@@ -8,15 +8,16 @@ import sys, hashlib, os, json, shutil, datetime, re
 fname = sys.argv[1] if len(sys.argv) > 1 else None
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 builds_dir = os.path.join(project_root, "..", "builds")
+android_dir = os.path.join(builds_dir, "android")  # APK 按平台分类归档
 
 if not fname:
-    apks = [f for f in os.listdir(builds_dir) if f.startswith("Jeenith_") and f.endswith(".apk")]
-    apks.sort(key=lambda f: os.path.getmtime(os.path.join(builds_dir, f)), reverse=True)
+    apks = [f for f in os.listdir(android_dir) if f.startswith("Jeenith_") and f.endswith(".apk")]
+    apks.sort(key=lambda f: os.path.getmtime(os.path.join(android_dir, f)), reverse=True)
     fname = apks[0] if apks else None
 if not fname:
     print("[HISTORY] No APK found"); sys.exit(1)
 
-target = os.path.join(builds_dir, fname)
+target = os.path.join(android_dir, fname)
 m = re.match(r"Jeenith_(\w+)_(\d+\.\d+\.\d+)_(\d{8})_(\d{2})\.apk", fname)
 if not m:
     print(f"[HISTORY] Cannot parse {fname}"); sys.exit(1)

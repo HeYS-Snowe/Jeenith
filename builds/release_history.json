@@ -1,0 +1,155 @@
+{
+  "project": "Jeenith",
+  "description": "Jeenith 在 GitHub 等平台的 Release 发布记录。字段对应 GitHub New release 表单：tag / target / title / notes / assets / label。notes 正文存于独立 markdown 文件（真实换行，便于直接复制粘贴到 GitHub Release notes 框），此处用 notesFile 引用。",
+  "namingRule": "tag 采用 v<语义版本>（如 v1.1.2）；assets 为对应构建产物；notes 正文存 release_notes_<tag>.md；发布后回填 url/publishedAt/downloadUrl 并将 status 改为 published。",
+  "statusEnum": "draft（待发布）/ published（已发布）/ unpublished（仅本地构建，未在平台发布）",
+  "releases": [
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v1.0.0",
+      "target": "main",
+      "title": "v1.0.0 — 志极首个正式版本",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v1.0.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_release_1.0.0_20260711_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 53117070,
+          "sizeFormatted": "50.66 MB",
+          "sha256": "653EC0FCFEEEF801B59F170257B22BD377449477AF4DF2C6C0E723D1A97B0054",
+          "localPath": "builds/android/Jeenith_release_1.0.0_20260711_01.apk",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "1.0.0+1",
+      "buildStatus": "release",
+      "builtAt": "2026-07-11T07:44:22",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v1.0.1",
+      "target": "main",
+      "title": "v1.0.1 — 新增 Windows 桌面平台",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v1.0.1.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_release_1.0.1_20260711_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 53149842,
+          "sizeFormatted": "50.69 MB",
+          "sha256": "5C476E952698D44BBB733C3FF6FB114CE279F49EBBDFE6C3A579E7D9669519EE",
+          "localPath": "builds/android/Jeenith_release_1.0.1_20260711_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 12901379,
+          "sizeFormatted": "12.30 MB",
+          "sha256": "F3E690ABE091AAF01A8DD86E0047991281B9268B18133396E39ACC9639984C20",
+          "localPath": "builds/windows/Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "1.0.1+2",
+      "buildStatus": "release",
+      "builtAt": "2026-07-11T12:59:13",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v1.1.0",
+      "target": "main",
+      "title": "v1.1.0 — 工程迁移至 mobile/ 子目录",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v1.1.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_release_1.1.0_20260712_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 53445010,
+          "sizeFormatted": "50.97 MB",
+          "sha256": "5A37830412A3A25F2ACB909C72217387ECFD04411C51B8FB96BA061F16399BEA",
+          "localPath": "builds/android/Jeenith_release_1.1.0_20260712_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 12943882,
+          "sizeFormatted": "12.34 MB",
+          "sha256": "E17EE2F11E185E07A26D734B5B5CBBC85B40F8EC824A8666D88EBE11914A6666",
+          "localPath": "builds/windows/Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "1.1.0+4",
+      "buildStatus": "release",
+      "builtAt": "2026-07-12T01:47:12",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v1.1.2",
+      "target": "main",
+      "title": "v1.1.2 — Windows 桌面适配 + 真机在线熵源修复",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v1.1.2.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_1.1.2_20260712_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 53445038,
+          "sizeFormatted": "50.97 MB",
+          "sha256": "24D681E9045DFEC3CF753A81AA6E5E29A60061EEE05404BB5F63CCE4EFB35FB8",
+          "localPath": "builds/android/Jeenith_fix_1.1.2_20260712_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 13226117,
+          "sizeFormatted": "12.61 MB",
+          "sha256": "B37D90090C7409EF07388EAA50FCC11E206F6E3F5A1EDAE570E30E9E5FD6334C",
+          "localPath": "builds/windows/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "1.1.2+6",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-12T13:34:25",
+      "commit": "a725d0b",
+      "publishedAt": "",
+      "url": "",
+      "status": "draft"
+    }
+  ]
+}

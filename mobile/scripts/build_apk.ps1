@@ -101,6 +101,10 @@ $apkOutputDir = Join-Path $projectRoot "build\app\outputs\flutter-apk"
 $buildsDir = Join-Path $projectRoot "..\builds"
 if (-not (Test-Path $buildsDir)) { New-Item -ItemType Directory -Path $buildsDir | Out-Null }
 
+# APK 按平台分类归档到 builds/android/（Windows zip 手动归档到 builds/windows/）
+$androidDir = Join-Path $buildsDir "android"
+if (-not (Test-Path $androidDir)) { New-Item -ItemType Directory -Path $androidDir | Out-Null }
+
 # 计算新版本号
 if ($TargetVersion) {
     if ($TargetVersion -notmatch '^\d+\.\d+\.\d+$') { Write-Error "Invalid TargetVersion: $TargetVersion"; exit 1 }
@@ -115,7 +119,7 @@ Write-Host "Version: $Version+$BuildNumber -> $releaseVersion+$releaseBuildNumbe
 # 关键：先更新 pubspec，再构建
 Update-VersionInPubspec -pubspecPath $pubspecPath -newVersion $releaseVersion -newBuildNumber $releaseBuildNumber
 
-$buildSequence = Get-BuildSequence -buildsDir $buildsDir -buildDate $buildDate -status $Status -version $releaseVersion -appName $appName
+$buildSequence = Get-BuildSequence -buildsDir $androidDir -buildDate $buildDate -status $Status -version $releaseVersion -appName $appName
 
 Write-Host "Building..." -ForegroundColor Green
 Set-Location $projectRoot
@@ -133,7 +137,7 @@ Backup-OriginalAPK -apkPath $apkFile
 $newApkName = "${appName}_${Status}_${releaseVersion}_${buildDate}_$($buildSequence.ToString('00')).apk"
 if (Rename-APK -apkPath $apkFile -status $Status -version $releaseVersion -buildDate $buildDate -sequence $buildSequence -appName $appName) {
     $newApkPath = Join-Path $apkOutputDir $newApkName
-    $buildsApkPath = Join-Path $buildsDir $newApkName
+    $buildsApkPath = Join-Path $androidDir $newApkName
     Copy-Item -Path $newApkPath -Destination $buildsApkPath -Force
     Write-Host "[ARCHIVE] Copied to builds: $newApkName" -ForegroundColor Green
 
