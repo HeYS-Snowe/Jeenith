@@ -18,8 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
+# The .vscode folder contains launch configuration and tasks you configure
+# in VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
 #.vscode/
 
@@ -43,3 +43,8 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Jeenith 构建产物归档：APK/zip 体积大（单包 50MB+），不入版本控制，
+# 仅保留构建历史记录。详见 docs/FLUTTER_APK_BUILD_PIPELINE.md Q7。
+/builds/*
+!/builds/build_history.json

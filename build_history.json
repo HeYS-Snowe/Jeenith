@@ -1,0 +1,20 @@
+{
+  "project": "Jeenith",
+  "builds": [
+    {
+      "version": "1.1.0+4",
+      "status": "release",
+      "statusLabel": "正式版",
+      "date": "20260712",
+      "sequence": 1,
+      "filename": "Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
+      "timestamp": "2026-07-12T01:47:12",
+      "fileSize": 12943882,
+      "fileSizeFormatted": "12.34 MB",
+      "sha256": "E17EE2F11E185E07A26D734B5B5CBBC85B40F8EC824A8666D88EBE11914A6666",
+      "platform": "windows-x64",
+      "buildType": "zip",
+      "verificationPassed": true
+    }
+  ]
+}
