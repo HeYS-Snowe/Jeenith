@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +77,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
     if (tokens.length < 3) return (<int>[], '请至少输入三个数字');
     final nums = tokens
         .take(3)
-        .map((s) => int.parse(s))
+        .map((s) => int.tryParse(s) ?? 6)
         .map((n) => n == 0 ? 6 : n)
         .toList();
     return (nums, null);
@@ -153,14 +155,14 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
       _busy = false;
     });
     _resultAnim.forward(from: 0);
-    HistoryStore.add(HistoryEntry(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
       techId: 'xiaoliuren',
       techName: '小六壬',
       time: DateTime.now(),
       summary: _result?.cards.map((c) => c.title).join('·') ?? '',
       detail: _buildCopyText(),
-    ));
+    )));
   }
 
   @override
@@ -399,7 +401,10 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
       for (var i = 0; i < r.cards.length; i++) ...[
         EntranceItem(
           animation: _resultAnim,
-          interval: Interval(0.28 + i * 0.1, 0.52 + i * 0.1),
+          interval: Interval(
+            (0.28 + i * 0.1).clamp(0.0, 1.0),
+            (0.52 + i * 0.1).clamp(0.0, 1.0),
+          ),
           child: PalaceResultCard(data: r.cards[i]),
         ),
         const SizedBox(height: 10),
@@ -473,9 +478,9 @@ class _PinHeaderDelegate extends SliverPersistentHeaderDelegate {
   const _PinHeaderDelegate({required this.child});
 
   @override
-  double get minExtent => 170;
+  double get minExtent => 200;
   @override
-  double get maxExtent => 170;
+  double get maxExtent => 200;
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) => child;
   @override

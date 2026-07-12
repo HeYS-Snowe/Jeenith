@@ -12,8 +12,9 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **1.1.0+4**（2026-07-12）|
+| 当前版本 | **1.1.2+6**（2026-07-12，fix）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
+| GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
 
 **定位**：叩问本心的卜算合集——一个 APP 首页选术，承载多种中国传统卜算术。核心价值是**可扩展卜算框架**：加新术 = 新建一个 feature 目录 + 注册一行，不改 core/shared。
@@ -46,10 +47,10 @@ Jeenith/                           # 仓库根（solution root）
 │   │   ├── core/
 │   │   │   ├── branding.dart      # 品牌常量（appName/tagline/copyright）
 │   │   │   ├── calendar/          # lunar_service（农历服务）
-│   │   │   ├── config/            # app_config + config_providers（SharedPreferences）
+│   │   │   ├── config/            # app_config + config_providers + ★platform_info（设备检测）
 │   │   │   ├── divination/        # ★ 卜算框架抽象（DivinationTech + Registry + Result 模型）
 │   │   │   ├── history/           # history_store（SharedPreferences JSON 持久化）
-│   │   │   ├── rng/               # ★ 真随机引擎（3 源 SHA256 混合）
+│   │   │   ├── rng/               # ★ 真随机引擎（3 源 SHA256 混合；触摸/鼠标轨迹自适应）
 │   │   │   └── theme/             # app_theme.dart（AppColors 色板 + appTheme()）
 │   │   ├── data/
 │   │   │   └── yijing/            # 64 卦 + 八卦数据（周易/梅花共用）
@@ -81,7 +82,12 @@ Jeenith/                           # 仓库根（solution root）
 ├── design/                        # 占位（设计稿）
 ├── docs/                          # 文档（本文件 + FLUTTER_APK_BUILD_PIPELINE.md）
 ├── tools/                         # 占位（工具脚本）
-├── builds/                        # ★ 构建产物归档（APK/ZIP + build_history.json 主副本）
+├── builds/                        # ★ 构建产物归档（按平台分类，产物不入 git）
+│   ├── android/                   # APK（build_apk.ps1 自动归档）
+│   ├── windows/                   # Windows zip（手动归档）
+│   ├── release_notes/             # 各版本 Release 说明 md（真实换行，复制粘贴用）
+│   ├── build_history.json         # 构建历史（归档区主副本）
+│   └── release_history.json       # 平台发布记录（GitHub Release 等）
 ├── build_history.json             # 项目内历史副本
 ├── CLAUDE.md                      # 项目定制规则
 └── AGENTS.md                      # Agent 规则（与 CLAUDE.md 同步）
@@ -117,6 +123,7 @@ Jeenith/                           # 仓库根（solution root）
 
 - **深色中国风**：玄黑底（#0C0A12）+ 鎏金（#D4A857）+ 朱砂（#E85A3C）+ 五行色（木青/水蓝/火红/金白/土黄）
 - **层叠布局**（小六壬/周易）：圆盘/六爻固定底层 + `DraggableScrollableSheet` 上层可拖拽覆盖 + 交互 `SliverPersistentHeader(pinned)` 粘顶吸附
+- **设备自适应**（`core/config/platform_info.dart`）：移动端用 DraggableScrollableSheet 拖拽；桌面端鼠标拖拽不灵，改 `Column` 上下分栏（可视化固定 + 滚轮滚动）。指针轨迹熵源——移动端走 `onPointerMove`、桌面端走 `onPointerHover`（鼠标自由移动）
 - **入场动画**：首页选术卡片错峰淡入上浮（InteractableCard）
 - **Starfield 星空背景**：全局粒子背景
 - **高 DPI**：AA_EnableHighDpiScaling + AA_UseHighDpiPixmaps
@@ -140,22 +147,29 @@ pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "1.2.0"
 cd mobile
 flutter build windows --release
 # 产物：build/windows/x64/runner/Release/jeenith.exe
-# 手动 zip 归档到 builds/（用 archive_history.py 或 python 脚本）
+# 手动 zip 归档到 builds/windows/（exe 版本号随 pubspec 自动注入）：
+pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath ../builds/windows/Jeenith_<状态>_<版本>_<日期>_01_windows_x64.zip -Force"
 ```
 
 ### 构建规范
 
-详见 `docs/FLUTTER_APK_BUILD_PIPELINE.md`。命名规则：`Jeenith_{状态}_{版本}_{日期}_{序号}.apk/.zip`。产物在 `builds/`（与 mobile/ 平级，不受 flutter clean 影响）。
+详见 `docs/FLUTTER_APK_BUILD_PIPELINE.md`。命名规则：`Jeenith_{状态}_{版本}_{日期}_{序号}.apk/.zip`。产物按平台分类归档：`builds/android/`（APK）、`builds/windows/`（zip）。GitHub Release 发布记录在 `builds/release_history.json` + `builds/release_notes/`（md 真实换行，复制粘贴到 notes 框）。
 
-### 当前归档（builds/）
+### 当前归档（builds/android/ + builds/windows/）
 
-| 文件 | 平台 | 版本 | 大小 |
-|------|------|------|------|
-| Jeenith_release_1.0.0_20260711_01.apk | Android | 1.0.0+1 | 50.7 MB |
-| Jeenith_release_1.0.1_20260711_01.apk | Android | 1.0.1+2 | 50.7 MB |
-| Jeenith_release_1.0.1_20260711_01_windows_x64.zip | Windows | 1.0.1+2 | 12.3 MB |
-| Jeenith_release_1.1.0_20260712_01.apk | Android | 1.1.0+4 | 51.0 MB |
-| Jeenith_release_1.1.0_20260712_01_windows_x64.zip | Windows | 1.1.0+4 | 12.3 MB |
+| 文件 | 平台 | 版本 | 大小 | 路径 |
+|------|------|------|------|------|
+| Jeenith_release_1.0.0_20260711_01.apk | Android | 1.0.0+1 | 50.7 MB | builds/android/ |
+| Jeenith_release_1.0.1_20260711_01.apk | Android | 1.0.1+2 | 50.7 MB | builds/android/ |
+| Jeenith_release_1.0.1_20260711_01_windows_x64.zip | Windows | 1.0.1+2 | 12.3 MB | builds/windows/ |
+| Jeenith_release_1.1.0_20260712_01.apk | Android | 1.1.0+4 | 51.0 MB | builds/android/ |
+| Jeenith_release_1.1.0_20260712_01_windows_x64.zip | Windows | 1.1.0+4 | 12.3 MB | builds/windows/ |
+| Jeenith_fix_1.1.2_20260712_01.apk | Android | 1.1.2+6 | 51.0 MB | builds/android/ |
+| Jeenith_fix_1.1.2_20260712_01_windows_x64.zip | Windows | 1.1.2+6 | 12.6 MB | builds/windows/ |
+
+### GitHub Release 发布记录
+
+`builds/release_history.json` 记录 4 个已发布 release（v1.0.0 / v1.0.1 / v1.1.0 / v1.1.2，均 `published`），含 tag / title / notesFile / assets（sha256 + downloadUrl）/ url / publishedAt。各版本 notes 见 `builds/release_notes/release_notes_<tag>.md`。
 
 ---
 
@@ -183,6 +197,7 @@ flutter build windows --release
 ### 构建
 - **中文路径 PyInstaller 冲突**：PyInstaller 的 Qt hook 在中文路径下报 `Qt plugin directory does not exist`（Python 版历史，Flutter 版无此问题——项目已移到英文路径 Qore/Jeenith）
 - **lintVitalRelease "37.0" bug**：`shared_preferences_android:lintVitalRelease` 报 `For input string: "37.0"`（lint 工具自身 bug），`build.gradle.kts` 加 `lint { checkReleaseBuilds = false }` 规避
+- **release 包 INTERNET 权限缺失**：debug/profile manifest 自带 INTERNET（服务 hot reload），release 只合并 main manifest；main 必须显式声明 `<uses-permission android:name="android.permission.INTERNET"/>`，否则 release 包联网全失败（random.org 在线熵源一直"超时/不可用"，但 debug/模拟器正常）
 - **CMake 缓存路径冲突**：项目移动后 `build/windows/x64/CMakeCache.txt` 路径不匹配，删 `rm -rf build/windows` 后重 build
 - **构建脚本 buildsDir**：`build_apk.ps1` 的 `$buildsDir = Join-Path $projectRoot "..\builds"`（builds 在仓库根，与 mobile/ 平级）
 
@@ -192,10 +207,13 @@ flutter build windows --release
 - **InteractableCard Interval end > 1**：首页卡片入场动画 `Interval(begin, end)` 的 end 必须 ≤ 1.0，用 `.clamp(0.0, 1.0).toDouble()` 规避
 - **HistoryStore const []**：`load()` 返回 `const []` 是不可修改列表，`list.insert` 会崩；用 `<HistoryEntry>[]`
 - **DraggableScrollableSheet + 圆盘位置**：圆盘用 `Transform.translate(offset: Offset(0, -80))` 上移，让初始状态圆盘完整可见（面板 initialChildSize 0.35 不遮圆盘）
+- **桌面端 sheet 拖拽不灵**：DraggableScrollableSheet 靠鼠标拖拽在桌面端识别差、sheet 卡在 initialChildSize（内容区过小）；用 `PlatformInfo.isDesktop` 分支改 `Column` 上下分栏
+- **桌面端 onPointerHover vs onPointerMove**：鼠标自由移动触发 `onPointerHover`（非 `onPointerMove`，后者仅按住拖拽时触发）；TouchTracker 采集桌面轨迹必须同时挂 `onPointerHover`
+- **feature 根目录 tech 文件 import 层级**：`features/<x>/<x>_tech.dart` 在 feature 根（与 `ui/` 平级），import core 用两层 `../../core/`；只有 `ui/` 子目录下的文件才用三层 `../../../core/`
 
 ### .gitignore 建议
-- `builds/` 不入 git（APK 是大二进制，用 NAS/云盘备份）
-- `build_history.json`（两份）入 git（构建记录凭证）
+- `builds/android/`、`builds/windows/` 不入 git（APK/zip 大二进制，用 NAS/云盘/GitHub Release 备份）
+- `build_history.json`（两份）+ `release_history.json` + `builds/release_notes/` 入 git（记录凭证）
 - `mobile/build/` 不入 git
 - `xlr_config.json`（用户配置）视需求
 
@@ -207,6 +225,8 @@ flutter build windows --release
 |------|------|
 | `mobile/lib/core/divination/divination_tech.dart` | 卜算框架抽象（DivinationTech + TechMeta）|
 | `mobile/lib/core/divination/divination_registry.dart` | ★ 加新术的唯一修改点 |
+| `mobile/lib/core/config/platform_info.dart` | 设备检测（mobile/desktop/web + 细分平台）|
+| `builds/release_history.json` | GitHub Release 发布记录 |
 | `mobile/lib/core/rng/true_random.dart` | 真随机引擎（3 源 SHA256）|
 | `mobile/lib/core/history/history_store.dart` | 历史记录存储 |
 | `mobile/lib/core/theme/app_theme.dart` | AppColors 色板 + appTheme() |

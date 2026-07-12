@@ -29,14 +29,26 @@ class OnlineEntropySource implements EntropyCollector {
       if (res.statusCode != 200) {
         return (display: '超时/不可用', bytes: Uint8List(0));
       }
-      final vals = RegExp(r'\d+')
-          .allMatches(res.body)
-          .map((m) => m.group(0)!)
-          .take(6)
-          .join(',');
+      // random.org format=plain 返回 6 行 1-9 的数字。严格校验整体格式，
+      // 避免错误页/HTML 中提取到数字被误当作熵源。
+      final body = res.body.trim();
+      final lines = const LineSplitter().convert(body);
+      final nums = <int>[];
+      for (final line in lines) {
+        final n = int.tryParse(line.trim());
+        if (n == null || n < 1 || n > 9) {
+          return (display: '超时/不可用', bytes: Uint8List(0));
+        }
+        nums.add(n);
+        if (nums.length == 6) break;
+      }
+      if (nums.length != 6) {
+        return (display: '超时/不可用', bytes: Uint8List(0));
+      }
+      final vals = nums.join(',');
       return (
         display: vals,
-        bytes: Uint8List.fromList(utf8.encode(res.body)),
+        bytes: Uint8List.fromList(utf8.encode(vals)),
       );
     } catch (_) {
       return (display: '超时/不可用', bytes: Uint8List(0));

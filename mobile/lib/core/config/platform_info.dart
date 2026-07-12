@@ -25,10 +25,6 @@ class PlatformInfo {
   static bool get isDesktop => family == DeviceFamily.desktop;
   static bool get isWeb => kIsWeb;
 
-  /// 是否以触摸为主要输入。
-  /// 桌面端无触摸，鼠标自由移动需走 `onPointerHover` 而非 `onPointerMove`。
-  static bool get hasTouch => isMobile;
-
   static bool get isAndroid =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
   static bool get isIOS =>

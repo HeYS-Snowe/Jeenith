@@ -21,18 +21,21 @@ class ConfigNotifier extends AsyncNotifier<AppConfig> {
   Future<void> setShowDetails(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('showDetails', v);
-    state = AsyncData(state.valueOrNull!.copyWith(showDetails: v));
+    final current = await future;
+    state = AsyncData(current.copyWith(showDetails: v));
   }
 
   Future<void> setUseOnline(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('useOnline', v);
-    state = AsyncData(state.valueOrNull!.copyWith(useOnline: v));
+    final current = await future;
+    state = AsyncData(current.copyWith(useOnline: v));
   }
 
   Future<void> setXiaoliurenCinematic(bool v) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('xiaoliurenCinematic', v);
-    state = AsyncData(state.valueOrNull!.copyWith(xiaoliurenCinematic: v));
+    final current = await future;
+    state = AsyncData(current.copyWith(xiaoliurenCinematic: v));
   }
 }

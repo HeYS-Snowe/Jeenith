@@ -1,4 +1,5 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,8 +51,21 @@ class HistoryEntry {
 }
 
 /// 历史记录存储（SharedPreferences JSON）。静态方法，各术可直接调用 add。
+///
+/// 所有写操作走 [_serialize] 串行化，避免 load→modify→save 之间的竞态
+/// 导致同一次 add/updateNote/remove 互相覆盖。
 class HistoryStore {
   static const _key = 'divination_history';
+  static Future<void> _chain = Future.value();
+
+  /// 生成单调递增的唯一 ID（基于当前时间 + 自增计数，避免 microsecondsSinceEpoch
+  /// 在同一帧多次调用时碰撞）。
+  static int _counter = 0;
+  static String generateId() {
+    final now = DateTime.now();
+    _counter = (_counter + 1) & 0xFFFF;
+    return '${now.microsecondsSinceEpoch}-${_counter.toRadixString(16).padLeft(4, '0')}';
+  }
 
   static Future<List<HistoryEntry>> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -65,28 +79,41 @@ class HistoryStore {
     }
   }
 
-  static Future<void> add(HistoryEntry e) async {
-    final list = await load();
-    list.insert(0, e); // 最新的在前
-    await _save(list);
+  /// 串行化所有写操作，避免并发 load/save 竞态。
+  static Future<T> _serialize<T>(Future<T> Function() task) {
+    final prev = _chain;
+    final completer = Completer<T>();
+    _chain = prev.then((_) => task()).then(completer.complete, onError: completer.completeError);
+    return completer.future;
   }
 
-  static Future<void> updateNote(String id, String? note) async {
-    final list = await load();
-    for (var i = 0; i < list.length; i++) {
-      if (list[i].id == id) {
-        list[i] = list[i].copyWith(note: note);
-        break;
-      }
-    }
-    await _save(list);
-  }
+  static Future<void> add(HistoryEntry e) => _serialize(() async {
+        final list = await load();
+        list.insert(0, e); // 最新的在前
+        await _save(list);
+      });
 
-  static Future<void> remove(String id) async {
-    final list = await load();
-    list.removeWhere((e) => e.id == id);
-    await _save(list);
-  }
+  static Future<void> updateNote(String id, String? note) => _serialize(() async {
+        final list = await load();
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].id == id) {
+            list[i] = list[i].copyWith(note: note);
+            break;
+          }
+        }
+        await _save(list);
+      });
+
+  static Future<void> remove(String id) => _serialize(() async {
+        final list = await load();
+        list.removeWhere((e) => e.id == id);
+        await _save(list);
+      });
+
+  static Future<void> clear() => _serialize(() async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove(_key);
+      });
 
   static Future<void> _save(List<HistoryEntry> list) async {
     final prefs = await SharedPreferences.getInstance();

@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -72,14 +74,14 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   void _onRevealed() {
     setState(() => _busy = false);
     _anim.forward(from: 0);
-    HistoryStore.add(HistoryEntry(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
       techId: 'zhouyi',
       techName: '周易',
       time: DateTime.now(),
       summary: _result?.benName ?? '',
       detail: _buildCopyText(),
-    ));
+    )));
   }
 
   @override
@@ -362,9 +364,9 @@ class _PinHeaderDelegate extends SliverPersistentHeaderDelegate {
   const _PinHeaderDelegate({required this.child});
 
   @override
-  double get minExtent => 80;
+  double get minExtent => 90;
   @override
-  double get maxExtent => 80;
+  double get maxExtent => 90;
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) => child;
   @override

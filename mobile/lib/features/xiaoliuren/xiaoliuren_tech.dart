@@ -23,9 +23,6 @@ class XiaoliurenTech extends DivinationTech {
       );
 
   @override
-  bool get usesTrueRandom => true;
-
-  @override
   Widget buildPage(BuildContext context, WidgetRef ref) =>
       const XiaoliurenPage();
 }

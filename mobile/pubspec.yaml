@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.1.2+6
+version: 1.1.3+7
 
 environment:
   sdk: ^3.11.4
@@ -39,6 +39,8 @@ dependencies:
   crypto: ^3.0.0
   lunar: ^1.7.8  # 寿星天文历：农历/干支/节气，时辰起卦及后续命理共用
   flutter_svg: ^2.0.0  # SVG 矢量图标加载
+  window_manager: ^0.5.2  # 桌面端窗口管理：尺寸/位置/最小尺寸（Windows/macOS/Linux）
+  screen_retriever: ^0.2.2  # 获取屏幕分辨率（与 window_manager 配合算窗口尺寸）
 
 dev_dependencies:
   flutter_test:

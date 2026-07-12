@@ -249,5 +249,6 @@ class _RitualPainter extends CustomPainter {
       textDirection: ui.TextDirection.ltr,
     )..layout();
     tp.paint(canvas, pos - Offset(tp.width / 2, tp.height / 2));
+    tp.dispose();
   }
 }

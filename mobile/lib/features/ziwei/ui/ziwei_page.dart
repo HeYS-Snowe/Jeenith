@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,17 +37,17 @@ class _ZiweiPageState extends State<ZiweiPage> {
     final m = int.tryParse(_month.text) ?? 0;
     final d = int.tryParse(_day.text) ?? 0;
     final h = int.tryParse(_hour.text) ?? -1;
-    if (y < 1900 || m < 1 || d < 1 || h < 0 || h > 23) return;
+    if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31 || h < 0 || h > 23) return;
     setState(() => _r = divine(y, m, d, h));
     FocusScope.of(context).unfocus();
-    HistoryStore.add(HistoryEntry(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
       techId: 'ziwei',
       techName: '紫微斗数',
       time: DateTime.now(),
       summary: _r?.wuxingJu ?? '',
       detail: _buildCopyText(),
-    ));
+    )));
   }
 
   @override

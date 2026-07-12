@@ -38,9 +38,6 @@ abstract class DivinationTech {
   /// 展示元数据。
   TechMeta get meta;
 
-  /// 是否使用 TrueRandom 服务。
-  bool get usesTrueRandom => false;
-
   /// 构建该术主页面。框架提供 [ref] 供访问 providers。
   Widget buildPage(BuildContext context, WidgetRef ref);
 }

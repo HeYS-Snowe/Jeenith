@@ -226,22 +226,22 @@ class _HomePageState extends ConsumerState<HomePage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 46,
-                                    height: 46,
+                                    width: 40,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                       color: meta.accentColor
                                           .withValues(alpha: 0.28),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Icon(Icons.auto_awesome,
-                                        color: meta.accentColor),
+                                        color: meta.accentColor, size: 22),
                                   ),
                                   const Spacer(),
                                   Text(
                                     meta.displayName,
                                     style: TextStyle(
                                       color: meta.accentColor,
-                                      fontSize: 26,
+                                      fontSize: 22,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -249,20 +249,22 @@ class _HomePageState extends ConsumerState<HomePage>
                                     meta.subtitle,
                                     style: const TextStyle(
                                       color: AppColors.textSubtitle,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       letterSpacing: 2,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    meta.description,
-                                    style: const TextStyle(
-                                      color: AppColors.textBody,
-                                      fontSize: 11,
-                                      height: 1.4,
+                                  const SizedBox(height: 6),
+                                  Flexible(
+                                    child: Text(
+                                      meta.description,
+                                      style: const TextStyle(
+                                        color: AppColors.textBody,
+                                        fontSize: 11,
+                                        height: 1.35,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),

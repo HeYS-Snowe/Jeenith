@@ -118,8 +118,8 @@
       "tag": "v1.1.2",
       "target": "main",
       "title": "v1.1.2 — Windows 桌面适配 + 真机在线熵源修复",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v1.1.2.md",
       "notesFormat": "markdown",
@@ -150,6 +150,45 @@
       "publishedAt": "2026-07-12T14:53:36",
       "url": "https://github.com/1010523654/Jeenith/releases/tag/v1.1.2",
       "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v1.1.3",
+      "target": "main",
+      "title": "v1.1.3 — 全面代码质量审计修复 + 桌面端窗口尺寸修复",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v1.1.3.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_1.1.3_20260712_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 53723746,
+          "sizeFormatted": "51.23 MB",
+          "sha256": "2BB9DF3623088A34ADC1F855F34E8F4C44DA31BBD91F5034F927C42D8D8A37D7",
+          "localPath": "builds/android/Jeenith_fix_1.1.3_20260712_01.apk",
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01.apk"
+        },
+        {
+          "name": "Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 13354337,
+          "sizeFormatted": "12.74 MB",
+          "sha256": "F1048AED292E8B90F6E7908ED95ADB34DB50A3E43954F395CFE5E15418842CD1",
+          "localPath": "builds/windows/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "1.1.3+7",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-12T23:17:25",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
     }
   ]
 }

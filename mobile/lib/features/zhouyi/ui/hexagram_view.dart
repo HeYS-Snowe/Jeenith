@@ -126,5 +126,6 @@ class _HexPainter extends CustomPainter {
     )..layout();
     final dx = align == TextAlign.right ? -tp.width : 0.0;
     tp.paint(c, pos + Offset(dx, -tp.height / 2));
+    tp.dispose();
   }
 }

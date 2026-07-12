@@ -16,7 +16,7 @@ import '../../features/ziwei/ziwei_tech.dart';
 ///   2. 在此追加：ZiweiTech(),
 /// 完成。无需修改 core/ 或 shared/ 任何代码。
 final divinationTechsProvider = Provider<List<DivinationTech>>((ref) {
-  return [
+  final techs = <DivinationTech>[
     XiaoliurenTech(),
     ZhouyiTech(),
     MeihuaTech(),
@@ -24,6 +24,12 @@ final divinationTechsProvider = Provider<List<DivinationTech>>((ref) {
     ZiweiTech(),
     QimenTech(),
   ];
+  // ID 必须唯一，否则 techByIdProvider.firstOrNull 会静默命中错误项。
+  assert(
+    techs.map((t) => t.id).toSet().length == techs.length,
+    'Duplicate DivinationTech id detected',
+  );
+  return techs;
 });
 
 /// 按 ID 查找（路由用）。

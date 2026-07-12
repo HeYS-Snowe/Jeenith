@@ -41,7 +41,7 @@ class DivinationWheelState extends State<DivinationWheel> {
   int cursor = -1;
   final Set<int> lit = {};
   final Map<int, double> _litAnim = {}; // 宫 -> 落点弹跳进度 0..1
-  final List<_TrailSeg> trail = [];     // 指针拖尾，每根独立渐隐
+  final List<_TrailSeg> _trail = [];     // 指针拖尾，每根独立渐隐
   List<int> resultLands = [];
   List<int> path = [];
   Set<int> landPositions = {};
@@ -59,7 +59,7 @@ class DivinationWheelState extends State<DivinationWheel> {
     stepCounter = 0;
     lit.clear();
     _litAnim.clear();
-    trail.clear();
+    _trail.clear();
     cursor = -1;
     _phase = _Phase.ignite;
     _igniteFrame = 0;
@@ -76,7 +76,7 @@ class DivinationWheelState extends State<DivinationWheel> {
     cursor = -1;
     lit.clear();
     _litAnim.clear();
-    trail.clear();
+    _trail.clear();
     resultLands = [];
     path = [];
     landPositions = {};
@@ -86,16 +86,16 @@ class DivinationWheelState extends State<DivinationWheel> {
 
   void _pushTrail(int palace) {
     if (palace == -1) return;
-    trail.add(_TrailSeg(palace, 0));
+    _trail.add(_TrailSeg(palace, 0));
   }
 
   void _tick() {
     pulse++;
     // 每根拖尾独立推进消失进度
-    for (final seg in trail) {
+    for (final seg in _trail) {
       seg.age += _trailFade;
     }
-    trail.removeWhere((s) => s.age >= 1.0);
+    _trail.removeWhere((s) => s.age >= 1.0);
 
     if (_phase == _Phase.ignite) {
       _igniteFrame++;
@@ -133,7 +133,7 @@ class DivinationWheelState extends State<DivinationWheel> {
     }
 
     // 游走结束且拖尾全部消散 → 停止重绘（盘面静止）
-    if (_phase == _Phase.idle && trail.isEmpty) {
+    if (_phase == _Phase.idle && _trail.isEmpty) {
       _timer?.cancel();
       _timer = null;
     }
@@ -312,7 +312,7 @@ class _WheelPainter extends CustomPainter {
     }
 
     // —— 游走指针拖尾：每根独立，从圆心端向宫位端渐隐（如射出之光）——
-    for (final seg in s.trail) {
+    for (final seg in s._trail) {
       final ang = -math.pi / 2 + (2 * math.pi / 6) * seg.palace;
       final pos = Offset(cx + R * math.cos(ang), cy + R * math.sin(ang));
       _drawTrailSeg(canvas, Offset(cx, cy), pos, seg.age);
@@ -370,6 +370,7 @@ class _WheelPainter extends CustomPainter {
       textDirection: ui.TextDirection.ltr,
     )..layout();
     tp.paint(canvas, pos - Offset(tp.width / 2, tp.height / 2));
+    tp.dispose();
   }
 
   /// 太极图（叠加法，与 Python 修复版一致）。

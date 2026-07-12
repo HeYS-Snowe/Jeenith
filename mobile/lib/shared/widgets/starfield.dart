@@ -4,6 +4,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 /// 全局背景星尘：缓慢漂浮 + 闪烁的金色微粒，渲染于所有页面底层。
+///
+/// 监听 AppLifecycleState：应用进入后台/非活跃态时暂停动画，
+/// 回到前台时恢复，避免后台仍持续 60fps 渲染消耗电量。
 class Starfield extends StatefulWidget {
   final int count;
   const Starfield({super.key, this.count = 64});
@@ -13,23 +16,40 @@ class Starfield extends StatefulWidget {
 }
 
 class _StarfieldState extends State<Starfield>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _ctrl;
   late final List<_Star> _stars;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     final rnd = math.Random(2026);
     _stars = List.generate(widget.count, (_) => _Star.random(rnd));
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 14),
-    )..repeat();
+      duration: const Duration(seconds: 30),
+    );
+    if (!_isAppInactive) _ctrl.repeat();
+  }
+
+  bool get _isAppInactive {
+    final state = WidgetsBinding.instance.lifecycleState;
+    return state != null && state != AppLifecycleState.resumed;
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_ctrl.isAnimating) _ctrl.repeat();
+    } else {
+      if (_ctrl.isAnimating) _ctrl.stop();
+    }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _ctrl.dispose();
     super.dispose();
   }

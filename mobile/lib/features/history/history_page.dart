@@ -87,6 +87,34 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
+  void _confirmClear() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppColors.card,
+        title: const Text('清空全部历史',
+            style: TextStyle(color: AppColors.goldBright, fontSize: 15, fontWeight: FontWeight.bold)),
+        content: const Text('此操作不可撤销，确定清空所有卜算历史记录？',
+            style: TextStyle(color: AppColors.textBody, fontSize: 13, height: 1.5)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('取消', style: TextStyle(color: AppColors.textSubtitle)),
+          ),
+          TextButton(
+            onPressed: () async {
+              await HistoryStore.clear();
+              if (!ctx.mounted) return;
+              Navigator.pop(ctx);
+              _reload();
+            },
+            child: const Text('清空', style: TextStyle(color: AppColors.gradeBad)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +124,14 @@ class _HistoryPageState extends State<HistoryPage> {
           onPressed: () => context.go('/'),
         ),
         title: const Text('历 史 记 录'),
+        actions: [
+          if (_list.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_sweep, color: AppColors.gradeBad),
+              tooltip: '清空全部历史',
+              onPressed: _confirmClear,
+            ),
+        ],
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.gold))

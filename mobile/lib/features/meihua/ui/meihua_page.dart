@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,14 +54,14 @@ class _MeihuaPageState extends State<MeihuaPage>
       _inputs = [n1, n2];
     });
     _anim.forward(from: 0);
-    HistoryStore.add(HistoryEntry(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
       techId: 'meihua',
       techName: '梅花易数',
       time: DateTime.now(),
       summary: _result?.benName ?? '',
       detail: _buildCopyText(),
-    ));
+    )));
   }
 
   void _onDivine() {
@@ -69,9 +71,22 @@ class _MeihuaPageState extends State<MeihuaPage>
     _divine(n1, n2);
   }
 
-  void _onRandom() => _divine(
-      (DateTime.now().microsecond % 100) + 1,
-      (DateTime.now().millisecond % 97) + 1);
+  void _onRandom() {
+    final (result, n1, n2) = divineRandom();
+    setState(() {
+      _result = result;
+      _inputs = [n1, n2];
+    });
+    _anim.forward(from: 0);
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
+      techId: 'meihua',
+      techName: '梅花易数',
+      time: DateTime.now(),
+      summary: _result?.benName ?? '',
+      detail: _buildCopyText(),
+    )));
+  }
 
   @override
   Widget build(BuildContext context) {

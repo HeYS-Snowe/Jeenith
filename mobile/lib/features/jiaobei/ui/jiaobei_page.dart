@@ -1,4 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -53,14 +55,14 @@ class _JiaobeiPageState extends State<JiaobeiPage>
       _last = r;
       _busy = false;
     });
-    HistoryStore.add(HistoryEntry(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
+    unawaited(HistoryStore.add(HistoryEntry(
+      id: HistoryStore.generateId(),
       techId: 'jiaobei',
       techName: '掷筊',
       time: DateTime.now(),
       summary: r.type.name,
       detail: _buildCopyText(),
-    ));
+    )));
   }
 
   void _onReset() {
