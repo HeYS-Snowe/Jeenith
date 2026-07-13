@@ -10,6 +10,9 @@ import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
+import '../algorithm/star_placement.dart';
+import '../data/stars.dart';
+import 'star_chart_painter.dart';
 
 class ZiweiPage extends StatefulWidget {
   const ZiweiPage({super.key});
@@ -99,8 +102,6 @@ class _ZiweiPageState extends State<ZiweiPage> {
           const SizedBox(height: 14),
           if (_r != null) _buildResult(_r!),
           const SizedBox(height: 10),
-          const Text('※ v1 基础排盘：命身宫 / 十二宫 / 五行局 / 八字。星曜安星（14主星+辅星）排盘留待 v2 深化。',
-              style: TextStyle(color: AppColors.textHint, fontSize: 11, height: 1.5)),
         ],
       ),
     );
@@ -144,21 +145,128 @@ class _ZiweiPageState extends State<ZiweiPage> {
           ),
         ),
         const SizedBox(height: 12),
-        const Text('◆ 命盘十二宫', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
+        const Text('◆ 命盘星图', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
         const SizedBox(height: 8),
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 4,
-          crossAxisSpacing: 6,
-          mainAxisSpacing: 6,
-          childAspectRatio: 1.1,
-          children: [
-            for (var zhi = 0; zhi < 12; zhi++)
-              _palaceCell(zhi, dz[zhi], r.gongAtZhi[zhi], r.mingGong, r.shenGong),
-          ],
+        DecorativePanel(
+          padding: const EdgeInsets.all(8),
+          child: SizedBox(
+            height: 380,
+            child: CustomPaint(
+              painter: StarChartPainter(
+                mingGong: r.mingGong,
+                shenGong: r.shenGong,
+                gongAtZhi: r.gongAtZhi,
+                mingGanZhi: r.mingGanZhi,
+                wuxingJu: r.wuxingJu,
+                chart: r.stars,
+              ),
+              child: const SizedBox.expand(),
+            ),
+          ),
         ),
+        const SizedBox(height: 14),
+        const Text('◆ 宫位详情', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
+        const SizedBox(height: 8),
+        for (var zhi = 0; zhi < 12; zhi++)
+          _buildGongDetailRow(zhi, dz[zhi], r.gongAtZhi[zhi], r.mingGong, r.shenGong, r.stars.gongStars[zhi]),
       ],
+    );
+  }
+
+  /// 单行宫位详情：地支 + 宫名 + 主星 + 吉星 + 煞星 + 神煞。
+  Widget _buildGongDetailRow(int zhi, String zhiName, int gongIdx, int ming, int shen, List<StarPlacement> stars) {
+    final isMing = zhi == ming;
+    final isShen = zhi == shen;
+    final gongName = (gongIdx >= 0 && gongIdx < palaceNames.length) ? palaceNames[gongIdx] : '';
+
+    String joinByCategory(StarCategory cat) =>
+        stars.where((s) => s.category == cat).map((s) => s.name).join(' ');
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: isMing
+            ? AppColors.gold.withValues(alpha: 0.12)
+            : (isShen ? AppColors.waterDeep.withValues(alpha: 0.12) : AppColors.card),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+            color: isMing
+                ? AppColors.goldBorder
+                : (isShen ? AppColors.waterDeepGlow : const Color.fromRGBO(212, 168, 87, 0.18)),
+            width: 1),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 60,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(zhiName,
+                        style: TextStyle(
+                            color: isMing ? AppColors.goldBright : AppColors.textMeta,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold)),
+                    if (isMing || isShen)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: Text(isMing ? '命' : '身',
+                            style: TextStyle(
+                                color: isMing ? AppColors.gold : AppColors.waterDeepGlow,
+                                fontSize: 10)),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(gongName,
+                    style: TextStyle(
+                        color: isMing ? AppColors.gold : AppColors.textPrimary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (joinByCategory(StarCategory.main).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Text(joinByCategory(StarCategory.main),
+                        style: const TextStyle(color: AppColors.goldBright, fontSize: 12, fontWeight: FontWeight.bold, height: 1.4)),
+                  ),
+                if (joinByCategory(StarCategory.auspicious).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Text('吉：${joinByCategory(StarCategory.auspicious)}',
+                        style: const TextStyle(color: AppColors.woodGlow, fontSize: 11, height: 1.4)),
+                  ),
+                if (joinByCategory(StarCategory.malefic).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Text('煞：${joinByCategory(StarCategory.malefic)}',
+                        style: const TextStyle(color: AppColors.fireGlow, fontSize: 11, height: 1.4)),
+                  ),
+                if (joinByCategory(StarCategory.boshishen).isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Text(joinByCategory(StarCategory.boshishen),
+                        style: const TextStyle(color: AppColors.textSubtitle, fontSize: 10, height: 1.4)),
+                  ),
+                if (joinByCategory(StarCategory.shensha).isNotEmpty)
+                  Text(joinByCategory(StarCategory.shensha),
+                      style: const TextStyle(color: AppColors.earthGlow, fontSize: 10, height: 1.4)),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -172,49 +280,24 @@ class _ZiweiPageState extends State<ZiweiPage> {
     sb.writeln(r.lunarDisplay);
     sb.writeln('八字：${r.bazi}');
     sb.writeln('命宫：${r.mingGanZhi}（${dz[r.mingGong]}）  身宫：${dz[r.shenGong]}  ${r.wuxingJu}');
-    sb.writeln('\n—— 十二宫 ——');
+    sb.writeln('\n—— 十二宫星曜 ——');
     for (var zhi = 0; zhi < 12; zhi++) {
       final g = r.gongAtZhi[zhi];
-      if (g >= 0) sb.writeln('${dz[zhi]}宫：${palaceNames[g]}');
+      final gongName = (g >= 0 && g < palaceNames.length) ? palaceNames[g] : '—';
+      final stars = r.stars.gongStars[zhi];
+      final main = stars.where((s) => s.category == StarCategory.main).map((s) => s.name).join(' ');
+      final aus = stars.where((s) => s.category == StarCategory.auspicious).map((s) => s.name).join(' ');
+      final mal = stars.where((s) => s.category == StarCategory.malefic).map((s) => s.name).join(' ');
+      final bos = stars.where((s) => s.category == StarCategory.boshishen).map((s) => s.name).join(' ');
+      final sha = stars.where((s) => s.category == StarCategory.shensha).map((s) => s.name).join(' ');
+      sb.writeln('${dz[zhi]}宫（$gongName）：');
+      if (main.isNotEmpty) sb.writeln('  主星：$main');
+      if (aus.isNotEmpty) sb.writeln('  吉星：$aus');
+      if (mal.isNotEmpty) sb.writeln('  煞星：$mal');
+      if (bos.isNotEmpty) sb.writeln('  博士：$bos');
+      if (sha.isNotEmpty) sb.writeln('  神煞：$sha');
     }
-    sb.writeln('\n※ v1 基础排盘，星曜安星待 v2 深化');
     sb.writeln('\n—— 志极 Jeenith · 叩问本心 ——');
     return sb.toString();
-  }
-
-  Widget _palaceCell(int zhi, String zhiName, int gongIdx, int ming, int shen) {
-    final isMing = zhi == ming;
-    final isShen = zhi == shen;
-    final gongName = gongIdx >= 0 ? palaceNames[gongIdx] : '';
-    return Container(
-      decoration: BoxDecoration(
-        color: isMing
-            ? AppColors.gold.withValues(alpha: 0.18)
-            : (isShen ? AppColors.waterDeep.withValues(alpha: 0.18) : AppColors.card),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-            color: isMing
-                ? AppColors.gold
-                : (isShen ? AppColors.waterDeepGlow : const Color.fromRGBO(212, 168, 87, 0.2)),
-            width: isMing || isShen ? 1.5 : 1),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(zhiName, style: TextStyle(color: AppColors.textMeta, fontSize: 11)),
-          const SizedBox(height: 2),
-          Text(gongName,
-              style: TextStyle(
-                  color: isMing ? AppColors.goldBright : AppColors.textPrimary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold)),
-          if (isMing || isShen)
-            Text(isMing ? '命' : '身',
-                style: TextStyle(
-                    color: isMing ? AppColors.gold : AppColors.waterDeepGlow, fontSize: 10)),
-        ],
-      ),
-    );
   }
 }

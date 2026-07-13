@@ -1,0 +1,137 @@
+// Copyright (c) 2026 Qore. All rights reserved.
+
+/// 紫微斗数星曜常量表与分类。
+library;
+
+/// 14 主星名。
+const mainStars = [
+  // 紫微系（6 颗，随紫微分布）
+  '紫微', '天机', '太阳', '武曲', '天同', '廉贞',
+  // 天府系（8 颗，随天府分布）
+  '天府', '太阴', '贪狼', '巨门', '天相', '天梁', '七杀', '破军',
+];
+
+/// 紫微系星曜相对紫微的偏移（正=顺布，负=逆布）。
+const ziweiXiOffset = <String, int>{
+  '紫微': 0,
+  '天机': -1,
+  '天同': -2,
+  '太阳': -3,
+  '武曲': -4,
+  '廉贞': 2,
+};
+
+/// 天府系星曜相对天府的偏移（正=顺布，负=逆布）。
+const tianfuXiOffset = <String, int>{
+  '天府': 0,
+  '太阴': 1,
+  '贪狼': 2,
+  '巨门': 3,
+  '天相': 4,
+  '天梁': 5,
+  '七杀': 6,
+  '破军': -1,
+};
+
+/// 六吉星名。
+const auspiciousStars = ['左辅', '右弼', '文昌', '文曲', '天魁', '天钺'];
+
+/// 六煞星名。
+const maleficStars = ['擎羊', '陀罗', '火星', '铃星', '地空', '地劫'];
+
+/// 博士十二神名序（从博士起顺布）。
+const boShiShen = [
+  '博士', '力士', '青龙', '小耗', '将军', '奏书',
+  '飞廉', '喜神', '病符', '大耗', '伏兵', '官府',
+];
+
+/// 博士十二神起始位（年干 → 博士所在宫地支索引）。
+const boShiStartByGan = <String, int>{
+  '甲': 1, '乙': 2, '丙': 3, '丁': 4, '戊': 5,
+  '己': 6, '庚': 7, '辛': 8, '壬': 9, '癸': 10,
+};
+
+/// 神煞名。
+const shenSha = ['天马', '华盖', '桃花', '红鸾', '天喜'];
+
+/// 年干 → 天魁（昼贵）宫位（地支索引）。
+const tianKuiByGan = <String, int>{
+  '甲': 1, '乙': 0, '丙': 9, '丁': 11, '戊': 1,
+  '己': 0, '庚': 1, '辛': 2, '壬': 3, '癸': 3,
+};
+
+/// 年干 → 天钺（夜贵）宫位。
+const tianYueByGan = <String, int>{
+  '甲': 7, '乙': 8, '丙': 11, '丁': 9, '戊': 7,
+  '己': 8, '庚': 7, '辛': 6, '壬': 5, '癸': 5,
+};
+
+/// 年干 → 擎羊宫位。
+const qingYangByGan = <String, int>{
+  '甲': 3, '乙': 4, '丙': 6, '丁': 7, '戊': 6,
+  '己': 7, '庚': 9, '辛': 10, '壬': 0, '癸': 1,
+};
+
+/// 年干 → 陀罗宫位。
+const tuoLuoByGan = <String, int>{
+  '甲': 1, '乙': 2, '丙': 4, '丁': 5, '戊': 4,
+  '己': 5, '庚': 7, '辛': 8, '壬': 10, '癸': 11,
+};
+
+/// 年支三合 → 火星起始宫位。
+const huoXingStartByZhi = <int, int>{
+  2: 2, 6: 2, 10: 2,   // 寅午戌 → 起 寅
+  8: 8, 0: 8, 4: 8,    // 申子辰 → 起 申
+  5: 5, 9: 5, 1: 5,    // 巳酉丑 → 起 巳
+  11: 11, 3: 11, 7: 11, // 亥卯未 → 起 亥
+};
+
+/// 年支三合 → 铃星起始宫位。
+const lingXingStartByZhi = <int, int>{
+  2: 3, 6: 3, 10: 3,    // 寅午戌 → 起 卯
+  8: 10, 0: 10, 4: 10,   // 申子辰 → 起 戌
+  5: 1, 9: 1, 1: 1,      // 巳酉丑 → 起 丑
+  11: 10, 3: 10, 7: 10,  // 亥卯未 → 起 戌
+};
+
+/// 年支三合 → 天马宫位。
+const tianMaByZhi = <int, int>{
+  2: 8, 6: 8, 10: 8,     // 寅午戌 → 申
+  8: 2, 0: 2, 4: 2,      // 申子辰 → 寅
+  5: 11, 9: 11, 1: 11,   // 巳酉丑 → 亥
+  11: 5, 3: 5, 7: 5,     // 亥卯未 → 巳
+};
+
+/// 年支三合 → 华盖宫位。
+const huaGaiByZhi = <int, int>{
+  2: 10, 6: 10, 10: 10,  // 寅午戌 → 戌
+  8: 4, 0: 4, 4: 4,      // 申子辰 → 辰
+  5: 1, 9: 1, 1: 1,       // 巳酉丑 → 丑
+  11: 7, 3: 7, 7: 7,     // 亥卯未 → 未
+};
+
+/// 年支三合 → 桃花（咸池）宫位。
+const taoHuaByZhi = <int, int>{
+  2: 3, 6: 3, 10: 3,     // 寅午戌 → 卯
+  8: 9, 0: 9, 4: 9,      // 申子辰 → 酉
+  5: 6, 9: 6, 1: 6,      // 巳酉丑 → 午
+  11: 0, 3: 0, 7: 0,     // 亥卯未 → 子
+};
+
+/// 星曜分类。
+enum StarCategory {
+  main,       // 14 主星
+  auspicious, // 六吉
+  malefic,    // 六煞
+  boshishen,  // 博士十二神
+  shensha,    // 神煞
+}
+
+/// 星曜 → 分类。
+final Map<String, StarCategory> starCategory = {
+  for (final s in mainStars) s: StarCategory.main,
+  for (final s in auspiciousStars) s: StarCategory.auspicious,
+  for (final s in maleficStars) s: StarCategory.malefic,
+  for (final s in boShiShen) s: StarCategory.boshishen,
+  for (final s in shenSha) s: StarCategory.shensha,
+};

@@ -1,6 +1,8 @@
 // Copyright (c) 2026 Qore. All rights reserved.
 import 'package:lunar/lunar.dart';
 
+import 'star_placement.dart';
+
 const _dizhi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 const _tiangan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 
@@ -26,7 +28,10 @@ const _nayin = {
 
 const _juName = {'金': '金四局', '火': '火六局', '木': '木三局', '土': '土五局', '水': '水二局'};
 
-/// 紫微斗数排盘结果（v1：命身宫 + 12宫 + 五行局 + 八字；星曜排盘留 v2）。
+/// 五行 → 局数（用于安星算法）。
+const _juNum = {'金': 4, '火': 6, '木': 3, '土': 5, '水': 2};
+
+/// 紫微斗数排盘结果（v2：命身宫 + 12宫 + 五行局 + 八字 + 星曜全盘）。
 class ZiweiResult {
   final String lunarDisplay;    // 农历
   final String bazi;            // 八字
@@ -36,6 +41,8 @@ class ZiweiResult {
   final String wuxingJu;        // 五行局
   /// 按地支 0-11 排列的宫名索引（0=命宫,1=兄弟...），-1 表示无（不应出现）
   final List<int> gongAtZhi;
+  /// 已排布的星曜分布（v2）。
+  final StarChart stars;
 
   const ZiweiResult({
     required this.lunarDisplay,
@@ -45,6 +52,7 @@ class ZiweiResult {
     required this.mingGanZhi,
     required this.wuxingJu,
     required this.gongAtZhi,
+    required this.stars,
   });
 }
 
@@ -78,6 +86,23 @@ ZiweiResult divine(int year, int month, int day, int hour) {
     gongAtZhi[zhi] = i;
   }
 
+  // v2: 安星算法 — 14主星 + 六吉六煞 + 博士十二神 + 神煞
+  final yearGanZhi = ec.getYear();           // 如 "甲子"
+  final yearGanChar = yearGanZhi[0];         // '甲'
+  final yearZhiChar = yearGanZhi[1];         // '子'
+  final yearZhiIdx = _dizhi.indexOf(yearZhiChar);  // 0..11
+  final czDay = lunar.getDay();              // 农历日 1..30
+  final juNum = _juNum[wuxing]!;             // 局数 2/3/4/5/6
+
+  final stars = placeStars(
+    yearGan: yearGanChar,
+    yearZhi: yearZhiIdx,
+    month: czMonth,
+    day: czDay,
+    hour: czHour,
+    ju: juNum,
+  );
+
   return ZiweiResult(
     lunarDisplay: '农历${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}',
     bazi: '${ec.getYear()} ${ec.getMonth()} ${ec.getDay()} ${ec.getTime()}',
@@ -86,5 +111,6 @@ ZiweiResult divine(int year, int month, int day, int hour) {
     mingGanZhi: mingGanZhi,
     wuxingJu: ju,
     gongAtZhi: gongAtZhi,
+    stars: stars,
   );
 }
