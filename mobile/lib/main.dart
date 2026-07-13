@@ -6,6 +6,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
 import 'core/config/platform_info.dart';
+import 'data/yijing/hexagram_texts.dart';
 
 /// 桌面端窗口最小尺寸（防止 UI 压崩；略小于目标宽度让 targetWidth 能生效）。
 const _kMinWindowSize = Size(420, 700);
@@ -50,6 +51,9 @@ Future<void> main() async {
       await windowManager.show();
     });
   }
+
+  // 预加载 64 卦卦辞爻辞到内存（周易/梅花结果页同步查询用）
+  await HexagramTexts.load();
 
   runApp(const ProviderScope(child: JeenithApp()));
 }

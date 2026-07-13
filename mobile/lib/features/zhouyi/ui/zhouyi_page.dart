@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/config/platform_info.dart';
 import '../../../core/history/history_store.dart';
+import '../../../data/yijing/hexagram_texts.dart';
 import '../../../data/yijing/trigrams.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
@@ -311,7 +312,110 @@ class _ZhouyiPageState extends State<ZhouyiPage>
           ),
         ),
       ],
+      // —— 本卦卦辞 ——
+      const SizedBox(height: 12),
+      EntranceItem(
+        animation: _anim,
+        interval: const Interval(0.54, 0.80),
+        child: _buildGuaCiCard(
+          title: '本卦卦辞 · ${r.benName}',
+          guaName: r.benName,
+          titleColor: AppColors.gold,
+        ),
+      ),
+      // —— 变爻爻辞列表 ——
+      for (final i in r.changing)
+        EntranceItem(
+          animation: _anim,
+          interval: Interval((0.62 + i * 0.04).clamp(0.0, 0.92),
+              (0.86 + i * 0.02).clamp(0.0, 1.0)),
+          child: _buildYaoCiCard(r, i),
+        ),
+      // —— 变卦卦辞 ——
+      if (r.bianName != null) ...[
+        const SizedBox(height: 12),
+        EntranceItem(
+          animation: _anim,
+          interval: const Interval(0.70, 0.92),
+          child: _buildGuaCiCard(
+            title: '之卦卦辞 · ${r.bianName}',
+            guaName: r.bianName!,
+            titleColor: AppColors.changing,
+          ),
+        ),
+      ],
     ];
+  }
+
+  /// 卦辞卡片（标题 + 原文 + 白话注解）。
+  Widget _buildGuaCiCard({
+    required String title,
+    required String guaName,
+    required Color titleColor,
+  }) {
+    final ci = HexagramTexts.guaCi(guaName) ?? '';
+    final note = HexagramTexts.guaCiNote(guaName) ?? '';
+    return DecorativePanel(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: TextStyle(
+                  color: titleColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold)),
+          if (ci.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(ci,
+                style: const TextStyle(
+                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+          ],
+          if (note.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(note,
+                style: const TextStyle(
+                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 单个变爻爻辞卡片。
+  Widget _buildYaoCiCard(ZhouyiResult r, int index) {
+    final line = r.lines[index];
+    final posName = HexagramTexts.posName(index, line.yang);
+    final ci = HexagramTexts.yaoCi(r.benName, posName) ?? '';
+    final note = HexagramTexts.yaoCiNote(r.benName, posName) ?? '';
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: DecorativePanel(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('变爻 · $posName',
+                style: const TextStyle(
+                    color: AppColors.changing,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold)),
+            if (ci.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(ci,
+                  style: const TextStyle(
+                      color: AppColors.textBody, fontSize: 14, height: 1.6)),
+            ],
+            if (note.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(note,
+                  style: const TextStyle(
+                      color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   /// 生成详细结果文本（供复制）。
@@ -334,6 +438,34 @@ class _ZhouyiPageState extends State<ZhouyiPage>
       sb.writeln('\n变爻：${r.changing.map((i) => pos[i]).join("、")} → 之卦：${r.bianName}');
     } else {
       sb.writeln('\n无变爻，以本卦为占。');
+    }
+    // 卦辞爻辞
+    final benCi = HexagramTexts.guaCi(r.benName);
+    if (benCi != null && benCi.isNotEmpty) {
+      sb.writeln('\n—— 本卦卦辞 ——');
+      sb.writeln(benCi);
+      final benNote = HexagramTexts.guaCiNote(r.benName);
+      if (benNote != null && benNote.isNotEmpty) sb.writeln('注：$benNote');
+    }
+    for (final i in r.changing) {
+      final line = r.lines[i];
+      final posName = HexagramTexts.posName(i, line.yang);
+      final ci = HexagramTexts.yaoCi(r.benName, posName);
+      if (ci != null && ci.isNotEmpty) {
+        sb.writeln('\n—— 变爻 $posName ——');
+        sb.writeln(ci);
+        final note = HexagramTexts.yaoCiNote(r.benName, posName);
+        if (note != null && note.isNotEmpty) sb.writeln('注：$note');
+      }
+    }
+    if (r.bianName != null) {
+      final bianCi = HexagramTexts.guaCi(r.bianName!);
+      if (bianCi != null && bianCi.isNotEmpty) {
+        sb.writeln('\n—— 之卦卦辞 ——');
+        sb.writeln(bianCi);
+        final bianNote = HexagramTexts.guaCiNote(r.bianName!);
+        if (bianNote != null && bianNote.isNotEmpty) sb.writeln('注：$bianNote');
+      }
     }
     sb.writeln('\n—— 志极 Jeenith · 叩问本心 ——');
     return sb.toString();

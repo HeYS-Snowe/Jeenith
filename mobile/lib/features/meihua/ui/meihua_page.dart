@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../data/yijing/trigrams.dart';
+import '../../../data/yijing/hexagram_texts.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -246,7 +247,103 @@ class _MeihuaPageState extends State<MeihuaPage>
             ),
           ),
         ),
+        // —— 本卦卦辞 ——
+        const SizedBox(height: 12),
+        EntranceItem(
+          animation: _anim,
+          interval: const Interval(0.54, 0.80),
+          child: _buildGuaCiCard(
+            title: '本卦卦辞 · ${r.benName}',
+            guaName: r.benName,
+            titleColor: AppColors.gold,
+          ),
+        ),
+        // —— 动爻爻辞 ——
+        const SizedBox(height: 12),
+        EntranceItem(
+          animation: _anim,
+          interval: const Interval(0.62, 0.86),
+          child: _buildDongYaoCiCard(r),
+        ),
+        // —— 变卦卦辞 ——
+        const SizedBox(height: 12),
+        EntranceItem(
+          animation: _anim,
+          interval: const Interval(0.70, 0.92),
+          child: _buildGuaCiCard(
+            title: '之卦卦辞 · ${r.bianName}',
+            guaName: r.bianName,
+            titleColor: AppColors.changing,
+          ),
+        ),
       ],
+    );
+  }
+
+  /// 卦辞卡片（标题 + 原文 + 白话注解）。
+  Widget _buildGuaCiCard({
+    required String title,
+    required String guaName,
+    required Color titleColor,
+  }) {
+    final ci = HexagramTexts.guaCi(guaName) ?? '';
+    final note = HexagramTexts.guaCiNote(guaName) ?? '';
+    return DecorativePanel(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: TextStyle(
+                  color: titleColor,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold)),
+          if (ci.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(ci,
+                style: const TextStyle(
+                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+          ],
+          if (note.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(note,
+                style: const TextStyle(
+                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 动爻爻辞卡片（梅花动爻只一爻）。
+  Widget _buildDongYaoCiCard(MeihuaResult r) {
+    final posName = HexagramTexts.posName(r.dongPos, r.dongYang);
+    final ci = HexagramTexts.yaoCi(r.benName, posName) ?? '';
+    final note = HexagramTexts.yaoCiNote(r.benName, posName) ?? '';
+    return DecorativePanel(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('动爻 · $posName',
+              style: const TextStyle(
+                  color: AppColors.changing,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold)),
+          if (ci.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(ci,
+                style: const TextStyle(
+                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+          ],
+          if (note.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(note,
+                style: const TextStyle(
+                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+          ],
+        ],
+      ),
     );
   }
 
@@ -261,6 +358,29 @@ class _MeihuaPageState extends State<MeihuaPage>
     sb.writeln('上卦：${r.upName}${xiang[r.upName]}  下卦：${r.loName}${xiang[r.loName]}');
     sb.writeln('动爻：第${const ["", "初", "二", "三", "四", "五", "上"][r.dong]}爻  体卦：${r.tiName}  用卦：${r.yongName}');
     sb.writeln('之卦：${r.bianName}');
+    // 卦辞爻辞
+    final benCi = HexagramTexts.guaCi(r.benName);
+    if (benCi != null && benCi.isNotEmpty) {
+      sb.writeln('\n—— 本卦卦辞 ——');
+      sb.writeln(benCi);
+      final benNote = HexagramTexts.guaCiNote(r.benName);
+      if (benNote != null && benNote.isNotEmpty) sb.writeln('注：$benNote');
+    }
+    final posName = HexagramTexts.posName(r.dongPos, r.dongYang);
+    final dongCi = HexagramTexts.yaoCi(r.benName, posName);
+    if (dongCi != null && dongCi.isNotEmpty) {
+      sb.writeln('\n—— 动爻 $posName ——');
+      sb.writeln(dongCi);
+      final dongNote = HexagramTexts.yaoCiNote(r.benName, posName);
+      if (dongNote != null && dongNote.isNotEmpty) sb.writeln('注：$dongNote');
+    }
+    final bianCi = HexagramTexts.guaCi(r.bianName);
+    if (bianCi != null && bianCi.isNotEmpty) {
+      sb.writeln('\n—— 之卦卦辞 ——');
+      sb.writeln(bianCi);
+      final bianNote = HexagramTexts.guaCiNote(r.bianName);
+      if (bianNote != null && bianNote.isNotEmpty) sb.writeln('注：$bianNote');
+    }
     sb.writeln('\n—— 志极 Jeenith · 叩问本心 ——');
     return sb.toString();
   }

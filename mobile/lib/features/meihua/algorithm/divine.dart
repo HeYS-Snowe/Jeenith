@@ -40,6 +40,17 @@ class MeihuaResult {
 
   /// 用卦名（动爻所在卦）。
   String get yongName => dongInUpper ? upName : loName;
+
+  /// 动爻的位序（0..5，0=初爻，自下而上）。
+  int get dongPos => dong - 1;
+
+  /// 动爻的阴阳（true=阳爻）。
+  /// 从本卦动爻所在经卦的二进制值中提取对应位。
+  bool get dongYang {
+    final bin = _nameToBin[dongInUpper ? upName : loName]!;
+    final bit = dongInUpper ? (dong - 4) : (dong - 1);
+    return ((bin >> bit) & 1) == 1;
+  }
 }
 
 /// 梅花易数：以两个数起卦。
