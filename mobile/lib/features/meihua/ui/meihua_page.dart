@@ -12,6 +12,7 @@ import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/entrance_item.dart';
 import '../../../shared/widgets/copy_result_button.dart';
+import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../../../shared/widgets/svg_icon.dart';
 import '../algorithm/divine.dart';
@@ -30,6 +31,7 @@ class _MeihuaPageState extends State<MeihuaPage>
   MeihuaResult? _result;
   List<int>? _inputs;
   late final AnimationController _anim;
+  final GlobalKey _boundaryKey = GlobalKey();
 
   @override
   void initState() {
@@ -140,12 +142,27 @@ class _MeihuaPageState extends State<MeihuaPage>
                   onPressed: _onRandom,
                 ),
                 const SizedBox(height: 8),
-                CopyResultButton(text: _buildCopyText(), enabled: _result != null),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CopyResultButton(text: _buildCopyText(), enabled: _result != null),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ShareResultButton(
+                        boundaryKey: _boundaryKey,
+                        enabled: _result != null,
+                        fallbackText: _buildCopyText(),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
           const SizedBox(height: 16),
-          if (_result != null) _buildResult(_result!),
+          if (_result != null)
+            RepaintBoundary(key: _boundaryKey, child: _buildResult(_result!)),
         ],
       ),
     );

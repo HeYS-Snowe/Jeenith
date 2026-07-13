@@ -31,6 +31,54 @@ class SettingsPage extends ConsumerWidget {
         data: (c) => ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
           children: [
+            const SectionTitle('◆ 外观'),
+            const SizedBox(height: 4),
+            _card(
+              context,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
+                  child: Row(
+                    children: [
+                      const Text('主题模式',
+                          style: TextStyle(color: AppColors.textPrimary)),
+                      const SizedBox(width: 8),
+                      const Text('跟随系统/浅色/深色',
+                          style: TextStyle(
+                              color: AppColors.textSubtitle, fontSize: 12)),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  child: SegmentedButton<ThemeMode>(
+                    segments: const [
+                      ButtonSegment(
+                        value: ThemeMode.system,
+                        icon: Icon(Icons.brightness_auto),
+                        label: Text('跟随'),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.light,
+                        icon: Icon(Icons.light_mode_outlined),
+                        label: Text('浅色'),
+                      ),
+                      ButtonSegment(
+                        value: ThemeMode.dark,
+                        icon: Icon(Icons.dark_mode_outlined),
+                        label: Text('深色'),
+                      ),
+                    ],
+                    selected: {c.themeMode},
+                    onSelectionChanged: (modes) => ref
+                        .read(configProvider.notifier)
+                        .setThemeMode(modes.first),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
             const SectionTitle('◆ 动画设置'),
             const SizedBox(height: 4),
             _card(

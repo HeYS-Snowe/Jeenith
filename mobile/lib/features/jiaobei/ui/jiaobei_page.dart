@@ -10,6 +10,7 @@ import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/entrance_item.dart';
 import '../../../shared/widgets/copy_result_button.dart';
+import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
 
@@ -27,6 +28,7 @@ class _JiaobeiPageState extends State<JiaobeiPage>
   int _shengCount = 0; // 累计圣筊数
   bool _busy = false;
   late final AnimationController _flip;
+  final GlobalKey _boundaryKey = GlobalKey();
 
   @override
   void initState() {
@@ -129,43 +131,60 @@ class _JiaobeiPageState extends State<JiaobeiPage>
             onPressed: _busy ? null : _onReset,
           ),
           const SizedBox(height: 8),
-          CopyResultButton(text: _buildCopyText(), enabled: _last != null),
-          const SizedBox(height: 16),
-          DecorativePanel(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Text('本轮',
-                        style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
-                    const SizedBox(width: 8),
-                    Text('${_round.length} 筊',
-                        style: const TextStyle(
-                            color: AppColors.goldBright,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 16),
-                    const Text('圣筊',
-                        style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
-                    const SizedBox(width: 8),
-                    Text('$_shengCount',
-                        style: const TextStyle(
-                            color: AppColors.gradeGreat,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold)),
-                  ],
+          Row(
+            children: [
+              Expanded(
+                child: CopyResultButton(text: _buildCopyText(), enabled: _last != null),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ShareResultButton(
+                  boundaryKey: _boundaryKey,
+                  enabled: _last != null,
+                  fallbackText: _buildCopyText(),
                 ),
-                const SizedBox(height: 8),
-                if (_last != null)
-                  Text(_last!.type.meaning,
-                      style:
-                          const TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.5)),
-                const SizedBox(height: 6),
-                const Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
-                    style: TextStyle(color: AppColors.textHint, fontSize: 11)),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          RepaintBoundary(
+            key: _boundaryKey,
+            child: DecorativePanel(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text('本轮',
+                          style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
+                      const SizedBox(width: 8),
+                      Text('${_round.length} 筊',
+                          style: const TextStyle(
+                              color: AppColors.goldBright,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 16),
+                      const Text('圣筊',
+                          style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
+                      const SizedBox(width: 8),
+                      Text('$_shengCount',
+                          style: const TextStyle(
+                              color: AppColors.gradeGreat,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  if (_last != null)
+                    Text(_last!.type.meaning,
+                        style:
+                            const TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                  const SizedBox(height: 6),
+                  const Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
+                      style: TextStyle(color: AppColors.textHint, fontSize: 11)),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 12),

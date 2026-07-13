@@ -14,6 +14,7 @@ import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/entrance_item.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
+import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/svg_icon.dart';
 import '../algorithm/divine.dart';
 import 'hexagram_view.dart';
@@ -33,6 +34,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   ScrollController? _sheetCtrl;
   // 桌面端无 DraggableScrollableSheet，自建 controller；移动端复用 sheet 的。
   ScrollController? _ownCtrl;
+  final GlobalKey _boundaryKey = GlobalKey();
 
   @override
   void initState() {
@@ -165,7 +167,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
         ),
       );
 
-  /// 交互区（摇卦/重置/复制）—— pinned header 内容，移动/桌面共用。
+  /// 交互区（摇卦/重置/复制/分享）—— pinned header 内容，移动/桌面共用。
   Widget _buildActionBar(ZhouyiResult? r) => Container(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
         color: AppColors.bg.withValues(alpha: 0.92),
@@ -187,15 +189,28 @@ class _ZhouyiPageState extends State<ZhouyiPage>
             ),
             const SizedBox(width: 8),
             CopyResultButton(text: _buildCopyText(), enabled: r != null),
+            const SizedBox(width: 8),
+            ShareResultButton(
+              boundaryKey: _boundaryKey,
+              enabled: r != null,
+              fallbackText: _buildCopyText(),
+            ),
           ],
         ),
       );
 
   /// 结果列表 sliver —— 移动/桌面共用。
+  /// 包裹 RepaintBoundary 以支持截图分享。
   Widget _buildResultSliver(ZhouyiResult? r) => SliverPadding(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
-        sliver: SliverList(
-          delegate: SliverChildListDelegate(_resultItems(r)),
+        sliver: SliverToBoxAdapter(
+          child: RepaintBoundary(
+            key: _boundaryKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _resultItems(r),
+            ),
+          ),
         ),
       );
 

@@ -1,9 +1,13 @@
 // Copyright (c) 2026 Qore. All rights reserved.
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/history/history_store.dart';
+import '../../core/history/history_export.dart';
 import '../../shared/widgets/decorative_panel.dart';
 
 /// 历史记录页：列表 + 详情 + 备注 + 删除。
@@ -115,6 +119,37 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
+  Future<void> _export(String format) async {
+    final list = await HistoryStore.load();
+    if (!mounted) return;
+    if (list.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('暂无历史记录可导出'),
+          backgroundColor: AppColors.card,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+    File file;
+    switch (format) {
+      case 'json':
+        file = await HistoryExport.exportJson(list);
+        break;
+      case 'md':
+        file = await HistoryExport.exportMarkdown(list);
+        break;
+      case 'csv':
+        file = await HistoryExport.exportCsv(list);
+        break;
+      default:
+        return;
+    }
+    await Share.shareXFiles([XFile(file.path)]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,6 +160,17 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         title: const Text('历 史 记 录'),
         actions: [
+          if (_list.isNotEmpty)
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.ios_share, color: AppColors.gold),
+              tooltip: '导出历史',
+              onSelected: _export,
+              itemBuilder: (ctx) => const [
+                PopupMenuItem(value: 'json', child: Text('导出为 JSON')),
+                PopupMenuItem(value: 'md', child: Text('导出为 Markdown')),
+                PopupMenuItem(value: 'csv', child: Text('导出为 CSV')),
+              ],
+            ),
           if (_list.isNotEmpty)
             IconButton(
               icon: const Icon(Icons.delete_sweep, color: AppColors.gradeBad),

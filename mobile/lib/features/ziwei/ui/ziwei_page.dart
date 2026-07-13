@@ -8,6 +8,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
+import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
 import '../algorithm/star_placement.dart';
@@ -26,6 +27,7 @@ class _ZiweiPageState extends State<ZiweiPage> {
   final _day = TextEditingController();
   final _hour = TextEditingController();
   ZiweiResult? _r;
+  final GlobalKey _boundaryKey = GlobalKey();
 
   @override
   void dispose() {
@@ -95,12 +97,27 @@ class _ZiweiPageState extends State<ZiweiPage> {
                 const SizedBox(height: 10),
                 GoldButton(text: '排盘', onPressed: _onDivine),
                 const SizedBox(height: 8),
-                CopyResultButton(text: _buildCopyText(), enabled: _r != null),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CopyResultButton(text: _buildCopyText(), enabled: _r != null),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ShareResultButton(
+                        boundaryKey: _boundaryKey,
+                        enabled: _r != null,
+                        fallbackText: _buildCopyText(),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
           const SizedBox(height: 14),
-          if (_r != null) _buildResult(_r!),
+          if (_r != null)
+            RepaintBoundary(key: _boundaryKey, child: _buildResult(_r!)),
           const SizedBox(height: 10),
         ],
       ),

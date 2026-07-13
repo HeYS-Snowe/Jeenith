@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 /// 回到前台时恢复，避免后台仍持续 60fps 渲染消耗电量。
 class Starfield extends StatefulWidget {
   final int count;
-  const Starfield({super.key, this.count = 64});
+  final bool isLight;
+  const Starfield({super.key, this.count = 64, this.isLight = false});
 
   @override
   State<Starfield> createState() => _StarfieldState();
@@ -58,7 +59,7 @@ class _StarfieldState extends State<Starfield>
   Widget build(BuildContext context) => AnimatedBuilder(
         animation: _ctrl,
         builder: (context, _) => CustomPaint(
-          painter: _StarPainter(_stars, _ctrl.value),
+          painter: _StarPainter(_stars, _ctrl.value, widget.isLight),
           child: const SizedBox.expand(),
         ),
       );
@@ -86,7 +87,8 @@ class _Star {
 class _StarPainter extends CustomPainter {
   final List<_Star> stars;
   final double t; // 0..1 循环
-  _StarPainter(this.stars, this.t);
+  final bool isLight;
+  _StarPainter(this.stars, this.t, this.isLight);
 
   @override
   bool shouldRepaint(_StarPainter old) => true;
@@ -94,6 +96,8 @@ class _StarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width, h = size.height;
+    // 浅色主题用深金色星点，深色主题用鎏金。
+    final baseColor = isLight ? const Color(0xFF9B7A2A) : const Color(0xFFD4A857);
     for (final s in stars) {
       final yy = ((s.y + t * s.drift) % 1.0) * h;
       final xx = s.x * w;
@@ -102,7 +106,7 @@ class _StarPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(xx, yy),
         s.r,
-        Paint()..color = const Color(0xFFD4A857).withValues(alpha: tw * 0.55),
+        Paint()..color = baseColor.withValues(alpha: tw * 0.55),
       );
     }
   }

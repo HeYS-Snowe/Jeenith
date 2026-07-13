@@ -171,6 +171,23 @@
       "platform": "android",
       "timestamp": "2026-07-13T19:01:26",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "1.5.0",
+      "buildNumber": 12,
+      "status": "feature",
+      "date": "20260713",
+      "sequence": 1,
+      "filename": "Jeenith_feature_1.5.0_20260713_01.apk",
+      "originalName": "app-release.apk",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_feature_1.5.0_20260713_01.apk",
+      "fileSize": 54978704,
+      "fileSizeHuman": "52.43 MB",
+      "sha256": "4CF4F3C6D999101E6D74724FA89B504DA47D73643908210628751159DFC2438D",
+      "buildType": "apk",
+      "platform": "android",
+      "timestamp": "2026-07-13T19:36:50",
+      "configSource": "pubspec.yaml"
     }
   ]
 }

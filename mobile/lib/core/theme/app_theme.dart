@@ -68,8 +68,75 @@ class AppColors {
   }
 }
 
+/// 浅色主题色彩常量（v1.5.0 新增，与深色保持同等五色系语义）。
+class AppColorsLight {
+  AppColorsLight._();
+
+  // —— 背景（浅米色）——
+  static const Color bg = Color(0xFFF6F0E2);
+  static const Color bgInner = Color(0xFFEBE2CC);
+  static const Color bgMid = Color(0xFFF1E9D5);
+  static const Color bgOuter = Color(0xFFE5D9BD);
+
+  // —— 鎏金系（深一些以保证对比度）——
+  static const Color gold = Color(0xFF9B7A2A);
+  static const Color goldBright = Color(0xFF8A6A1E);
+  static const Color goldLight = Color(0xFFB89534);
+  static const Color goldBorder = Color.fromRGBO(155, 122, 42, 0.55);
+
+  // —— 文字 ——
+  static const Color textHighlight = Color(0xFF1A1208);
+  static const Color textPrimary = Color(0xFF2E2210);
+  static const Color textBody = Color(0xFF4A3A1E);
+  static const Color textMeta = Color(0xFF6B5A3A);
+  static const Color textSubtitle = Color(0xFF8A7A55);
+  static const Color textHint = Color(0xFF9B8C6E);
+
+  // —— 面板 ——
+  static const Color panel = Color.fromRGBO(245, 238, 220, 0.92);
+  static const Color card = Color.fromRGBO(240, 232, 212, 0.95);
+  static const Color buttonTop = Color(0xFFEBE2CC);
+  static const Color buttonBottom = Color(0xFFD9CBA8);
+
+  // —— 五行色 ——
+  static const Color wood = Color(0xFF2D8E54);
+  static const Color woodGlow = Color(0xFF1E6B3F);
+  static const Color water = Color(0xFF3A6E8E);
+  static const Color waterGlow = Color(0xFF2A5670);
+  static const Color fire = Color(0xFFC13E1E);
+  static const Color fireGlow = Color(0xFFA02E0E);
+  static const Color metal = Color(0xFF5A6878);
+  static const Color metalGlow = Color(0xFF3E4A58);
+  static const Color waterDeep = Color(0xFF1E5A88);
+  static const Color waterDeepGlow = Color(0xFF124068);
+  static const Color earth = Color(0xFF8A6420);
+  static const Color earthGlow = Color(0xFF6A4A14);
+
+  static const Color yang = Color(0xFF9B7A2A);
+  static const Color yin = Color(0xFF3A6E8E);
+  static const Color changing = Color(0xFFC13E1E);
+
+  static const Color gradeGreat = Color(0xFF1E6B3F);
+  static const Color gradeGood = Color(0xFF2A5670);
+  static const Color gradeSteady = Color(0xFF8A6A1E);
+  static const Color gradeRough = Color(0xFF6A4A14);
+  static const Color gradeBad = Color(0xFFA02E0E);
+}
+
+/// 字体常量。
+class AppFonts {
+  AppFonts._();
+  /// 思源宋体（如已打包则用宋体；否则回退系统默认）。
+  static const String serif = 'SourceHanSerif';
+}
+
 /// 中国风深色主题（Material 3）。
-ThemeData appTheme() {
+ThemeData appTheme({bool isLight = false}) {
+  if (isLight) return _lightTheme();
+  return _darkTheme();
+}
+
+ThemeData _darkTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
@@ -105,6 +172,46 @@ ThemeData appTheme() {
         borderSide: const BorderSide(color: AppColors.goldBright),
       ),
       hintStyle: const TextStyle(color: AppColors.textHint),
+    ),
+  );
+}
+
+ThemeData _lightTheme() {
+  return ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.transparent,
+    colorScheme: const ColorScheme.light(
+      primary: AppColorsLight.gold,
+      secondary: AppColorsLight.goldBright,
+      surface: AppColorsLight.bg,
+      onPrimary: Color(0xFFF6F0E2),
+      onSurface: AppColorsLight.textPrimary,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      centerTitle: true,
+      titleTextStyle: TextStyle(
+        color: AppColorsLight.goldBright,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 6,
+      ),
+      iconTheme: IconThemeData(color: AppColorsLight.gold),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: const Color.fromRGBO(240, 232, 212, 0.86),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColorsLight.goldBorder),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColorsLight.goldBright),
+      ),
+      hintStyle: const TextStyle(color: AppColorsLight.textHint),
     ),
   );
 }

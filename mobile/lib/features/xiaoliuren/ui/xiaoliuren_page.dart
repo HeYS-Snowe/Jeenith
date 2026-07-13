@@ -16,6 +16,7 @@ import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/entrance_item.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
+import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/svg_icon.dart';
 import '../algorithm/divine.dart';
 import '../state/xiaoliuren_providers.dart';
@@ -37,6 +38,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
   // 桌面端无 DraggableScrollableSheet，自建 controller；移动端复用 sheet 的。
   ScrollController? _ownCtrl;
   late final AnimationController _resultAnim;
+  final GlobalKey _boundaryKey = GlobalKey();
   List<int>? _nums;
   DivineResult? _divine;
   EntropySample? _entropy;
@@ -258,10 +260,17 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
       );
 
   /// 结果列表 sliver —— 移动/桌面共用。
+  /// 包裹 RepaintBoundary 以支持截图分享。
   Widget _buildResultSliver() => SliverPadding(
         padding: const EdgeInsets.fromLTRB(12, 4, 12, 28),
-        sliver: SliverList(
-          delegate: SliverChildListDelegate(_resultItems()),
+        sliver: SliverToBoxAdapter(
+          child: RepaintBoundary(
+            key: _boundaryKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: _resultItems(),
+            ),
+          ),
         ),
       );
 
@@ -327,6 +336,11 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
           DarkButton(icon: const SvgIcon('schedule'), text: '时辰', onPressed: _busy ? null : _onTime),
           DarkButton(icon: const SvgIcon('refresh'), text: '重置', onPressed: _onReset),
           CopyResultButton(text: _buildCopyText(), enabled: _result != null),
+          ShareResultButton(
+            boundaryKey: _boundaryKey,
+            enabled: _result != null,
+            fallbackText: _buildCopyText(),
+          ),
         ],
       );
 
