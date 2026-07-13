@@ -7,6 +7,7 @@ import '../core/divination/divination_registry.dart';
 import '../core/divination/divination_tech.dart';
 import '../features/home/home_page.dart';
 import '../features/history/history_page.dart';
+import '../features/manual/manual_page.dart';
 import '../features/settings/settings_page.dart';
 import '../features/xiaoliuren/ui/xiaoliuren_ritual.dart';
 
@@ -22,6 +23,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: '/manual',
+        builder: (context, state) => const ManualPage(),
       ),
       // 小六壬仪式入场动画（点卡片 → 太极生六宫 → 进入小六壬页）
       GoRoute(

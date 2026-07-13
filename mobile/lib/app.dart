@@ -44,7 +44,7 @@ class JeenithApp extends ConsumerWidget {
 
   /// 根据 themeMode + 系统亮度计算实际是否浅色主题。
   bool _effectiveLight(BuildContext context, AppConfig? config) {
-    final mode = config?.themeMode ?? ThemeMode.system;
+    final mode = config?.themeMode ?? ThemeMode.dark;
     switch (mode) {
       case ThemeMode.light:
         return true;

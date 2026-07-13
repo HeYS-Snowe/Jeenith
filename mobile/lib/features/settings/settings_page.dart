@@ -87,8 +87,10 @@ class SettingsPage extends ConsumerWidget {
                 ExpansionTile(
                   tilePadding:
                       const EdgeInsets.symmetric(horizontal: 12),
-                  shape: const Border(),
-                  collapsedShape: const Border(),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
+                  collapsedShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                   iconColor: AppColors.gold,
                   collapsedIconColor: AppColors.textSubtitle,
                   title: const Text('小六壬',
@@ -100,6 +102,8 @@ class SettingsPage extends ConsumerWidget {
                     SwitchListTile(
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
                       title: const Text('仪式入场动画',
                           style: TextStyle(color: AppColors.textPrimary)),
                       subtitle: const Text(
@@ -125,6 +129,8 @@ class SettingsPage extends ConsumerWidget {
               children: [
                 SwitchListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                   title: const Text('展示采样详情',
                       style: TextStyle(color: AppColors.textPrimary)),
                   subtitle: const Text('随机起卦后展示各熵源的真实采样值',
@@ -137,6 +143,8 @@ class SettingsPage extends ConsumerWidget {
                 const Divider(color: Color.fromRGBO(212, 168, 87, 0.18), height: 1),
                 SwitchListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)),
                   title: const Text('在线大气噪声',
                       style: TextStyle(color: AppColors.textPrimary)),
                   subtitle: const Text('联网取 random.org 真随机增强熵源',
@@ -163,6 +171,7 @@ class SettingsPage extends ConsumerWidget {
   Widget _card(BuildContext context, {required List<Widget> children}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: AppColors.panel,
         borderRadius: BorderRadius.circular(14),

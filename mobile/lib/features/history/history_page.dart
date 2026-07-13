@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -36,6 +37,30 @@ class _HistoryPageState extends State<HistoryPage> {
     });
   }
 
+  /// 复制一条历史记录到剪贴板，含术数名、摘要、时间、详情与备注。
+  Future<void> _copyEntry(HistoryEntry e) async {
+    final buf = StringBuffer()
+      ..writeln('【${e.techName}】${e.summary}')
+      ..writeln('时间：${e.time.toString().substring(0, 19)}')
+      ..writeln()
+      ..writeln(e.detail);
+    if (e.note != null && e.note!.isNotEmpty) {
+      buf
+        ..writeln()
+        ..writeln('备注：${e.note}');
+    }
+    await Clipboard.setData(ClipboardData(text: buf.toString().trimRight()));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('已复制到剪贴板'),
+        backgroundColor: AppColors.card,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   void _openDetail(HistoryEntry e) {
     final noteCtrl = TextEditingController(text: e.note ?? '');
     showDialog(
@@ -68,6 +93,12 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
         actions: [
+          TextButton(
+            onPressed: () async {
+              await _copyEntry(e);
+            },
+            child: const Text('复制', style: TextStyle(color: AppColors.goldBright)),
+          ),
           TextButton(
             onPressed: () async {
               await HistoryStore.remove(e.id);
@@ -195,8 +226,10 @@ class _HistoryPageState extends State<HistoryPage> {
                       child: DecorativePanel(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text('${e.techName} · ${e.summary}',
+                        contentPadding: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        title: Text('${e.techName} · ${e.summary}',
                               style: const TextStyle(
                                   color: AppColors.goldBright,
                                   fontSize: 14,
@@ -212,7 +245,22 @@ class _HistoryPageState extends State<HistoryPage> {
                                     style: const TextStyle(color: AppColors.textBody, fontSize: 12)),
                             ],
                           ),
-                          trailing: const Icon(Icons.chevron_right, color: AppColors.textSubtitle),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.copy_all,
+                                    color: AppColors.textSubtitle, size: 20),
+                                tooltip: '复制',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                    minWidth: 36, minHeight: 36),
+                                onPressed: () => _copyEntry(e),
+                              ),
+                              const Icon(Icons.chevron_right,
+                                  color: AppColors.textSubtitle),
+                            ],
+                          ),
                           onTap: () => _openDetail(e),
                         ),
                       ),

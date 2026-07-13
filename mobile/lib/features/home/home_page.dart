@@ -11,6 +11,7 @@ import '../../core/divination/divination_registry.dart';
 import '../../shared/widgets/entrance_item.dart';
 import '../../shared/widgets/guide_dialog.dart';
 import '../../shared/widgets/interactable_card.dart';
+import '../../shared/widgets/svg_icon.dart';
 
 /// 首页：选术卡片 grid。读 [visibleTechsProvider]，新术自动出现。
 ///
@@ -87,6 +88,7 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget _guideCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: AppColors.panel,
         borderRadius: BorderRadius.circular(14),
@@ -95,8 +97,10 @@ class _HomePageState extends ConsumerState<HomePage>
       child: ExpansionTile(
         initiallyExpanded: true,
         tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-        shape: const Border(),
-        collapsedShape: const Border(),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14)),
+        collapsedShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14)),
         iconColor: AppColors.gold,
         collapsedIconColor: AppColors.textSubtitle,
         dense: true,
@@ -299,15 +303,28 @@ class _HomePageState extends ConsumerState<HomePage>
                   onPressed: () => _startExit(() => context.go('/history')),
                 ),
               ),
-              // 右上角设置按钮
+              // 右上角：使用手册 + 设置按钮
               Positioned(
                 top: 6,
                 right: 6,
-                child: IconButton(
-                  icon: const Icon(Icons.settings_outlined,
-                      color: AppColors.textSubtitle),
-                  tooltip: '设置',
-                  onPressed: () => _startExit(() => context.go('/settings')),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const SvgIcon('manual',
+                          color: AppColors.textSubtitle),
+                      tooltip: '使用手册',
+                      onPressed: () =>
+                          _startExit(() => context.go('/manual')),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.settings_outlined,
+                          color: AppColors.textSubtitle),
+                      tooltip: '设置',
+                      onPressed: () =>
+                          _startExit(() => context.go('/settings')),
+                    ),
+                  ],
                 ),
               ),
             ],

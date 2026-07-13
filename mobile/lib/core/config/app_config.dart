@@ -12,14 +12,14 @@ class AppConfig {
     required this.showDetails,
     required this.useOnline,
     this.xiaoliurenCinematic = true,
-    this.themeMode = ThemeMode.system,
+    this.themeMode = ThemeMode.dark,
   });
 
   static const defaults = AppConfig(
     showDetails: true,
     useOnline: true,
     xiaoliurenCinematic: true,
-    themeMode: ThemeMode.system,
+    themeMode: ThemeMode.dark,
   );
 
   AppConfig copyWith({

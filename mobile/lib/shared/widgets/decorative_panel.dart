@@ -15,6 +15,7 @@ class DecorativePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: AppColors.panel,
           borderRadius: BorderRadius.circular(16),
