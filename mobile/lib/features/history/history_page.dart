@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/history/history_store.dart';
 import '../../core/history/history_export.dart';
 import '../../shared/widgets/decorative_panel.dart';
+import '../../shared/widgets/divination_loading_indicator.dart';
 
 /// 历史记录页：列表 + 详情 + 备注 + 删除。
 class HistoryPage extends StatefulWidget {
@@ -211,7 +212,7 @@ class _HistoryPageState extends State<HistoryPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.gold))
+          ? const Center(child: DivinationLoadingIndicator(size: 56))
           : _list.isEmpty
               ? const Center(
                   child: Text('暂无历史记录', style: TextStyle(color: AppColors.textHint)),

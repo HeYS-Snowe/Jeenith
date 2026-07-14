@@ -201,8 +201,9 @@ class _ZhouyiPageState extends State<ZhouyiPage>
 
   /// 结果列表 sliver —— 移动/桌面共用。
   /// 包裹 RepaintBoundary 以支持截图分享。
+  /// RepaintBoundary 仅包裹卦象展示结果区，绝不包裹底部按钮（ActionBar）。
   Widget _buildResultSliver(ZhouyiResult? r) => SliverPadding(
-        padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
         sliver: SliverToBoxAdapter(
           child: RepaintBoundary(
             key: _boundaryKey,

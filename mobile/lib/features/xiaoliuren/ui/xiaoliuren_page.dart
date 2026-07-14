@@ -261,8 +261,9 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
 
   /// 结果列表 sliver —— 移动/桌面共用。
   /// 包裹 RepaintBoundary 以支持截图分享。
+  /// RepaintBoundary 仅包裹宫位结果区，绝不包裹底部输入框与按钮（ActionBar）。
   Widget _buildResultSliver() => SliverPadding(
-        padding: const EdgeInsets.fromLTRB(12, 4, 12, 28),
+        padding: const EdgeInsets.fromLTRB(12, 4, 12, 96),
         sliver: SliverToBoxAdapter(
           child: RepaintBoundary(
             key: _boundaryKey,

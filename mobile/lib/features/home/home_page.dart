@@ -8,6 +8,7 @@ import '../../core/branding.dart';
 import '../../core/config/config_providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/divination/divination_registry.dart';
+import '../../shared/widgets/animated_expand_icon.dart';
 import '../../shared/widgets/entrance_item.dart';
 import '../../shared/widgets/guide_dialog.dart';
 import '../../shared/widgets/interactable_card.dart';
@@ -15,8 +16,10 @@ import '../../shared/widgets/svg_icon.dart';
 
 /// 首页：选术卡片 grid。读 [visibleTechsProvider]，新术自动出现。
 ///
-/// 点选某术时整体上浮淡出（退出动画），再导航。小六壬在开启「仪式入场动画」
-/// 时走 `/ritual/xiaoliuren`（太极生六宫过渡），否则直接进 `/tech/:id`。
+/// 点选某术时整体上浮淡出（退出动画），再导航：
+/// - 小六壬：开启「仪式入场动画」时走 `/ritual/xiaoliuren`（太极生六宫过渡）
+/// - 其余 9 术：开启「仪式动画」时走 `/ritual/<tech>`（v2.1.0 + v2.2.0）
+/// - 关闭仪式动画或其余各术直接进 `/tech/:id`
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -29,6 +32,8 @@ class _HomePageState extends ConsumerState<HomePage>
   late final AnimationController _entrance;
   late final AnimationController _exit;
   bool _exiting = false;
+  bool _guideExpanded = true;
+  final _guideController = ExpansibleController();
 
   @override
   void initState() {
@@ -65,14 +70,32 @@ class _HomePageState extends ConsumerState<HomePage>
     super.dispose();
   }
 
-  /// 点选某术：小六壬在开启仪式动画时走仪式路由，其余直接进。
+  /// 点选某术：
+  /// - 该术在 `animationSettings` 中为 true（默认）且有仪式动画：走 `/ritual/<id>`
+  /// - 否则直接进 `/tech/<id>`
+  ///
+  /// 仪式动画结束后会自动 `context.go('/tech/<id>')` 进入操作页。
+  /// v2.3.0: 统一用 `AppConfig.isAnimationEnabled(id)` 控制。八字/测名字等
+  /// 新增术暂无仪式动画，直接进 tech 页。
+  static const _ritualTechs = {
+    'xiaoliuren',
+    'zhouyi',
+    'ziwei',
+    'qimen',
+    'daliuren',
+    'luopan',
+    'meihua',
+    'jiaobei',
+    'chouqian',
+    'cezi',
+  };
+
   void _onTapTech(String id) {
     if (_exiting) return;
-    final cinematic =
-        ref.read(configProvider).valueOrNull?.xiaoliurenCinematic ?? true;
-    final target = (id == 'xiaoliuren' && cinematic)
-        ? '/ritual/xiaoliuren'
-        : '/tech/$id';
+    final cfg = ref.read(configProvider).valueOrNull;
+    final ritualOn = cfg?.isAnimationEnabled(id) ?? true;
+    final hasRitual = _ritualTechs.contains(id);
+    final target = (ritualOn && hasRitual) ? '/ritual/$id' : '/tech/$id';
     _startExit(() => context.go(target));
   }
 
@@ -85,6 +108,8 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   /// 首页置顶的「使用方法」卡片（可收起，默认展开）。
+  ///
+  /// v2.0.0 升级：trailing 用 [AnimatedExpandIcon] 替换默认 chevron，带呼吸反馈。
   Widget _guideCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,25 +120,42 @@ class _HomePageState extends ConsumerState<HomePage>
         border: Border.all(color: const Color.fromRGBO(212, 168, 87, 0.30)),
       ),
       child: ExpansionTile(
-        initiallyExpanded: true,
+        controller: _guideController,
+        initiallyExpanded: _guideExpanded,
+        onExpansionChanged: (v) => setState(() => _guideExpanded = v),
         tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         collapsedShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14)),
+          borderRadius: BorderRadius.circular(14),
+        ),
         iconColor: AppColors.gold,
         collapsedIconColor: AppColors.textSubtitle,
         dense: true,
+        trailing: AnimatedExpandIcon(
+          expanded: _guideExpanded,
+          color: _guideExpanded ? AppColors.gold : AppColors.textSubtitle,
+          size: 22,
+          onPressed: () {
+            if (_guideExpanded) {
+              _guideController.collapse();
+            } else {
+              _guideController.expand();
+            }
+          },
+        ),
         title: const Row(
           children: [
             Icon(Icons.menu_book, color: AppColors.goldBright, size: 18),
             SizedBox(width: 6),
-            Text('使用方法',
-                style: TextStyle(
-                    color: AppColors.goldBright,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2)),
+            Text(
+              '使用方法',
+              style: TextStyle(
+                color: AppColors.goldBright,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+              ),
+            ),
           ],
         ),
         children: const [
@@ -122,31 +164,57 @@ class _HomePageState extends ConsumerState<HomePage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('1. 单一卜算术起卦',
-                    style: TextStyle(
-                        color: AppColors.goldBright,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold)),
-                Text('第一次问大致的问题，第二次问细致的问题。',
-                    style: TextStyle(
-                        color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                Text(
+                  '1. 单一卜算术起卦',
+                  style: TextStyle(
+                    color: AppColors.goldBright,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '第一次问大致的问题，第二次问细致的问题。',
+                  style: TextStyle(
+                    color: AppColors.textBody,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
                 SizedBox(height: 8),
-                Text('2. 多卜算术组合使用',
-                    style: TextStyle(
-                        color: AppColors.goldBright,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold)),
-                Text('先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
-                    style: TextStyle(
-                        color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                Text(
+                  '2. 多卜算术组合使用',
+                  style: TextStyle(
+                    color: AppColors.goldBright,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  '先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
+                  style: TextStyle(
+                    color: AppColors.textBody,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
                 SizedBox(height: 8),
-                Text('3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
-                    style: TextStyle(
-                        color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                Text(
+                  '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
+                  style: TextStyle(
+                    color: AppColors.textBody,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
                 SizedBox(height: 6),
-                Text('4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
-                    style: TextStyle(
-                        color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                Text(
+                  '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
+                  style: TextStyle(
+                    color: AppColors.textBody,
+                    fontSize: 12,
+                    height: 1.5,
+                  ),
+                ),
               ],
             ),
           ),
@@ -218,62 +286,70 @@ class _HomePageState extends ConsumerState<HomePage>
                       childAspectRatio: 0.86,
                       children: [
                         for (var i = 0; i < techs.length; i++)
-                          Builder(builder: (context) {
-                            final meta = techs[i].meta;
-                            return InteractableCard(
-                              entrance: _entrance,
-                              interval:
-                                  Interval(0.28 + i * 0.08, (0.62 + i * 0.08).clamp(0.0, 1.0).toDouble()),
-                              color: meta.accentColor,
-                              onTap: () => _onTapTech(meta.id),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: meta.accentColor
-                                          .withValues(alpha: 0.28),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Icon(Icons.auto_awesome,
-                                        color: meta.accentColor, size: 22),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    meta.displayName,
-                                    style: TextStyle(
-                                      color: meta.accentColor,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    meta.subtitle,
-                                    style: const TextStyle(
-                                      color: AppColors.textSubtitle,
-                                      fontSize: 11,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Flexible(
-                                    child: Text(
-                                      meta.description,
-                                      style: const TextStyle(
-                                        color: AppColors.textBody,
-                                        fontSize: 11,
-                                        height: 1.35,
+                          Builder(
+                            builder: (context) {
+                              final meta = techs[i].meta;
+                              return InteractableCard(
+                                entrance: _entrance,
+                                interval: Interval(
+                                  0.28 + i * 0.08,
+                                  (0.62 + i * 0.08).clamp(0.0, 1.0).toDouble(),
+                                ),
+                                color: meta.accentColor,
+                                onTap: () => _onTapTech(meta.id),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: meta.accentColor.withValues(
+                                          alpha: 0.28,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                                      child: Icon(
+                                        Icons.auto_awesome,
+                                        color: meta.accentColor,
+                                        size: 22,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
+                                    const Spacer(),
+                                    Text(
+                                      meta.displayName,
+                                      style: TextStyle(
+                                        color: meta.accentColor,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      meta.subtitle,
+                                      style: const TextStyle(
+                                        color: AppColors.textSubtitle,
+                                        fontSize: 11,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Flexible(
+                                      child: Text(
+                                        meta.description,
+                                        style: const TextStyle(
+                                          color: AppColors.textBody,
+                                          fontSize: 11,
+                                          height: 1.35,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),
@@ -286,7 +362,9 @@ class _HomePageState extends ConsumerState<HomePage>
                       child: Text(
                         Branding.copyright,
                         style: const TextStyle(
-                            color: AppColors.textHint, fontSize: 10),
+                          color: AppColors.textHint,
+                          fontSize: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -297,8 +375,10 @@ class _HomePageState extends ConsumerState<HomePage>
                 top: 6,
                 left: 6,
                 child: IconButton(
-                  icon: const Icon(Icons.history,
-                      color: AppColors.textSubtitle),
+                  icon: const Icon(
+                    Icons.history,
+                    color: AppColors.textSubtitle,
+                  ),
                   tooltip: '历史记录',
                   onPressed: () => _startExit(() => context.go('/history')),
                 ),
@@ -311,15 +391,18 @@ class _HomePageState extends ConsumerState<HomePage>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const SvgIcon('manual',
-                          color: AppColors.textSubtitle),
+                      icon: const SvgIcon(
+                        'manual',
+                        color: AppColors.textSubtitle,
+                      ),
                       tooltip: '使用手册',
-                      onPressed: () =>
-                          _startExit(() => context.go('/manual')),
+                      onPressed: () => _startExit(() => context.go('/manual')),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.settings_outlined,
-                          color: AppColors.textSubtitle),
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        color: AppColors.textSubtitle,
+                      ),
                       tooltip: '设置',
                       onPressed: () =>
                           _startExit(() => context.go('/settings')),

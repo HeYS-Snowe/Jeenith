@@ -88,49 +88,59 @@ class StarChartPainter extends CustomPainter {
             : (isShen ? AppColors.waterDeepGlow : AppColors.goldBorder);
       canvas.drawPath(path, borderPaint);
 
-      // 宫内文字位置（扇形中点）
+      // Text anchor at the sector radial midpoint.
       final mx = cx + midR * math.cos(centerAngle);
       final my = cy + midR * math.sin(centerAngle);
-      final mid = Offset(mx, my);
 
-      // 地支
+      // Radial layout: translate to the anchor then rotate so the text stands
+      // on the radius. After rotate(centerAngle - π/2), local +y points outward
+      // (tail outward) and local -y points to the center (text head inward).
+      // This is the standard Ziwei chart convention: all palace text faces the
+      // center uniformly; the user rotates the chart to read each palace.
+      canvas.save();
+      canvas.translate(mx, my);
+      canvas.rotate(centerAngle - math.pi / 2);
+
+      // Earthly Branch (head, toward the center, innermost).
       _drawText(
         canvas,
         dz[zhi],
-        mid,
+        const Offset(0, -24),
         color: isMing ? AppColors.goldBright : AppColors.textMeta,
         fontSize: 13,
         fontWeight: FontWeight.bold,
       );
 
-      // 宫名（紧贴地支下方）
+      // Palace name (just outside the Earthly Branch).
       final gongIdx = gongAtZhi[zhi];
       if (gongIdx >= 0 && gongIdx < palaceNames.length) {
         _drawText(
           canvas,
           palaceNames[gongIdx],
-          mid + const Offset(0, 15),
+          const Offset(0, -9),
           color: isMing ? AppColors.gold : AppColors.textPrimary,
           fontSize: 10,
           fontWeight: FontWeight.bold,
         );
       }
 
-      // 星曜列表（从地支下方 28pt 开始往下排）
+      // Stars (listed from the palace name outward).
       final stars = chart.gongStars[zhi];
-      var y = 28.0;
+      var y = 6.0;
       for (final star in stars) {
         final color = _categoryColor(star.category);
         final fontSize = star.category == StarCategory.main ? 10.5 : 8.5;
         _drawText(
           canvas,
           star.name,
-          mid + Offset(0, y),
+          Offset(0, y),
           color: color,
           fontSize: fontSize,
         );
         y += fontSize + 2;
       }
+
+      canvas.restore();
     }
 
     // === 内外环 ===

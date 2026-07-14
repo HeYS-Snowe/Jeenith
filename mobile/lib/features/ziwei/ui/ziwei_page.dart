@@ -1,7 +1,9 @@
 // Copyright (c) 2026 Qore. All rights reserved.
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -21,16 +23,26 @@ class ZiweiPage extends StatefulWidget {
   State<ZiweiPage> createState() => _ZiweiPageState();
 }
 
-class _ZiweiPageState extends State<ZiweiPage> {
+class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
   final _year = TextEditingController();
   final _month = TextEditingController();
   final _day = TextEditingController();
   final _hour = TextEditingController();
   ZiweiResult? _r;
   final GlobalKey _boundaryKey = GlobalKey();
+  final GlobalKey _chartKey = GlobalKey();
+
+  // Star chart rotation state.
+  double _rotationAngle = 0.0;
+  double _lastAngle = 0.0;
+  Offset? _chartCenter;
+  Offset _lastLocalPosition = Offset.zero;
+  AnimationController? _inertiaCtrl;
+  FrictionSimulation? _frictionSim;
 
   @override
   void dispose() {
+    _inertiaCtrl?.dispose();
     for (final c in [_year, _month, _day, _hour]) {
       c.dispose();
     }
@@ -53,6 +65,89 @@ class _ZiweiPageState extends State<ZiweiPage> {
       summary: _r?.wuxingJu ?? '',
       detail: _buildCopyText(),
     )));
+  }
+
+  // === Star chart rotation gestures ===
+
+  void _onPanStart(DragStartDetails details) {
+    // Cancel any running inertia.
+    _inertiaCtrl?.stop();
+    _inertiaCtrl = null;
+    _frictionSim = null;
+    // Resolve the chart center from the gesture target's render box.
+    final box = _chartKey.currentContext?.findRenderObject() as RenderBox?;
+    if (box != null && box.hasSize) {
+      _chartCenter = Offset(box.size.width / 2, box.size.height / 2);
+    }
+    final center = _chartCenter;
+    if (center == null) return;
+    final dx = details.localPosition.dx - center.dx;
+    final dy = details.localPosition.dy - center.dy;
+    _lastAngle = math.atan2(dy, dx);
+    _lastLocalPosition = details.localPosition;
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    final center = _chartCenter;
+    if (center == null) return;
+    final dx = details.localPosition.dx - center.dx;
+    final dy = details.localPosition.dy - center.dy;
+    final angle = math.atan2(dy, dx);
+    var delta = angle - _lastAngle;
+    // Normalize delta to [-π, π] to avoid jumps across the ±π boundary.
+    if (delta > math.pi) {
+      delta -= 2 * math.pi;
+    } else if (delta < -math.pi) {
+      delta += 2 * math.pi;
+    }
+    setState(() {
+      _rotationAngle += delta;
+      _lastAngle = angle;
+      _lastLocalPosition = details.localPosition;
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    final center = _chartCenter;
+    if (center == null) return;
+    final v = details.velocity.pixelsPerSecond;
+    final dx = _lastLocalPosition.dx - center.dx;
+    final dy = _lastLocalPosition.dy - center.dy;
+    final r2 = dx * dx + dy * dy;
+    if (r2 < 1) return;
+    // Angular velocity matching the _rotationAngle convention (rad/s):
+    // ω = d(atan2(dy, dx))/dt = (dx·v.dy - dy·v.dx) / r².
+    final omega = (dx * v.dy - dy * v.dx) / r2;
+    if (omega.abs() < 0.05) return;
+    // Friction drag 0.45: enough inertia to feel silky without spinning too long.
+    const drag = 0.45;
+    _frictionSim = FrictionSimulation(drag, _rotationAngle, omega);
+    // Estimate stop time from the exponential decay of velocity; clamp so the
+    // animation never starts too short nor runs too long.
+    var stopSeconds = math.log(omega.abs() / 0.05) / drag;
+    if (stopSeconds < 0.3) stopSeconds = 0.3;
+    if (stopSeconds > 3.0) stopSeconds = 3.0;
+    final durationSeconds = stopSeconds;
+    _inertiaCtrl = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: (durationSeconds * 1000).round()),
+    )
+      ..addListener(() {
+        final sim = _frictionSim;
+        final ctrl = _inertiaCtrl;
+        if (sim == null || ctrl == null) return;
+        setState(() {
+          _rotationAngle = sim.x(durationSeconds * ctrl.value);
+        });
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _inertiaCtrl?.dispose();
+          _inertiaCtrl = null;
+          _frictionSim = null;
+        }
+      })
+      ..forward();
   }
 
   @override
@@ -168,19 +263,35 @@ class _ZiweiPageState extends State<ZiweiPage> {
           padding: const EdgeInsets.all(8),
           child: SizedBox(
             height: 380,
-            child: CustomPaint(
-              painter: StarChartPainter(
-                mingGong: r.mingGong,
-                shenGong: r.shenGong,
-                gongAtZhi: r.gongAtZhi,
-                mingGanZhi: r.mingGanZhi,
-                wuxingJu: r.wuxingJu,
-                chart: r.stars,
+            child: GestureDetector(
+              key: _chartKey,
+              onPanStart: _onPanStart,
+              onPanUpdate: _onPanUpdate,
+              onPanEnd: _onPanEnd,
+              child: ClipRect(
+                // Clip overflow so rotated text is smoothly cut at the edge.
+                child: Transform.rotate(
+                  angle: _rotationAngle,
+                  child: CustomPaint(
+                    painter: StarChartPainter(
+                      mingGong: r.mingGong,
+                      shenGong: r.shenGong,
+                      gongAtZhi: r.gongAtZhi,
+                      mingGanZhi: r.mingGanZhi,
+                      wuxingJu: r.wuxingJu,
+                      chart: r.stars,
+                    ),
+                    child: const SizedBox.expand(),
+                  ),
+                ),
               ),
-              child: const SizedBox.expand(),
             ),
           ),
         ),
+        const SizedBox(height: 6),
+        const Text('指尖拖拽可旋转命盘',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppColors.textHint, fontSize: 11)),
         const SizedBox(height: 14),
         const Text('◆ 宫位详情', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
         const SizedBox(height: 8),

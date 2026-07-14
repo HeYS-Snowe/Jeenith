@@ -51,3 +51,8 @@ app.*.map.json
 !/builds/build_history.json
 !/builds/release_history.json
 !/builds/release_notes/
+
+
+.对话.txt
+/.trae/documents/*
+/design/html/*
