@@ -505,6 +505,84 @@
     {
       "platform": "GitHub",
       "repo": "1010523654/Jeenith",
+      "tag": "v2.1.0",
+      "target": "main",
+      "title": "v2.1.0 — 动效体系 Phase 1 + Phase 2a（5 套仪式动画落地）",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.1.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.1.0_20260714_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 56077267,
+          "sizeFormatted": "53.48 MB",
+          "sha256": "FFB7A63FCBDC41BDF43F653FAEF7E8B57B4B786DB0921DF72AB406B006309EC1",
+          "localPath": "builds/android/Jeenith_feature_2.1.0_20260714_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 13732869,
+          "sizeFormatted": "13.10 MB",
+          "sha256": "C8697456546718C5EFE3D94A1724C5F5C223BB797684D8F6770E3C3B2371680A",
+          "localPath": "builds/windows/Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.1.0+17",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-14T19:48:00",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.2.0",
+      "target": "main",
+      "title": "v2.2.0 — 动效体系 Phase 2b + Phase 4.3 + Phase 5.1（仪式动画补全 + 路由转场差异化）",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.2.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.2.0_20260714_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 56208335,
+          "sizeFormatted": "53.60 MB",
+          "sha256": "4BE5BECB02B2FC15583FC7426947475F829D4CF637AB848A84641A30937B2ABD",
+          "localPath": "builds/android/Jeenith_feature_2.2.0_20260714_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 13757168,
+          "sizeFormatted": "13.12 MB",
+          "sha256": "47A2D4EFF14C7134B642D6D77AD42721AC610F96FA442D3CE8A2350F0AD0C4B8",
+          "localPath": "builds/windows/Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.2.0+18",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-14T20:57:29",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
       "tag": "v2.3.0",
       "target": "main",
       "title": "v2.3.0 — 新增八字推演与测名字，紫微命盘重构，设置页动画 Map 化",

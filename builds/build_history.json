@@ -434,6 +434,23 @@
       "verificationPassed": true
     },
     {
+      "version": "2.1.0+17",
+      "status": "feature",
+      "statusLabel": "功能版",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+      "timestamp": "2026-07-14T19:48:00",
+      "fileSize": 13732869,
+      "fileSizeFormatted": "13.10 MB",
+      "sha256": "C8697456546718C5EFE3D94A1724C5F5C223BB797684D8F6770E3C3B2371680A",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\windows\\x64\\runner\\Release\\",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+      "platform": "windows-x64",
+      "buildType": "zip",
+      "verificationPassed": true
+    },
+    {
       "version": "2.2.0+18",
       "status": "feature",
       "statusLabel": "功能版",
@@ -451,6 +468,23 @@
       "verificationPassed": true
     },
     {
+      "version": "2.2.0+18",
+      "status": "feature",
+      "statusLabel": "功能版",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+      "timestamp": "2026-07-14T20:57:29",
+      "fileSize": 13757168,
+      "fileSizeFormatted": "13.12 MB",
+      "sha256": "47A2D4EFF14C7134B642D6D77AD42721AC610F96FA442D3CE8A2350F0AD0C4B8",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\windows\\x64\\runner\\Release\\",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+      "platform": "windows-x64",
+      "buildType": "zip",
+      "verificationPassed": true
+    },
+    {
       "version": "2.2.0+19",
       "status": "fix",
       "statusLabel": "修复版",
@@ -465,6 +499,23 @@
       "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_fix_2.2.0_20260714_01.apk",
       "backupPath": null,
       "platform": "android-arm64,android-arm,android-x64",
+      "verificationPassed": true
+    },
+    {
+      "version": "2.2.0+19",
+      "status": "fix",
+      "statusLabel": "修复版",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_fix_2.2.0_20260714_01_windows_x64.zip",
+      "timestamp": "2026-07-14T22:56:05",
+      "fileSize": 13757167,
+      "fileSizeFormatted": "13.12 MB",
+      "sha256": "5824DD207A748294827899E8672F404E62EBC2CD5A23150E85F6CC848060A279",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\windows\\x64\\runner\\Release\\",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_fix_2.2.0_20260714_01_windows_x64.zip",
+      "platform": "windows-x64",
+      "buildType": "zip",
       "verificationPassed": true
     },
     {

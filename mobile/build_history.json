@@ -309,6 +309,23 @@
       "configSource": "pubspec.yaml"
     },
     {
+      "version": "2.1.0",
+      "buildNumber": 17,
+      "status": "feature",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+      "originalName": "windows-x64-release",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+      "fileSize": 13732869,
+      "fileSizeHuman": "13.10 MB",
+      "sha256": "C8697456546718C5EFE3D94A1724C5F5C223BB797684D8F6770E3C3B2371680A",
+      "buildType": "zip",
+      "platform": "windows-x64",
+      "timestamp": "2026-07-14T19:48:00",
+      "configSource": "pubspec.yaml"
+    },
+    {
       "version": "2.2.0",
       "buildNumber": 18,
       "status": "feature",
@@ -327,6 +344,23 @@
     },
     {
       "version": "2.2.0",
+      "buildNumber": 18,
+      "status": "feature",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+      "originalName": "windows-x64-release",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+      "fileSize": 13757168,
+      "fileSizeHuman": "13.12 MB",
+      "sha256": "47A2D4EFF14C7134B642D6D77AD42721AC610F96FA442D3CE8A2350F0AD0C4B8",
+      "buildType": "zip",
+      "platform": "windows-x64",
+      "timestamp": "2026-07-14T20:57:29",
+      "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.2.0",
       "buildNumber": 19,
       "status": "fix",
       "date": "20260714",
@@ -340,6 +374,23 @@
       "buildType": "apk",
       "platform": "android",
       "timestamp": "2026-07-14T22:30:34",
+      "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.2.0",
+      "buildNumber": 19,
+      "status": "fix",
+      "date": "20260714",
+      "sequence": 1,
+      "filename": "Jeenith_fix_2.2.0_20260714_01_windows_x64.zip",
+      "originalName": "windows-x64-release",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_fix_2.2.0_20260714_01_windows_x64.zip",
+      "fileSize": 13757167,
+      "fileSizeHuman": "13.12 MB",
+      "sha256": "5824DD207A748294827899E8672F404E62EBC2CD5A23150E85F6CC848060A279",
+      "buildType": "zip",
+      "platform": "windows-x64",
+      "timestamp": "2026-07-14T22:56:05",
       "configSource": "pubspec.yaml"
     },
     {
