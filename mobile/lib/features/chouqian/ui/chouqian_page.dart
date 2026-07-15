@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../core/rng/rng_providers.dart';
@@ -223,31 +225,37 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
   Widget _buildResult(ChouqianResult r) {
     final stick = r.stick;
     final gradeColor = _colorForGrade(stick.grade);
+    final enabled = ref
+            .watch(configProvider)
+            .valueOrNull
+            ?.isAnimationEnabled('chouqian') ??
+        true;
     return DecorativePanel(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: gradeColor.withValues(alpha: 0.18),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: gradeColor.withValues(alpha: 0.6)),
-              ),
-              child: Text(
-                stick.grade.label,
-                style: TextStyle(
-                  color: gradeColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 6,
-                ),
+      child: RevealAnimation(
+        enabled: enabled,
+        hero: Center(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              color: gradeColor.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(8),
+              border:
+                  Border.all(color: gradeColor.withValues(alpha: 0.6)),
+            ),
+            child: Text(
+              stick.grade.label,
+              style: TextStyle(
+                color: gradeColor,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 6,
               ),
             ),
           ),
-          const SizedBox(height: 12),
+        ),
+        sections: [
           Center(
             child: Text(
               stick.title,
@@ -259,9 +267,9 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
               ),
             ),
           ),
-          const SizedBox(height: 16),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+                vertical: 14, horizontal: 12),
             decoration: BoxDecoration(
               color: AppColors.bgMid.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -278,7 +286,6 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
               ),
             ),
           ),
-          const SizedBox(height: 12),
           _sectionLabel('解曰'),
           Text(
             stick.interpretation,
@@ -288,7 +295,6 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
               height: 1.6,
             ),
           ),
-          const SizedBox(height: 10),
           _sectionLabel('详注'),
           Text(
             stick.detail,
@@ -299,11 +305,11 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
               letterSpacing: 1,
             ),
           ),
-          const SizedBox(height: 12),
           Center(
             child: Text(
               '${r.time.toString().substring(0, 19)} 抽得',
-              style: const TextStyle(color: AppColors.textHint, fontSize: 11),
+              style:
+                  const TextStyle(color: AppColors.textHint, fontSize: 11),
             ),
           ),
         ],

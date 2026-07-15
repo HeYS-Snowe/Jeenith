@@ -324,7 +324,18 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
               ),
             ),
             const SizedBox(width: 8),
-            GoldButton(text: '起卦', onPressed: _busy ? null : _onDivine),
+            // GoldButton 必须用 SizedBox 给定宽度：GoldButton 内部 AnimatedBuilder
+            // → Transform.scale 链路会阻断 intrinsic size 传递，在 Row 中无 Expanded
+            // 时 Row 测不到按钮宽度，会渲染成"一小条竖线"。zhouyi 用 Expanded 包裹
+            // 不受影响，xiaoliuren 此处按钮在 TextField 之后无法用 Expanded（会撑满），
+            // 故用固定宽度 88px（"起卦"2 字 + padding 44 ≈ 74，给 14px 余量）。
+            SizedBox(
+              width: 88,
+              child: GoldButton(
+                text: '起卦',
+                onPressed: _busy ? null : _onDivine,
+              ),
+            ),
           ],
         ),
       );

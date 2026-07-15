@@ -1,5 +1,6 @@
 // Copyright (c) 2026 Qore. All rights reserved.
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,9 @@ import '../../core/theme/app_theme.dart';
 ///
 /// 进入首页后首次弹出（由调用方用 SharedPreferences 控制只弹一次）。
 /// 开启后 3 秒内「我知道了」按钮禁用并显示倒计时，3 秒后可关闭。
+///
+/// v2.3.1：升级入场动画（Phase 5）——背景 BackdropFilter 模糊渐入 +
+/// 卡片从中心 scale 0.85→1.0 + easeOutBack 弹回（280ms）。
 class GuideDialog extends StatefulWidget {
   final int countdownSec;
   const GuideDialog({super.key, this.countdownSec = 3});
@@ -17,13 +21,19 @@ class GuideDialog extends StatefulWidget {
   State<GuideDialog> createState() => _GuideDialogState();
 }
 
-class _GuideDialogState extends State<GuideDialog> {
+class _GuideDialogState extends State<GuideDialog>
+    with SingleTickerProviderStateMixin {
   late int _count = widget.countdownSec;
   Timer? _t;
+  late final AnimationController _enter;
 
   @override
   void initState() {
     super.initState();
+    _enter = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 280),
+    )..forward();
     _t = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) {
         t.cancel();
@@ -37,72 +47,113 @@ class _GuideDialogState extends State<GuideDialog> {
   @override
   void dispose() {
     _t?.cancel();
+    _enter.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final ready = _count <= 0;
+    // 入场曲线：easeOutBack（带回弹）
+    final enterCurve = CurvedAnimation(
+      parent: _enter,
+      curve: Curves.easeOutBack,
+    );
     return PopScope(
       canPop: ready, // 3 秒内禁止系统返回键关闭
-      child: AlertDialog(
-        backgroundColor: AppColors.card,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color.fromRGBO(212, 168, 87, 0.5)),
-        ),
-        title: const Row(
-          children: [
-            Icon(Icons.menu_book, color: AppColors.goldBright, size: 20),
-            SizedBox(width: 8),
-            Text('使用方法',
-                style: TextStyle(
-                    color: AppColors.goldBright,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2)),
-          ],
-        ),
-        content: const SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _GuideItem(
-                num: '1',
-                title: '单一卜算术起卦',
-                body: '第一次问大致的问题，第二次问细致的问题。',
-              ),
-              SizedBox(height: 12),
-              _GuideItem(
-                num: '2',
-                title: '多卜算术组合使用',
-                body: '先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
-              ),
-              SizedBox(height: 12),
-              Text(
-                '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
-                style: TextStyle(color: AppColors.textBody, fontSize: 13, height: 1.6),
-              ),
-              SizedBox(height: 12),
-              Text(
-                '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
-                style: TextStyle(color: AppColors.textBody, fontSize: 13, height: 1.6),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: ready ? () => Navigator.of(context).pop() : null,
-            child: Text(
-              ready ? '我知道了' : '$_count s 后可关闭',
-              style: TextStyle(
-                color: ready ? AppColors.gold : AppColors.textHint,
-                fontWeight: ready ? FontWeight.bold : FontWeight.normal,
+      child: AnimatedBuilder(
+        animation: _enter,
+        builder: (context, _) {
+          // 背景模糊与暗化（同步渐入）
+          final blurT = Curves.easeOutCubic.transform(_enter.value);
+          return BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 5 * blurT,
+              sigmaY: 5 * blurT,
+            ),
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.4 * blurT),
+              child: Center(
+                child: Transform.scale(
+                  scale: 0.85 + 0.15 * enterCurve.value,
+                  child: Opacity(
+                    opacity: _enter.value.clamp(0.0, 1.0),
+                    child: AlertDialog(
+                      backgroundColor: AppColors.card,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: const BorderSide(
+                            color: Color.fromRGBO(212, 168, 87, 0.5)),
+                      ),
+                      title: const Row(
+                        children: [
+                          Icon(Icons.menu_book,
+                              color: AppColors.goldBright, size: 20),
+                          SizedBox(width: 8),
+                          Text('使用方法',
+                              style: TextStyle(
+                                  color: AppColors.goldBright,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2)),
+                        ],
+                      ),
+                      content: const SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _GuideItem(
+                              num: '1',
+                              title: '单一卜算术起卦',
+                              body: '第一次问大致的问题，第二次问细致的问题。',
+                            ),
+                            SizedBox(height: 12),
+                            _GuideItem(
+                              num: '2',
+                              title: '多卜算术组合使用',
+                              body: '先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
+                              style: TextStyle(
+                                  color: AppColors.textBody,
+                                  fontSize: 13,
+                                  height: 1.6),
+                            ),
+                            SizedBox(height: 12),
+                            Text(
+                              '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
+                              style: TextStyle(
+                                  color: AppColors.textBody,
+                                  fontSize: 13,
+                                  height: 1.6),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: ready
+                              ? () => Navigator.of(context).pop()
+                              : null,
+                          child: Text(
+                            ready ? '我知道了' : '$_count s 后可关闭',
+                            style: TextStyle(
+                              color: ready ? AppColors.gold : AppColors.textHint,
+                              fontWeight:
+                                  ready ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -83,9 +83,9 @@ v2.3.0 是志极 2.x 阶段的首个"功能扩展 + 体验重塑"双轮迭代版
 
 ## 后续阶段预告
 
-- v2.3.x：Phase 3 CustomPainter 绘制过程动画（10 处命盘/罗盘/卦象/签诗绘制过程可见化）
-- v2.4.0：Phase 4.1-4.2 RevealAnimation 结果揭示封装 + 10 术结果页接入
-- v2.4.x：Phase 5 剩余微交互 + Phase 6 性能优化（60fps 验证、RepaintBoundary 全量审计）
+- ~~v2.3.x：Phase 3 CustomPainter 绘制过程动画~~ → 已在 v2.3.1 实施（紫微 StarChartPainter progress 参数驱动命盘顺时针展开；xiaoliuren/zhouyi 已有自带动画；其余 7 术使用 Widget 布局无 painter）
+- ~~v2.4.0：Phase 4.1-4.2 RevealAnimation 结果揭示封装 + 10 术结果页接入~~ → 已在 v2.3.1 实施（RevealAnimation 统一封装 + bazi/cezi/chouqian/daliuren/jiaobei/name_test/qimen/ziwei 全 8 术接入；meihua 保留 EntranceItem 自带动画）
+- ~~v2.4.x：Phase 5 剩余微交互 + Phase 6 性能优化~~ → 已在 v2.3.1 实施（InteractableCard 桌面 hover / CopyResultButton 勾选切换 / GuideDialog 中心放大入场 / HoverableIconButton 组件 / 首页 IconButton 替换 / RepaintBoundary 全量审计 / flutter analyze 0 issue）
 
 ---
 

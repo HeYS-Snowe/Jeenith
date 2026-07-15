@@ -1,14 +1,16 @@
 // Copyright (c) 2026 Qore. All rights reserved.
 import 'package:flutter/material.dart';
 
+import '../../core/config/platform_info.dart';
 import '../../core/theme/app_theme.dart';
 
-/// 可交互卡片：可选入场动画 + 按下缩放 / 光晕交互。
+/// 可交互卡片：可选入场动画 + 按下缩放 / 光晕交互 + 桌面端 hover 反馈。
 ///
 /// - **入场**：传入 [entrance] + [interval] 时按序淡入上浮；都不传则无入场。
-/// - **交互**：按下缩放至 0.95 并增强边框 / 光晕（按 [color]），松开回弹。
+/// - **交互（触摸端）**：按下缩放至 0.95 并增强边框 / 光晕（按 [color]），松开回弹。
+/// - **hover（桌面端）**：鼠标移入 translateY(-4) + 阴影 blur 10→18 + border opacity 0.5→0.8。
 ///
-/// 卡片内容（[child]）由调用方自定义——视觉因术而异，不在此共享。
+/// v2.3.1：新增桌面端 hover 反馈（Phase 5）。
 class InteractableCard extends StatefulWidget {
   final Animation<double>? entrance;
   final Interval? interval;
@@ -35,9 +37,20 @@ class InteractableCard extends StatefulWidget {
 
 class _InteractableCardState extends State<InteractableCard> {
   bool _pressed = false;
+  bool _hover = false;
 
   @override
   Widget build(BuildContext context) {
+    // 桌面端 hover 计算的视觉参数
+    final isDesktop = PlatformInfo.isDesktop;
+    final hoverShift = isDesktop && _hover ? -4.0 : 0.0;
+    final hoverBorderAlpha = _hover ? 0.8 : (_pressed ? 0.85 : 0.5);
+    final hoverBlur = _hover ? 18.0 : (_pressed ? 26.0 : 10.0);
+    final hoverSpread = _hover ? 1.0 : (_pressed ? 2.0 : 0.0);
+    final hoverShadowAlpha = _hover
+        ? 0.30
+        : (_pressed ? 0.42 : 0.14);
+
     // 内层：按下缩放 / 光晕 + 卡片内容（独立 final 变量，避免被入场闭包自引用）。
     final content = AnimatedScale(
       scale: _pressed ? 0.95 : 1.0,
@@ -52,7 +65,9 @@ class _InteractableCardState extends State<InteractableCard> {
         },
         onTapCancel: () => setState(() => _pressed = false),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          transform: Matrix4.translationValues(0, hoverShift, 0),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -65,13 +80,12 @@ class _InteractableCardState extends State<InteractableCard> {
             borderRadius: BorderRadius.circular(widget.radius),
             border: Border.all(
                 color:
-                    widget.color.withValues(alpha: _pressed ? 0.85 : 0.5)),
+                    widget.color.withValues(alpha: hoverBorderAlpha)),
             boxShadow: [
               BoxShadow(
-                color:
-                    widget.color.withValues(alpha: _pressed ? 0.42 : 0.14),
-                blurRadius: _pressed ? 26 : 10,
-                spreadRadius: _pressed ? 2 : 0,
+                color: widget.color.withValues(alpha: hoverShadowAlpha),
+                blurRadius: hoverBlur,
+                spreadRadius: hoverSpread,
               ),
             ],
           ),
@@ -81,7 +95,19 @@ class _InteractableCardState extends State<InteractableCard> {
       ),
     );
 
-    // 可选叠加入场（淡入上浮）；引用不变的 content，杜绝闭包自引用。
+    // 桌面端：包裹 MouseRegion 提供 hover 反馈
+    final withHover = isDesktop
+        ? MouseRegion(
+            onEnter: (_) => setState(() => _hover = true),
+            onExit: (_) => setState(() => _hover = false),
+            cursor: widget.onTap != null
+                ? SystemMouseCursors.click
+                : MouseCursor.defer,
+            child: content,
+          )
+        : content;
+
+    // 可选叠加入场（淡入上浮）；引用不变的 withHover，杜绝闭包自引用。
     final entrance = widget.entrance;
     final interval = widget.interval;
     if (entrance != null && interval != null) {
@@ -94,12 +120,12 @@ class _InteractableCardState extends State<InteractableCard> {
             opacity: t,
             child: Transform.translate(
               offset: Offset(0, (1 - t) * 24),
-              child: content,
+              child: withHover,
             ),
           );
         },
       );
     }
-    return content;
+    return withHover;
   }
 }

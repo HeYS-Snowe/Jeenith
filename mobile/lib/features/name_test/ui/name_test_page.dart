@@ -2,8 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -13,14 +16,14 @@ import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/wuge.dart';
 
-class NameTestPage extends StatefulWidget {
+class NameTestPage extends ConsumerStatefulWidget {
   const NameTestPage({super.key});
 
   @override
-  State<NameTestPage> createState() => _NameTestPageState();
+  ConsumerState<NameTestPage> createState() => _NameTestPageState();
 }
 
-class _NameTestPageState extends State<NameTestPage> {
+class _NameTestPageState extends ConsumerState<NameTestPage> {
   final _ctrl = TextEditingController();
   WugeResult? _last;
   String? _error;
@@ -194,41 +197,45 @@ class _NameTestPageState extends State<NameTestPage> {
   }
 
   Widget _buildResult(WugeResult r) {
+    final enabled = ref
+            .watch(configProvider)
+            .valueOrNull
+            ?.isAnimationEnabled('name_test') ??
+        true;
     return DecorativePanel(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Name banner
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              decoration: BoxDecoration(
-                color: AppColors.bgMid.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.goldBorder, width: 1.5),
-              ),
-              child: Text(
-                r.fullName
-                    .split('')
-                    .join(' '),
-                style: const TextStyle(
-                  color: AppColors.textHighlight,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 4,
-                ),
+      child: RevealAnimation(
+        enabled: enabled,
+        hero: Center(
+          child: Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.bgMid.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.goldBorder, width: 1.5),
+            ),
+            child: Text(
+              r.fullName.split('').join(' '),
+              style: const TextStyle(
+                color: AppColors.textHighlight,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 4,
               ),
             ),
           ),
-          const SizedBox(height: 8),
+        ),
+        sections: [
           if (r.hasMissing)
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.gradeBad.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.gradeBad.withValues(alpha: 0.4)),
+                border: Border.all(
+                    color: AppColors.gradeBad.withValues(alpha: 0.4)),
               ),
               child: Row(
                 children: [
@@ -238,14 +245,15 @@ class _NameTestPageState extends State<NameTestPage> {
                   Expanded(
                     child: Text(
                       '部分汉字笔画数据缺失（${_missingChars(r)}），已按估算推算，结果可能不准。',
-                      style: const TextStyle(color: AppColors.gradeBad, fontSize: 11, height: 1.4),
+                      style: const TextStyle(
+                          color: AppColors.gradeBad,
+                          fontSize: 11,
+                          height: 1.4),
                     ),
                   ),
                 ],
               ),
             ),
-          if (r.hasMissing) const SizedBox(height: 12),
-
           // Stroke breakdown
           _sectionLabel('康熙笔画'),
           Wrap(
@@ -256,22 +264,17 @@ class _NameTestPageState extends State<NameTestPage> {
                 _strokeChip(r.chars[i], r.strokes[i], r.missing[i]),
             ],
           ),
-          const SizedBox(height: 14),
-
           // Five-grid table
           _sectionLabel('五格数理'),
           _buildGridTable(r),
-          const SizedBox(height: 14),
-
           // Wuxing distribution
           _sectionLabel('五行分布'),
           _buildWuxingDistribution(r),
-          const SizedBox(height: 14),
-
           // Verdict
           _sectionLabel('综合批断'),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+            padding: const EdgeInsets.symmetric(
+                vertical: 12, horizontal: 12),
             decoration: BoxDecoration(
               color: AppColors.bgMid.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
@@ -287,11 +290,11 @@ class _NameTestPageState extends State<NameTestPage> {
               ),
             ),
           ),
-          const SizedBox(height: 10),
           Center(
             child: Text(
               '${r.time.toString().substring(0, 19)} 测得',
-              style: const TextStyle(color: AppColors.textHint, fontSize: 11),
+              style:
+                  const TextStyle(color: AppColors.textHint, fontSize: 11),
             ),
           ),
         ],

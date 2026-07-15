@@ -2,8 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -44,14 +47,14 @@ Color _wuxingColor(String wx) => switch (wx) {
 
 // -- Page ----------------------------------------------------------------
 
-class BaziPage extends StatefulWidget {
+class BaziPage extends ConsumerStatefulWidget {
   const BaziPage({super.key});
 
   @override
-  State<BaziPage> createState() => _BaziPageState();
+  ConsumerState<BaziPage> createState() => _BaziPageState();
 }
 
-class _BaziPageState extends State<BaziPage> {
+class _BaziPageState extends ConsumerState<BaziPage> {
   DateTime _birthDate = DateTime(1995, 6, 15);
   int? _hourIndex; // null = unknown
   int _gender = 1; // 1 = male, 0 = female
@@ -425,28 +428,22 @@ class _BaziPageState extends State<BaziPage> {
   // -- Result widgets -----------------------------------------------------
 
   Widget _buildResult(BaziResult r) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildHeader(r),
-        const SizedBox(height: 12),
+    final enabled = ref
+            .watch(configProvider)
+            .valueOrNull
+            ?.isAnimationEnabled('bazi') ??
+        true;
+    return RevealAnimation(
+      enabled: enabled,
+      hero: _buildHeader(r),
+      sections: [
         _buildPillars(r),
-        const SizedBox(height: 12),
-        if (r.hasTime) ...[
-          _buildDaYun(r),
-          const SizedBox(height: 12),
-        ] else
-          _buildNoTimeWarning(),
+        if (r.hasTime) _buildDaYun(r) else _buildNoTimeWarning(),
         _buildLiuNian(r),
-        const SizedBox(height: 12),
         _buildShenShas(r),
-        const SizedBox(height: 12),
         _buildMingGe(r),
-        const SizedBox(height: 12),
         _buildWuxingAnalysis(r),
-        const SizedBox(height: 12),
         _buildJieShu(r),
-        const SizedBox(height: 10),
         Center(
           child: Text(
             '${r.divineTime.toString().substring(0, 19)} 推演',

@@ -2,8 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -14,14 +17,14 @@ import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
 
-class JiaobeiPage extends StatefulWidget {
+class JiaobeiPage extends ConsumerStatefulWidget {
   const JiaobeiPage({super.key});
 
   @override
-  State<JiaobeiPage> createState() => _JiaobeiPageState();
+  ConsumerState<JiaobeiPage> createState() => _JiaobeiPageState();
 }
 
-class _JiaobeiPageState extends State<JiaobeiPage>
+class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
     with SingleTickerProviderStateMixin {
   JiaoResult? _last;
   final List<JiaoResult> _round = []; // 本轮（默认连掷三筊为一轮）
@@ -149,41 +152,53 @@ class _JiaobeiPageState extends State<JiaobeiPage>
           const SizedBox(height: 16),
           RepaintBoundary(
             key: _boundaryKey,
-            child: DecorativePanel(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Text('本轮',
-                          style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
-                      const SizedBox(width: 8),
-                      Text('${_round.length} 筊',
+            child: RevealAnimation(
+              enabled: ref
+                      .watch(configProvider)
+                      .valueOrNull
+                      ?.isAnimationEnabled('jiaobei') ??
+                  true,
+              hero: DecorativePanel(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text('本轮',
+                            style: TextStyle(
+                                color: AppColors.textSubtitle, fontSize: 12)),
+                        const SizedBox(width: 8),
+                        Text('${_round.length} 筊',
+                            style: const TextStyle(
+                                color: AppColors.goldBright,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 16),
+                        const Text('圣筊',
+                            style: TextStyle(
+                                color: AppColors.textSubtitle, fontSize: 12)),
+                        const SizedBox(width: 8),
+                        Text('$_shengCount',
+                            style: const TextStyle(
+                                color: AppColors.gradeGreat,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (_last != null)
+                      Text(_last!.type.meaning,
                           style: const TextStyle(
-                              color: AppColors.goldBright,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 16),
-                      const Text('圣筊',
-                          style: TextStyle(color: AppColors.textSubtitle, fontSize: 12)),
-                      const SizedBox(width: 8),
-                      Text('$_shengCount',
-                          style: const TextStyle(
-                              color: AppColors.gradeGreat,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  if (_last != null)
-                    Text(_last!.type.meaning,
+                              color: AppColors.textBody,
+                              fontSize: 12,
+                              height: 1.5)),
+                    const SizedBox(height: 6),
+                    const Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
                         style:
-                            const TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.5)),
-                  const SizedBox(height: 6),
-                  const Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
-                      style: TextStyle(color: AppColors.textHint, fontSize: 11)),
-                ],
+                            TextStyle(color: AppColors.textHint, fontSize: 11)),
+                  ],
+                ),
               ),
             ),
           ),

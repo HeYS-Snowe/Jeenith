@@ -66,9 +66,12 @@ class _GoldButtonState extends ConsumerState<GoldButton>
       return;
     }
     setState(() => _down = false);
-    _press.reverse().then((_) {
-      if (mounted) widget.onPressed?.call();
-    });
+    // 立即触发 onPressed，弹回动画与功能执行并行。
+    // 旧实现用 _press.reverse().then(...) 等 260ms 弹回完成才回调，快速点击时
+    // reverse 会被下一次 forward 中断，then 不触发，导致 onPressed 丢失、状态错乱
+    // （表现为"按几下才有反应"）。改为并行后视觉缩放仍由 controller 驱动，体验一致。
+    _press.reverse();
+    widget.onPressed?.call();
   }
 
   void _onTapCancel() {

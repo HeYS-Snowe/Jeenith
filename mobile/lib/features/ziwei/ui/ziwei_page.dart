@@ -4,8 +4,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -17,13 +20,14 @@ import '../algorithm/star_placement.dart';
 import '../data/stars.dart';
 import 'star_chart_painter.dart';
 
-class ZiweiPage extends StatefulWidget {
+class ZiweiPage extends ConsumerStatefulWidget {
   const ZiweiPage({super.key});
   @override
-  State<ZiweiPage> createState() => _ZiweiPageState();
+  ConsumerState<ZiweiPage> createState() => _ZiweiPageState();
 }
 
-class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
+class _ZiweiPageState extends ConsumerState<ZiweiPage>
+    with TickerProviderStateMixin {
   final _year = TextEditingController();
   final _month = TextEditingController();
   final _day = TextEditingController();
@@ -40,9 +44,23 @@ class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
   AnimationController? _inertiaCtrl;
   FrictionSimulation? _frictionSim;
 
+  // Star chart progressive draw animation (v2.3.1 Phase 3).
+  // 1.2s, drives StarChartPainter.progress 0.0→1.0.
+  late final AnimationController _chartAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _chartAnim = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+  }
+
   @override
   void dispose() {
     _inertiaCtrl?.dispose();
+    _chartAnim.dispose();
     for (final c in [_year, _month, _day, _hour]) {
       c.dispose();
     }
@@ -56,6 +74,8 @@ class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
     final h = int.tryParse(_hour.text) ?? -1;
     if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31 || h < 0 || h > 23) return;
     setState(() => _r = divine(y, m, d, h));
+    // 触发命盘绘制过程动画
+    _chartAnim.forward(from: 0);
     FocusScope.of(context).unfocus();
     unawaited(HistoryStore.add(HistoryEntry(
       id: HistoryStore.generateId(),
@@ -227,38 +247,59 @@ class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
 
   Widget _buildResult(ZiweiResult r) {
     const dz = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        DecorativePanel(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(r.lunarDisplay,
-                  style: const TextStyle(color: AppColors.goldBright, fontSize: 14, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text('八字：${r.bazi}',
-                  style: const TextStyle(color: AppColors.textBody, fontSize: 13)),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text('命宫：${r.mingGanZhi}（${dz[r.mingGong]}）',
-                      style: const TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 16),
-                  Text('身宫：${dz[r.shenGong]}',
-                      style: const TextStyle(color: AppColors.waterDeepGlow, fontSize: 13, fontWeight: FontWeight.bold)),
-                  const Spacer(),
-                  Text(r.wuxingJu,
-                      style: const TextStyle(color: AppColors.fireGlow, fontSize: 13, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ],
-          ),
+    final enabled = ref
+            .watch(configProvider)
+            .valueOrNull
+            ?.isAnimationEnabled('ziwei') ??
+        true;
+    return RevealAnimation(
+      enabled: enabled,
+      hero: DecorativePanel(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(r.lunarDisplay,
+                style: const TextStyle(
+                    color: AppColors.goldBright,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text('八字：${r.bazi}',
+                style: const TextStyle(
+                    color: AppColors.textBody, fontSize: 13)),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Text('命宫：${r.mingGanZhi}（${dz[r.mingGong]}）',
+                    style: const TextStyle(
+                        color: AppColors.gold,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+                const SizedBox(width: 16),
+                Text('身宫：${dz[r.shenGong]}',
+                    style: const TextStyle(
+                        color: AppColors.waterDeepGlow,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+                const Spacer(),
+                Text(r.wuxingJu,
+                    style: const TextStyle(
+                        color: AppColors.fireGlow,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
-        const Text('◆ 命盘星图', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
-        const SizedBox(height: 8),
+      ),
+      sections: [
+        const Text('◆ 命盘星图',
+            style: TextStyle(
+                color: AppColors.gold,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2)),
         DecorativePanel(
           padding: const EdgeInsets.all(8),
           child: SizedBox(
@@ -272,31 +313,48 @@ class _ZiweiPageState extends State<ZiweiPage> with TickerProviderStateMixin {
                 // Clip overflow so rotated text is smoothly cut at the edge.
                 child: Transform.rotate(
                   angle: _rotationAngle,
-                  child: CustomPaint(
-                    painter: StarChartPainter(
-                      mingGong: r.mingGong,
-                      shenGong: r.shenGong,
-                      gongAtZhi: r.gongAtZhi,
-                      mingGanZhi: r.mingGanZhi,
-                      wuxingJu: r.wuxingJu,
-                      chart: r.stars,
-                    ),
-                    child: const SizedBox.expand(),
+                  // v2.3.1: 命盘绘制过程动画（progress 0→1 驱动）
+                  child: AnimatedBuilder(
+                    animation: _chartAnim,
+                    builder: (context, _) {
+                      return RepaintBoundary(
+                        child: CustomPaint(
+                          painter: StarChartPainter(
+                            mingGong: r.mingGong,
+                            shenGong: r.shenGong,
+                            gongAtZhi: r.gongAtZhi,
+                            mingGanZhi: r.mingGanZhi,
+                            wuxingJu: r.wuxingJu,
+                            chart: r.stars,
+                            progress: _chartAnim.value,
+                          ),
+                          child: const SizedBox.expand(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(height: 6),
         const Text('指尖拖拽可旋转命盘',
             textAlign: TextAlign.center,
             style: TextStyle(color: AppColors.textHint, fontSize: 11)),
-        const SizedBox(height: 14),
-        const Text('◆ 宫位详情', style: TextStyle(color: AppColors.gold, fontSize: 13, fontWeight: FontWeight.bold, letterSpacing: 2)),
-        const SizedBox(height: 8),
-        for (var zhi = 0; zhi < 12; zhi++)
-          _buildGongDetailRow(zhi, dz[zhi], r.gongAtZhi[zhi], r.mingGong, r.shenGong, r.stars.gongStars[zhi]),
+        const Text('◆ 宫位详情',
+            style: TextStyle(
+                color: AppColors.gold,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2)),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (var zhi = 0; zhi < 12; zhi++)
+              _buildGongDetailRow(zhi, dz[zhi], r.gongAtZhi[zhi], r.mingGong,
+                  r.shenGong, r.stars.gongStars[zhi]),
+          ],
+        ),
       ],
     );
   }

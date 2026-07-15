@@ -551,6 +551,23 @@
       "platform": "windows-x64",
       "buildType": "zip",
       "verificationPassed": true
+    },
+    {
+      "version": "2.3.1+21",
+      "status": "release",
+      "statusLabel": "正式版",
+      "date": "20260715",
+      "sequence": 1,
+      "filename": "Jeenith_release_2.3.1_20260715_01.apk",
+      "timestamp": "2026-07-15T11:46:45",
+      "fileSize": 57651191,
+      "fileSizeFormatted": "54.98 MB",
+      "sha256": "C5DF5EBD4988BC37EDA91FE6C4FFDC7FFE236C8B8699D0902400DC03A11A506F",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\app\\outputs\\flutter-apk\\app-release.apk",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_release_2.3.1_20260715_01.apk",
+      "backupPath": null,
+      "platform": "android-arm64,android-arm,android-x64",
+      "verificationPassed": true
     }
   ]
 }

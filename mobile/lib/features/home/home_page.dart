@@ -11,6 +11,7 @@ import '../../core/divination/divination_registry.dart';
 import '../../shared/widgets/animated_expand_icon.dart';
 import '../../shared/widgets/entrance_item.dart';
 import '../../shared/widgets/guide_dialog.dart';
+import '../../shared/widgets/hoverable_icon_button.dart';
 import '../../shared/widgets/interactable_card.dart';
 import '../../shared/widgets/svg_icon.dart';
 
@@ -370,15 +371,12 @@ class _HomePageState extends ConsumerState<HomePage>
                   ),
                 ],
               ),
-              // 左上角历史记录按钮
+              // 左上角历史记录按钮（v2.3.1：HoverableIconButton 带 hover 反馈）
               Positioned(
                 top: 6,
                 left: 6,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.history,
-                    color: AppColors.textSubtitle,
-                  ),
+                child: HoverableIconButton(
+                  icon: const Icon(Icons.history),
                   tooltip: '历史记录',
                   onPressed: () => _startExit(() => context.go('/history')),
                 ),
@@ -390,19 +388,13 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
-                      icon: const SvgIcon(
-                        'manual',
-                        color: AppColors.textSubtitle,
-                      ),
+                    HoverableIconButton(
+                      icon: const SvgIcon('manual'),
                       tooltip: '使用手册',
                       onPressed: () => _startExit(() => context.go('/manual')),
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.settings_outlined,
-                        color: AppColors.textSubtitle,
-                      ),
+                    HoverableIconButton(
+                      icon: const Icon(Icons.settings_outlined),
                       tooltip: '设置',
                       onPressed: () =>
                           _startExit(() => context.go('/settings')),

@@ -2,8 +2,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -13,14 +16,14 @@ import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
 
-class CeziPage extends StatefulWidget {
+class CeziPage extends ConsumerStatefulWidget {
   const CeziPage({super.key});
 
   @override
-  State<CeziPage> createState() => _CeziPageState();
+  ConsumerState<CeziPage> createState() => _CeziPageState();
 }
 
-class _CeziPageState extends State<CeziPage> {
+class _CeziPageState extends ConsumerState<CeziPage> {
   final _ctrl = TextEditingController();
   CeziResult? _last;
   String? _error;
@@ -195,33 +198,33 @@ class _CeziPageState extends State<CeziPage> {
 
   Widget _buildResult(CeziResult r) {
     final wxColor = _colorForWuxing(r.wuxing);
+    final enabled =
+        ref.watch(configProvider).valueOrNull?.isAnimationEnabled('cezi') ?? true;
     return DecorativePanel(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 大字展示
-          Center(
-            child: Container(
-              width: 110,
-              height: 110,
-              decoration: BoxDecoration(
-                color: AppColors.bgMid.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: wxColor.withValues(alpha: 0.6), width: 2),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                r.inputChar,
-                style: const TextStyle(
-                  color: AppColors.textHighlight,
-                  fontSize: 64,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: RevealAnimation(
+        enabled: enabled,
+        hero: Center(
+          child: Container(
+            width: 110,
+            height: 110,
+            decoration: BoxDecoration(
+              color: AppColors.bgMid.withValues(alpha: 0.6),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: wxColor.withValues(alpha: 0.6), width: 2),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              r.inputChar,
+              style: const TextStyle(
+                color: AppColors.textHighlight,
+                fontSize: 64,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 12),
+        ),
+        sections: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -230,7 +233,6 @@ class _CeziPageState extends State<CeziPage> {
               _attrChip('性情', r.wuxing.nature, AppColors.textBody),
             ],
           ),
-          const SizedBox(height: 14),
           _sectionLabel('字形拆解'),
           Text(
             r.strokeAnalysis,
@@ -240,7 +242,6 @@ class _CeziPageState extends State<CeziPage> {
               height: 1.6,
             ),
           ),
-          const SizedBox(height: 12),
           _sectionLabel('断语诗'),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
@@ -260,7 +261,6 @@ class _CeziPageState extends State<CeziPage> {
               ),
             ),
           ),
-          const SizedBox(height: 12),
           _sectionLabel('解字'),
           Text(
             r.interpretation,
@@ -270,7 +270,6 @@ class _CeziPageState extends State<CeziPage> {
               height: 1.6,
             ),
           ),
-          const SizedBox(height: 10),
           _sectionLabel('详注'),
           Text(
             r.detail,
@@ -281,7 +280,6 @@ class _CeziPageState extends State<CeziPage> {
               letterSpacing: 1,
             ),
           ),
-          const SizedBox(height: 10),
           Center(
             child: Text(
               '${r.time.toString().substring(0, 19)} 测得',
