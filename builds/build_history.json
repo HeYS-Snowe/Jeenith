@@ -603,6 +603,41 @@
       "platform": "windows-x64",
       "buildType": "zip",
       "verificationPassed": true
+    },
+    {
+      "version": "2.3.3+23",
+      "status": "release",
+      "statusLabel": "正式版",
+      "date": "20260715",
+      "sequence": 1,
+      "filename": "Jeenith_release_2.3.3_20260715_01.apk",
+      "timestamp": "2026-07-15T20:27:13",
+      "fileSize": 57667575,
+      "fileSizeFormatted": "55.00 MB",
+      "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\app\\outputs\\flutter-apk\\app-release.apk",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_release_2.3.3_20260715_01.apk",
+      "backupPath": null,
+      "platform": "android-arm64,android-arm,android-x64",
+      "verificationPassed": true
+    },
+    {
+      "version": "2.3.3+23",
+      "status": "release",
+      "statusLabel": "正式版",
+      "date": "20260715",
+      "sequence": 1,
+      "filename": "Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+      "timestamp": "2026-07-15T20:30:00",
+      "fileSize": 13911748,
+      "fileSizeFormatted": "13.27 MB",
+      "sha256": "FF691015789058AD59E730EB6F1338BBDEE860E6C62A5E214CEB4906C31074A8",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\windows\\x64\\runner\\Release\\",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+      "backupPath": null,
+      "platform": "windows-x64",
+      "buildType": "zip",
+      "verificationPassed": true
     }
   ]
 }

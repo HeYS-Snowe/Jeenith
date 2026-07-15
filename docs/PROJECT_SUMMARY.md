@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.0.0+16**（2026-07-14，release — 体验深化与品牌定调）|
+| 当前版本 | **2.3.3+23**（2026-07-15，release — 首页按钮间距修复 + MIT LICENSE）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -86,7 +86,7 @@ Jeenith/                           # 仓库根（solution root）
 │   │   ├── build_apk.ps1          # APK 构建脚本（版本递增+归档+历史）
 │   │   └── archive_history.py     # 历史记录追加（双份 build_history.json）
 │   ├── android/ ios/ web/ windows/ linux/ macos/
-│   ├── pubspec.yaml               # version: 2.0.0+16
+│   ├── pubspec.yaml               # version: 2.3.3+23
 │   ├── build_history.json         # 项目内历史副本
 │   ├── ico/                       # APP 图标素材
 │   └── assets/icons/              # SVG 图标
@@ -209,10 +209,15 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | Jeenith_feature_1.8.0_20260713_01_windows_x64.zip | Windows | 1.8.0+15 | 13.06 MB | feature |
 | **Jeenith_release_2.0.0_20260714_01.apk** | **Android** | **2.0.0+16** | **53.06 MB** | **release** |
 | **Jeenith_release_2.0.0_20260714_01_windows_x64.zip** | **Windows** | **2.0.0+16** | **21.00 MB** | **release** |
+| Jeenith_release_2.3.1_20260715_01.apk | Android | 2.3.1+21 | 54.98 MB | release |
+| Jeenith_release_2.3.2_20260715_01.apk | Android | 2.3.2+22 | 55.00 MB | release |
+| Jeenith_release_2.3.2_20260715_01_windows_x64.zip | Windows | 2.3.2+22 | 13.27 MB | release |
+| **Jeenith_release_2.3.3_20260715_01.apk** | **Android** | **2.3.3+23** | **55.00 MB** | **release** |
+| **Jeenith_release_2.3.3_20260715_01_windows_x64.zip** | **Windows** | **2.3.3+23** | **13.27 MB** | **release** |
 
 ### GitHub Release 发布记录
 
-`builds/release_history.json` 记录全部已构建 release：v1.0.0 / v1.0.1 / v1.1.0 / v1.1.2 已在 GitHub 发布（`published`），v1.1.3 ~ v2.0.0 仅本地构建（`unpublished`，待发布）。各版本 notes 见 `builds/release_notes/release_notes_<tag>.md`。
+`builds/release_history.json` 记录全部已构建 release：v1.0.0 / v1.0.1 / v1.1.0 / v1.1.2 已在 GitHub 发布（`published`），v1.1.3 ~ v2.3.3 仅本地构建（`unpublished`，待发布）。各版本 notes 见 `builds/release_notes/release_notes_<tag>.md`。
 
 ---
 
@@ -233,6 +238,13 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | 1.7.0+14 | 2026-07-13 | feature | 大六壬全套 + 风水罗盘（sensors_plus）|
 | 1.8.0+15 | 2026-07-13 | feature | 使用手册页面 + 圆角修复 + 历史复制 + 默认深色 |
 | **2.0.0+16** | **2026-07-14** | **release** | **体验深化与品牌定调：按钮物理反馈 + 图标状态切换 + 动效开关** |
+| 2.1.0+17 | 2026-07-14 | feature | 动效体系 Phase 1-3（入场仪式 + 路由转场 + HoverableIconButton）|
+| 2.2.0+18 | 2026-07-14 | feature | 动效体系 Phase 4-6（绘制过程 + 结果揭示 + 设置开关）|
+| 2.2.0+19 | 2026-07-14 | fix | v2.2.0 修订 |
+| 2.3.0+20 | 2026-07-15 | feature | 八字推演 + 测名字 + 紫微盘重构 + 设置页动画 Map 化 |
+| 2.3.1+21 | 2026-07-15 | release | 起卦按钮 BUG 修复 + 动效曲线优化 |
+| 2.3.2+22 | 2026-07-15 | release | 设置页动画细分开关（4 个 AnimationKind）+ Windows 应用图标修复 |
+| **2.3.3+23** | **2026-07-15** | **release** | **首页按钮间距修复 + MIT LICENSE + Windows 图标产物归档** |
 
 ---
 

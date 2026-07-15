@@ -477,6 +477,40 @@
       "platform": "windows-x64",
       "timestamp": "2026-07-15T13:57:00",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.3.3",
+      "buildNumber": 23,
+      "status": "release",
+      "date": "20260715",
+      "sequence": 1,
+      "filename": "Jeenith_release_2.3.3_20260715_01.apk",
+      "originalName": "app-release.apk",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_release_2.3.3_20260715_01.apk",
+      "fileSize": 57667575,
+      "fileSizeHuman": "55.00 MB",
+      "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
+      "buildType": "apk",
+      "platform": "android",
+      "timestamp": "2026-07-15T20:27:13",
+      "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.3.3",
+      "buildNumber": 23,
+      "status": "release",
+      "date": "20260715",
+      "sequence": 1,
+      "filename": "Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+      "originalName": "jeenith.exe",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+      "fileSize": 13911748,
+      "fileSizeHuman": "13.27 MB",
+      "sha256": "FF691015789058AD59E730EB6F1338BBDEE860E6C62A5E214CEB4906C31074A8",
+      "buildType": "zip",
+      "platform": "windows-x64",
+      "timestamp": "2026-07-15T20:30:00",
+      "configSource": "pubspec.yaml"
     }
   ]
 }

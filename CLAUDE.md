@@ -10,7 +10,7 @@
 | 项目类型 | 移动 App（Flutter，Android + Windows 桌面）|
 | 所属组织 | Qore（叩心）|
 | 应用包名 | `com.qore.jeenith` |
-| 当前版本 | 2.0.0+16（release，2026-07-14）|
+| 当前版本 | 2.3.3+23（release，2026-07-15）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 
 **项目定位**：叩问本心的卜算合集——小六壬、周易、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘 + 使用手册。一个 APP 首页选术，可扩展卜算框架（加新术 = 新建 feature 目录 + 注册一行）。
@@ -26,7 +26,7 @@ Jeenith/
       core/           # branding / calendar / config / divination / history / rng / theme
       data/           # yijing（64卦 + 八卦数据，周易/梅花共用）
       features/       # home / xiaoliuren / zhouyi / meihua / jiaobei / ziwei / qimen /
-                      #   chouqian / cezi / daliuren / luopan / manual / settings / history
+                      #   chouqian / cezi / daliuren / luopan / bazi / name_test / manual / settings / history
       providers/      # providers.dart（barrel 聚合 config + rng providers）
       router/         # app_router.dart（GoRouter + 仪式路由）
       shared/         # widgets/（GoldButton / DarkButton / AnimatedExpandIcon / SvgIcon /
@@ -82,6 +82,11 @@ flutter build windows --release
 - 周易/梅花卦辞爻辞已落地（v1.2.0）
 - 主题切换 + 结果分享 + 历史导出已落地（v1.5.0）
 - v2.0.0 完成体验深化与品牌定调（按钮物理反馈 + 图标状态切换 + 动效开关）
+- v2.1.0/v2.2.0 动效体系 Phase 1-6 全面落地（入场仪式 / 路由转场 / 绘制过程 / 结果揭示）
+- v2.3.0 新增八字推演、测名字，重构紫微盘与设置页动画
+- v2.3.1 起卦按钮 BUG 修复 + 动效曲线优化
+- v2.3.2 设置页动画细分开关（4 个 AnimationKind 独立控制）+ Windows 应用图标修复
+- v2.3.3 首页按钮间距修复 + 添加 MIT LICENSE + Windows 图标产物归档
 - 后续可考虑：思源宋体字体、首次使用引导遮罩、主题浅色对齐细节
 
 ## 六、规则
