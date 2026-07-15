@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
@@ -228,7 +229,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
-            ?.isAnimationEnabled('chouqian') ??
+            ?.isAnimationEnabled('chouqian', AnimationKind.reveal) ??
         true;
     return DecorativePanel(
       padding: const EdgeInsets.all(16),

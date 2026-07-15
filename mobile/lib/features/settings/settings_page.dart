@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/config/app_config.dart';
 import '../../core/config/config_providers.dart';
 import '../../core/divination/divination_registry.dart';
 import '../../core/theme/app_theme.dart';
@@ -15,6 +16,10 @@ import '../../shared/widgets/section_title.dart';
 /// 合并为单一的「◆ 动画/动效」分区。顶部为微交互动效总开关（按钮缩放/图标旋转等
 /// 全局微交互），其下为「开启所有分类 / 关闭所有分类」两枚一键按钮，再下按术数
 /// 列出 ExpansionTile，每术一个开关，统一写入 `AppConfig.animationSettings` Map。
+///
+/// v2.3.2: 每术 ExpansionTile 内拆分为 4 个细分开关（入场仪式 / 路由转场 /
+/// 绘制过程 / 结果揭示），由 `AppConfig.isAnimationEnabled(techId, kind)` 读取，
+/// 写入 prefs key `anim_<techId>_<kind>`。
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -167,24 +172,15 @@ class SettingsPage extends ConsumerWidget {
                               fontSize: 15,
                               fontWeight: FontWeight.bold)),
                       children: [
-                        SwitchListTile(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14)),
-                          title: const Text('开启此术动画',
-                              style:
-                                  TextStyle(color: AppColors.textPrimary)),
-                          subtitle: const Text(
-                              '仪式入场 + 路由转场 + 绘制过程 + 结果揭示',
-                              style: TextStyle(
-                                  color: AppColors.textSubtitle,
-                                  fontSize: 12)),
-                          value: c.isAnimationEnabled(t.id),
-                          onChanged: (v) => ref
-                              .read(configProvider.notifier)
-                              .setAnimationSetting(t.id, v),
-                        ),
+                        // v2.3.2: 4 个细分开关
+                        _kindSwitch(c, ref, t.id, AnimationKind.entrance,
+                            '入场仪式', '仪式入场动画（路由前置过渡）'),
+                        _kindSwitch(c, ref, t.id, AnimationKind.transition,
+                            '路由转场', '进入此术时的路由过渡动画'),
+                        _kindSwitch(c, ref, t.id, AnimationKind.painter,
+                            '绘制过程', 'CustomPainter 绘制过程动画'),
+                        _kindSwitch(c, ref, t.id, AnimationKind.reveal,
+                            '结果揭示', '结果段落错峰淡入与打字机'),
                       ],
                     )),
               ],
@@ -249,4 +245,30 @@ class SettingsPage extends ConsumerWidget {
       child: Column(children: children),
     );
   }
+
+  /// 单个细分动画开关：紧凑型 SwitchListTile，左对齐缩进 20，subtitle 12px。
+  Widget _kindSwitch(
+    AppConfig c,
+    WidgetRef ref,
+    String techId,
+    AnimationKind kind,
+    String title,
+    String subtitle,
+  ) =>
+      SwitchListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        dense: true,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: Text(title,
+            style: const TextStyle(
+                color: AppColors.textPrimary, fontSize: 14)),
+        subtitle: Text(subtitle,
+            style: const TextStyle(
+                color: AppColors.textSubtitle, fontSize: 11)),
+        value: c.isAnimationEnabled(techId, kind),
+        onChanged: (v) => ref
+            .read(configProvider.notifier)
+            .setAnimationSetting(techId, kind, v),
+      );
 }

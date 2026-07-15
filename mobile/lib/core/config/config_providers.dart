@@ -10,18 +10,27 @@ final configProvider = AsyncNotifierProvider<ConfigNotifier, AppConfig>(
 );
 
 class ConfigNotifier extends AsyncNotifier<AppConfig> {
+  /// prefs key 前缀。完整格式：`anim_<techId>_<kind>`，如 `anim_xiaoliuren_entrance`。
   static const String _kAnimPrefix = 'anim_';
 
   @override
   Future<AppConfig> build() async {
     final prefs = await SharedPreferences.getInstance();
     // Read all animation settings whose key starts with `anim_`.
-    final raw = <String, bool>{};
+    // Format: anim_<techId>_<kind>，其中 techId 可能含下划线（如 name_test），
+    // 因此以最后一个下划线分段：尾部为 kind，前面合并为 techId。
+    final raw = <String, Map<String, bool>>{};
+    final knownKinds = AnimationKind.values.map((k) => k.name).toSet();
     for (final key in prefs.getKeys()) {
-      if (key.startsWith(_kAnimPrefix)) {
-        final id = key.substring(_kAnimPrefix.length);
-        raw[id] = prefs.getBool(key) ?? true;
-      }
+      if (!key.startsWith(_kAnimPrefix)) continue;
+      final suffix = key.substring(_kAnimPrefix.length);
+      final lastUnderscore = suffix.lastIndexOf('_');
+      if (lastUnderscore <= 0) continue; // 跳过旧格式 anim_<techId>
+      final kindStr = suffix.substring(lastUnderscore + 1);
+      final techId = suffix.substring(0, lastUnderscore);
+      if (!knownKinds.contains(kindStr)) continue; // 未知 kind 跳过
+      raw.putIfAbsent(techId, () => {});
+      raw[techId]![kindStr] = prefs.getBool(key) ?? true;
     }
     return AppConfig(
       showDetails: prefs.getBool('showDetails') ?? true,
@@ -53,26 +62,33 @@ class ConfigNotifier extends AsyncNotifier<AppConfig> {
     state = AsyncData(current.copyWith(animationsEnabled: v));
   }
 
-  /// Toggle the animation setting for a single tech.
-  Future<void> setAnimationSetting(String techId, bool v) async {
+  /// Toggle one [AnimationKind] for a single tech.
+  Future<void> setAnimationSetting(
+      String techId, AnimationKind kind, bool v) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('$_kAnimPrefix$techId', v);
+    await prefs.setBool('$_kAnimPrefix${techId}_${kind.name}', v);
     final current = await future;
-    final next = Map<String, bool>.from(current.animationSettings);
-    next[techId] = v;
+    final next = Map<String, Map<String, bool>>.from(current.animationSettings);
+    next[techId] = Map<String, bool>.from(next[techId] ?? {});
+    next[techId]![kind.name] = v;
     state = AsyncData(current.copyWith(animationSettings: next));
   }
 
-  /// One-click bulk toggle: enable or disable animations for all given techs.
+  /// One-click bulk toggle: enable or disable all 4 kinds for all given techs.
   Future<void> setAllAnimations(List<String> techIds, bool v) async {
     final prefs = await SharedPreferences.getInstance();
     for (final id in techIds) {
-      await prefs.setBool('$_kAnimPrefix$id', v);
+      for (final kind in AnimationKind.values) {
+        await prefs.setBool('$_kAnimPrefix${id}_${kind.name}', v);
+      }
     }
     final current = await future;
-    final next = Map<String, bool>.from(current.animationSettings);
+    final next = Map<String, Map<String, bool>>.from(current.animationSettings);
     for (final id in techIds) {
-      next[id] = v;
+      next[id] = Map<String, bool>.from(next[id] ?? {});
+      for (final kind in AnimationKind.values) {
+        next[id]![kind.name] = v;
+      }
     }
     state = AsyncData(current.copyWith(animationSettings: next));
   }

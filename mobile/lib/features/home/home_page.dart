@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/branding.dart';
+import '../../core/config/app_config.dart';
 import '../../core/config/config_providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/divination/divination_registry.dart';
@@ -94,7 +95,8 @@ class _HomePageState extends ConsumerState<HomePage>
   void _onTapTech(String id) {
     if (_exiting) return;
     final cfg = ref.read(configProvider).valueOrNull;
-    final ritualOn = cfg?.isAnimationEnabled(id) ?? true;
+    final ritualOn =
+        cfg?.isAnimationEnabled(id, AnimationKind.entrance) ?? true;
     final hasRitual = _ritualTechs.contains(id);
     final target = (ritualOn && hasRitual) ? '/ritual/$id' : '/tech/$id';
     _startExit(() => context.go(target));

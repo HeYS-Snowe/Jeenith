@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/animation/reveal/reveal_animation.dart';
+import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
@@ -74,8 +75,17 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     final h = int.tryParse(_hour.text) ?? -1;
     if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31 || h < 0 || h > 23) return;
     setState(() => _r = divine(y, m, d, h));
-    // 触发命盘绘制过程动画
-    _chartAnim.forward(from: 0);
+    // 触发命盘绘制过程动画（受 painter kind 开关控制）
+    final painterOn = ref
+            .read(configProvider)
+            .valueOrNull
+            ?.isAnimationEnabled('ziwei', AnimationKind.painter) ??
+        true;
+    if (painterOn) {
+      _chartAnim.forward(from: 0);
+    } else {
+      _chartAnim.value = 1.0; // 关闭动画时直接完成绘制
+    }
     FocusScope.of(context).unfocus();
     unawaited(HistoryStore.add(HistoryEntry(
       id: HistoryStore.generateId(),
@@ -250,7 +260,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
-            ?.isAnimationEnabled('ziwei') ??
+            ?.isAnimationEnabled('ziwei', AnimationKind.reveal) ??
         true;
     return RevealAnimation(
       enabled: enabled,

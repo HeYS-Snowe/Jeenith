@@ -13,6 +13,7 @@ import '../core/animation/ritual/qimen_ritual.dart';
 import '../core/animation/ritual/ziwei_ritual.dart';
 import '../core/animation/ritual/zhouyi_ritual.dart';
 import '../core/animation/transitions/tech_transitions.dart';
+import '../core/config/app_config.dart';
 import '../core/config/config_providers.dart';
 import '../core/divination/divination_registry.dart';
 import '../core/divination/divination_tech.dart';
@@ -106,8 +107,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               : _TechPage(tech: tech);
           // v2.3.0: per-tech signature transition; falls back to fade
           // when the tech's animation setting is off.
-          final transitionsEnabled =
-              ref.read(configProvider).valueOrNull?.isAnimationEnabled(id) ?? true;
+          final transitionsEnabled = ref
+                  .read(configProvider)
+                  .valueOrNull
+                  ?.isAnimationEnabled(id, AnimationKind.transition) ??
+              true;
           return TechTransition.build(
             key: state.pageKey,
             child: page,
