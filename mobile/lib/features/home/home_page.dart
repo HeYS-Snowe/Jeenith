@@ -395,6 +395,7 @@ class _HomePageState extends ConsumerState<HomePage>
                       tooltip: '使用手册',
                       onPressed: () => _startExit(() => context.go('/manual')),
                     ),
+                    const SizedBox(width: 8),
                     HoverableIconButton(
                       icon: const Icon(Icons.settings_outlined),
                       tooltip: '设置',
