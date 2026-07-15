@@ -1,159 +1,366 @@
 # App 页面与路由清单 App Pages & Routes
 
+> 志极 Jeenith · 页面清单与 go_router 路由表
+
 ## 文档信息 Document Information
 
 | 项目 Item | 内容 Content |
-|---|---|
-| 文档版本 Version | v0.1.0 |
-| 创建日期 Created | 2026-07-05 |
-| 作者 Author | Claude（思维逻辑层） |
-| 客户端 Client | Flutter（Riverpod 状态管理 · go_router 路由） |
-| 上游 Depends | 《预警状态机与业务规则》《数据模型与 API 契约》 |
-| 下游 Downstream | Codex（页面视觉与信息架构）、Flutter 路由实现 |
+|---------|-------------|
+| 项目名称 Project | 志极 / Jeenith |
+| 组织 Organization | Qore Origins（叩心） |
+| 包名 Package | `com.qore.jeenith` |
+| 文档版本 Version | v2.3.3 |
+| 当前版本 App Version | 2.3.3+23（release，2026-07-15） |
+| 开发者 Developer | HeYS-Snowe |
+| 路由库 Router | go_router ^14.0 |
+| 许可证 License | MIT · Copyright (c) 2026 Qore |
 
 ---
 
-## 1. 角色与导航架构
+## 修改记录 Change History
 
-### 1.1 角色 Roles
-
-| role | 中文 | 主场景 |
-|---|---|---|
-| `guard` | 安保 | 接警、现场处置、反馈 |
-| `manager` | 管理者 | 督战、介入指派、看统计 |
-| `admin` | 系统管理员 | 设备/区域/规则/账号管理 |
-
-### 1.2 底部导航 Bottom Nav（4 tab）
-
-| # | tab | 路由 | guard | manager | admin |
-|---|---|---|:---:|:---:|:---:|
-| 0 | 预警 | `/alerts` | ✅默认首页 | ✅（全部） | ✅ |
-| 1 | 监控 | `/monitor` | ✅（本区域） | ✅（所辖） | ✅（全部） |
-| 2 | 统计 | `/stats` | ✅（简版） | ✅（全量） | ✅（全量） |
-| 3 | 我的 | `/profile` | ✅ | ✅ | ✅（+ 管理入口） |
-
-> 管理类页面（设备/区域/规则/账号）从「我的」进入，admin 专属。
+| 版本 Version | 日期 Date | 修改内容 Description |
+|-------------|---------|-------------------|
+| v1.0.0 | 2026-01 | 初版：4 系统页 + 12 术路由 |
+| v2.1.0 | 2026-04 | 新增 5 术仪式前置路由（周易/紫微/奇门/大六壬/罗盘） |
+| v2.2.0 | 2026-05 | 新增 4 术仪式前置路由（梅花/掷筊/抽签/测字） |
+| v2.3.3 | 2026-07-15 | 同步当前路由表与转场逻辑 |
 
 ---
 
-## 2. 路由表 Route Table（go_router）
+## 1. 路由概述 Route Overview
 
-| path | name | 角色范围 | 需登录 | tab | 说明 |
-|---|---|---|:---:|:---:|---|
-| `/splash` | splash | 公开 | — | — | 启动 / 鉴权判定 |
-| `/login` | login | 公开 | — | — | 登录 |
-| `/alerts` | alerts | all | ✅ | 0 | 预警列表（首页） |
-| `/alerts/:id` | alertDetail | all | ✅ | — | 预警详情 |
-| `/monitor` | monitor | all | ✅ | 1 | 监控（设备/区域） |
-| `/cameras/:id` | cameraDetail | all | ✅ | — | 设备详情 |
-| `/stats` | stats | all | ✅ | 2 | 统计看板 |
-| `/profile` | profile | all | ✅ | 3 | 我的 |
-| `/profile/settings` | settings | all | ✅ | — | 设置 |
-| `/admin/cameras` | adminCameras | admin | ✅ | — | 设备管理 |
-| `/admin/regions` | adminRegions | admin | ✅ | — | 区域管理 |
-| `/admin/rules` | adminRules | admin | ✅ | — | 预警规则管理 |
-| `/admin/users` | adminUsers | admin | ✅ | — | 账号管理 |
+### 1.1 路由方案 Routing Solution
 
-**重定向 Redirect**：未登录访问受保护页 → `/login`；已登录访问 `/login` → `/alerts`；非 admin 访问 `/admin/*` → 403 页。
+志极 Jeenith 采用 `go_router ^14.0` 声明式路由，路由表集中在 `mobile/lib/router/app_router.dart`，由 `routerProvider`（Riverpod Provider）暴露。`JeenithApp` 通过 `ref.watch(routerProvider)` 注入 `MaterialApp.router`。
+
+### 1.2 路由分类 Route Categories
+
+| 类别 Category | 路径模式 Pattern | 数量 Count | 说明 |
+|------------|--------------|----------|-----|
+| 系统页 System | `/` `/history` `/settings` `/manual` | 4 | 固定页面 |
+| 仪式前置 Ritual | `/ritual/<id>` | 10 | 各术入场动画 |
+| 术主页 Tech | `/tech/:id` | 1（动态） | 动态解析 12 术 |
+
+### 1.3 初始路由 Initial Route
+
+`initialLocation: '/'`（首页）
 
 ---
 
-## 3. 页面清单 Page Specs
+## 2. 完整路由表 Route Table
 
-> 每页标注：数据来源（API / WebSocket）、核心状态、操作。状态徽章/色条见《预警状态机》§7。
+### 2.1 系统页路由 System Routes
 
-### P-01 /login 登录
-- **数据**：`POST /auth/login`
-- **状态**：空表单 / 提交中 / 错误（凭证错、账号禁用 10101）
-- **操作**：登录、忘记密码（占位）
+| 路径 Path | 页面 Page | 文件 File | builder/pageBuilder | 说明 |
+|---------|--------|--------|------------------|-----|
+| `/` | HomePage | `features/home/home_page.dart` | builder | 首页：术数 grid + 品牌 |
+| `/history` | HistoryPage | `features/history/history_page.dart` | builder | 卜算历史列表 |
+| `/settings` | SettingsPage | `features/settings/settings_page.dart` | builder | 配置页 |
+| `/manual` | ManualPage | `features/manual/manual_page.dart` | builder | 使用手册 |
 
-### P-02 /alerts 预警列表（首页）★
-- **数据**：`GET /alerts`（默认 `status≠archived`）+ WS `alert.created` / `alert.updated`
-- **顶部筛选**：状态（全部/待处置/处置中/已闭环/误报/已升级）、级别、行为类型、区域
-- **排序**：`pending` → `escalated` → 按 `severity` → 按 `detected_at` desc
-- **列表项 `AlertListItem`**：抓拍缩略图 · 左侧 severity 色条 · status 徽章 · 行为中文名 · camera/region · 相对时间 · `merged_count` 角标
-- **强提醒**：`pending` + `high` 全屏置顶卡 + 强震动（具体样式 Codex 定）
-- **状态**：空（"暂无待处置预警"安心态）/ 加载 / 错误 / 离线横幅
-- **操作**：点击进详情、下拉刷新、上拉分页
+### 2.2 仪式前置路由 Ritual Routes
 
-### P-03 /alerts/:id 预警详情 ★
-- **数据**：`GET /alerts/{id}` + WS `alert.updated`
-- **内容**：大图 / 视频片段 · 行为+级别+置信度 · camera+region+位置 · 检测时间 · `merged_count` · status 徽章 · 处置时间线 `status_logs` · 已处置信息
-- **操作按钮组（按 `status` + 角色动态显示）**：
+每术一条 `/ritual/<id>`，构建对应 `<Tech>Ritual` 组件，`onCompleted` 回调 `context.go('/tech/<id>')` 进入术主页。
 
-  | 当前 status | guard 可见按钮 | manager 额外 |
-  |---|---|---|
-  | `pending` | 接警 / 误报 / 升级 | — |
-  | `handling` | 提交处置 / 误报 / 请求支援 | — |
-  | `escalated` | — | 指派给… / 强制闭环 |
-  | `closed` / `false_alarm` / `archived` | 只读 | 只读 |
+| 路径 Path | 仪式组件 Ritual Widget | 文件 File | 时长 Duration | 引入版本 Added |
+|---------|------------------|--------|------------|------------|
+| `/ritual/xiaoliuren` | XiaoliurenRitual | `features/xiaoliuren/ui/xiaoliuren_ritual.dart` | — | v1.0.0 |
+| `/ritual/zhouyi` | ZhouyiRitual | `core/animation/ritual/zhouyi_ritual.dart` | 5000ms | v2.1.0 |
+| `/ritual/ziwei` | ZiweiRitual | `core/animation/ritual/ziwei_ritual.dart` | 6000ms | v2.1.0 |
+| `/ritual/qimen` | QimenRitual | `core/animation/ritual/qimen_ritual.dart` | 5000ms | v2.1.0 |
+| `/ritual/daliuren` | DaliurenRitual | `core/animation/ritual/daliuren_ritual.dart` | 5000ms | v2.1.0 |
+| `/ritual/luopan` | LuopanRitual | `core/animation/ritual/luopan_ritual.dart` | 4000ms | v2.1.0 |
+| `/ritual/meihua` | MeihuaRitual | `core/animation/ritual/meihua_ritual.dart` | 4000ms | v2.2.0 |
+| `/ritual/jiaobei` | JiaobeiRitual | `core/animation/ritual/jiaobei_ritual.dart` | 3000ms | v2.2.0 |
+| `/ritual/chouqian` | ChouqianRitual | `core/animation/ritual/chouqian_ritual.dart` | 5000ms | v2.2.0 |
+| `/ritual/cezi` | CeziRitual | `core/animation/ritual/cezi_ritual.dart` | 5000ms | v2.2.0 |
 
-- **提交处置**：底表/弹窗 → `handle_type` 选择 + `note` + 拍照/选图 → `POST /alerts/{id}/handle`
-- **状态**：加载骨架 / 404（预警不存在 10201）/ 409（已被他人接警 10203 → 提示并刷新）/ 422（缺必填 10204）
+> 注：`bazi`（八字）与 `name_test`（测名字）无独立仪式前置路由，首页卡片点击直接 `context.go('/tech/<id>')`。
 
-### P-04 /monitor 监控
-- **数据**：`GET /cameras?region_id=`（按角色 region_scope）
-- **内容**：本/所辖/全部区域 camera 列表（在线/离线状态、最近预警数）
-- **状态**：列表视图（MVP）；地图视图预留
-- **操作**：点击 → cameraDetail
+### 2.3 术主页路由 Tech Route
 
-### P-05 /cameras/:id 设备详情
-- **数据**：`GET /cameras/{id}` + 该设备近期预警
-- **admin 额外**：编辑 / 启停（`online`↔`maintenance`）
+| 路径 Path | 解析 Resolution | 文件 File | pageBuilder | 转场 Transition |
+|---------|-------------|--------|-----------|--------------|
+| `/tech/:id` | `techByIdProvider(id)` → DivinationTech | `router/app_router.dart` | pageBuilder | TechTransition（按术开关降级 fade） |
 
-### P-06 /stats 统计看板
-- **数据**：`GET /stats/overview` · `GET /stats/trend`
-- **guard**：本区域简版（今日预警数 / 待处置 / 闭环率）
-- **manager / admin**：全量 `StatsOverview`（总数、各状态、闭环率、平均接警时长、各行为占比、级别分布）+ 时序图
-- **状态**：加载 / 空（无数据）
-
-### P-07 /profile 我的
-- **内容**：姓名 / 角色 / 区域 · 我的处置统计（今日接警 / 闭环数）· 设置入口 · 退出登录
-
-### P-08 /admin/* 管理（admin 专属）
-- `/admin/cameras` `/admin/regions` `/admin/rules` `/admin/users`：标准 CRUD 列表 + 表单 + 删除确认
+**动态解析流程**：
+1. 取 `state.pathParameters['id']`
+2. `ref.read(techByIdProvider(id))` 查找术
+3. `tech == null` → 渲染「未知卜算法」占位页
+4. `tech != null` → `_TechPage(tech: tech)` → `tech.buildPage(context, ref)`
+5. 读取 `isAnimationEnabled(id, AnimationKind.transition)` 决定转场
 
 ---
 
-## 4. 页面通用状态 Common Page States（给 Codex）
+## 3. 页面清单 Page Inventory
 
-| 状态 | 说明 |
-|---|---|
-| loading | 骨架屏（详情）/ 骨架列表项 |
-| empty | 空态（插画 + 文案，预警空态用"安心态"正向表达） |
-| error | 错误态 + 重试按钮 |
-| offline | 顶部离线横幅，数据展示上次缓存 |
-| noPermission | 403 页（区域越权 / 角色不足） |
+### 3.1 系统页 System Pages
+
+#### 3.1.1 首页 HomePage
+
+- **路由**：`/`
+- **文件**：`features/home/home_page.dart`
+- **职责**：
+  - 品牌标识展示（志极 / Jeenith / 口号）
+  - 术数 grid（`visibleTechsProvider` 渲染，按 `sortOrder` 排序）
+  - 卡片点击 → 仪式路由或直接术主页
+  - 底部入口：历史 / 设置 / 手册
+- **关键组件**：InteractableCard（错峰入场）、SvgIcon
+
+#### 3.1.2 历史页 HistoryPage
+
+- **路由**：`/history`
+- **文件**：`features/history/history_page.dart`
+- **职责**：
+  - `HistoryStore.load()` 渲染历史列表（最新在前）
+  - 单条点击展开详情
+  - 编辑备注（`updateNote`）
+  - 删除单条（`remove`）/ 清空（`clear`）
+  - 导出（JSON/MD/CSV）→ share_plus 分享
+- **状态**：本地 setState + HistoryStore 静态调用
+
+#### 3.1.3 设置页 SettingsPage
+
+- **路由**：`/settings`
+- **文件**：`features/settings/settings_page.dart`
+- **职责**：
+  - 熵源开关（`useOnline`）
+  - 采样详情开关（`showDetails`）
+  - 动画总开关（`animationsEnabled`）
+  - 一键批量动画开关（`setAllAnimations`）
+  - 分术 × AnimationKind 细粒度开关（`setAnimationSetting`）
+  - 主题模式切换（`themeMode`：system/light/dark）
+  - 关于信息（版本/版权/开发者）
+- **状态**：`configProvider`（AsyncNotifier）
+
+#### 3.1.4 手册页 ManualPage
+
+- **路由**：`/manual`
+- **文件**：`features/manual/manual_page.dart`
+- **职责**：各术使用说明、起卦方法、术语解释
+
+### 3.2 术主页 Tech Pages
+
+每个术主页由对应 `DivinationTech.buildPage` 构造，文件位于 `features/<tech>/ui/<tech>_page.dart`。
+
+| 术 id | 页面 Page | 文件 File | 输入采集 Input |
+|-----|--------|--------|------------|
+| xiaoliuren | XiaoliurenPage | `features/xiaoliuren/ui/xiaoliuren_page.dart` | 真随机 3 数 |
+| zhouyi | ZhouyiPage | `features/zhouyi/ui/zhouyi_page.dart` | 真随机 6 爻 |
+| meihua | MeihuaPage | `features/meihua/ui/meihua_page.dart` | 数/时起卦 |
+| jiaobei | JiaobeiPage | `features/jiaobei/ui/jiaobei_page.dart` | 真随机 |
+| ziwei | ZiweiPage | `features/ziwei/ui/ziwei_page.dart` | 生辰 |
+| qimen | QimenPage | `features/qimen/ui/qimen_page.dart` | 时辰 |
+| chouqian | ChouqianPage | `features/chouqian/ui/chouqian_page.dart` | 真随机 |
+| cezi | CeziPage | `features/cezi/ui/cezi_page.dart` | 手写/输入 |
+| daliuren | DaliurenPage | `features/daliuren/ui/daliuren_page.dart` | 时辰 |
+| luopan | LuopanPage | `features/luopan/ui/luopan_page.dart` | 传感器/触摸 |
+| name_test | NameTestPage | `features/name_test/ui/name_test_page.dart` | 姓名输入 |
+| bazi | BaziPage | `features/bazi/ui/bazi_page.dart` | 生辰 |
+
+### 3.3 仪式动画页 Ritual Pages
+
+仪式动画组件位于 `core/animation/ritual/<tech>_ritual.dart`（小六壬位于 `features/xiaoliuren/ui/xiaoliuren_ritual.dart`），由仪式路由构建。
+
+每个仪式组件约定：
+- 接收 `onCompleted` 回调
+- 内部 AnimationController 驱动动画
+- 跳过按钮延迟 3s 显示（`skipButtonDelay`）
+- `onCompleted` → `context.go('/tech/<id>')`
 
 ---
 
-## 5. 关键交互流 Flows
+## 4. 路由流转图 Route Flow
 
-### 5.1 接警 → 处置闭环（核心流）
+### 4.1 完整起卦流转 Full Divination Flow
+
 ```
-推送/列表点击 → /alerts/:id
-  → [接警] (POST ack, 带 version)
-    → 409 已被接警? → 提示 + 刷新
-    → 成功 status=handling
-  → [提交处置] (handle_type + note + photos, POST handle, 带 version)
-    → status=closed, 时间线追加 → 返回列表
+                        ┌─────────┐
+                        │ 首页 /  │
+                        └────┬────┘
+                             │ 点击术卡片
+                ┌────────────┴────────────┐
+                ▼                         ▼
+     有仪式前置（10 术）          无仪式（bazi/name_test）
+                │                         │
+                ▼                         │
+     /ritual/<id> 仪式动画                │
+                │ onCompleted             │
+                ▼                         │
+     /tech/<id> ◄─────────────────────────┘
+                │
+                ▼
+        术主页（采集 → 起卦 → 结果）
+                │
+        ┌───────┼───────┐
+        ▼       ▼       ▼
+   复制结果  分享结果  历史记录
+                        │
+                        ▼
+               /history 历史页
 ```
 
-### 5.2 升级流
+### 4.2 系统页流转 System Navigation
+
 ```
-详情 [升级] → status=escalated → manager 收二次推送
-  → /alerts/:id → [指派给 guardB] (reassign) 或 [强制闭环] (force_close)
+/  ───► /history
+ │  ───► /settings
+ │  ───► /manual
+ │  ───► /ritual/<id> ───► /tech/<id>
+ │
+ └─ AppBar/底部入口互跳
 ```
 
 ---
 
-## 6. 信息架构提示（给 Codex）
+## 5. 路由实现细节 Route Implementation
 
-- 预警是核心，默认首页；强提醒需可穿透前台（`pending`+`high`）。
-- 详情页操作按钮组**按 `status` 动态变化**，与《预警状态机》§3 迁移表一一对应。
-- 列表/详情的视觉权重严格按 severity 色条 + status 徽章（见状态机 §7）。
-- 时间线（`status_logs`）是详情页的固定区块，呈现处置全过程。
+### 5.1 routerProvider 定义
+
+```dart
+final routerProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const HomePage()),
+      GoRoute(path: '/history', builder: (context, state) => const HistoryPage()),
+      GoRoute(path: '/settings', builder: (context, state) => const SettingsPage()),
+      GoRoute(path: '/manual', builder: (context, state) => const ManualPage()),
+      // 10 条仪式路由
+      GoRoute(path: '/ritual/xiaoliuren',
+          builder: (context, state) => XiaoliurenRitual(onCompleted: () => context.go('/tech/xiaoliuren'))),
+      // ... 其他 9 术
+      // 术主页动态路由
+      GoRoute(path: '/tech/:id', pageBuilder: (context, state) { ... }),
+    ],
+  );
+});
+```
+
+### 5.2 仪式路由 builder 模式 Ritual Builder Pattern
+
+```dart
+GoRoute(
+  path: '/ritual/zhouyi',
+  builder: (context, state) =>
+      ZhouyiRitual(onCompleted: () => context.go('/tech/zhouyi')),
+)
+```
+
+`context.go` 替换栈顶，仪式页不残留于路由历史。
+
+### 5.3 术主页 pageBuilder 与转场 Tech pageBuilder & Transition
+
+```dart
+GoRoute(
+  path: '/tech/:id',
+  pageBuilder: (context, state) {
+    final id = state.pathParameters['id']!;
+    final tech = ref.read(techByIdProvider(id));
+    final Widget page = (tech == null)
+        ? const Scaffold(body: Center(child: Text('未知卜算法')))
+        : _TechPage(tech: tech);
+    final transitionsEnabled = ref
+            .read(configProvider).valueOrNull
+            ?.isAnimationEnabled(id, AnimationKind.transition) ?? true;
+    return TechTransition.build(
+      key: state.pageKey,
+      child: page,
+      techId: id,
+      transitionsEnabled: transitionsEnabled,
+    );
+  },
+)
+
+class _TechPage extends ConsumerWidget {
+  final DivinationTech tech;
+  const _TechPage({required this.tech});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => tech.buildPage(context, ref);
+}
+```
+
+**要点**：
+- 用 `pageBuilder` 而非 `builder`，以便返回 `CustomPage` 注入转场
+- `state.pageKey` 保证转场动画正确识别页面
+- `transitionsEnabled = false` 时 `TechTransition.build` 降级为 fade
+- `tech == null` 兜底占位页，防止路由参数错误白屏
+
+### 5.4 转场控制 Transition Control
+
+`TechTransition.build`（`core/animation/transitions/tech_transitions.dart`）：
+- 启用：返回该术签名转场（CustomPage + 自定义 transitionBuilder）
+- 关闭：降级为默认 fade
+- 受 `AnimationKind.transition` + `animationsEnabled` 总开关双重控制
 
 ---
 
-**文档结束** —— 三份逻辑契约（状态机 / 数据模型·API / 页面·路由）已交付完毕。
+## 6. 导航 API Navigation API
+
+### 6.1 go_router 导航方法
+
+| 方法 Method | 用途 Usage | 示例 Example |
+|-----------|---------|------------|
+| `context.go(path)` | 替换当前页（无返回栈） | `context.go('/tech/zhouyi')` |
+| `context.push(path)` | 压栈（可返回） | `context.push('/history')` |
+| `context.pop()` | 出栈返回 | `context.pop()` |
+
+### 6.2 项目导航约定 Navigation Conventions
+
+- 仪式 → 术主页用 `context.go`（仪式不残留）
+- 首页 → 系统页可用 `context.push`（可返回首页）
+- 术主页内不互相跳转（术间隔离）
+
+---
+
+## 7. 页面状态管理 Page State
+
+### 7.1 系统页状态 System Page State
+
+| 页面 | 状态来源 State Source |
+|-----|-------------------|
+| HomePage | `visibleTechsProvider`（watch） |
+| HistoryPage | `HistoryStore.load()`（本地 setState） |
+| SettingsPage | `configProvider`（watch AsyncNotifier） |
+| ManualPage | 无状态静态内容 |
+
+### 7.2 术主页状态 Tech Page State
+
+各术在 `features/<tech>/state/<tech>_providers.dart` 定义术特定 Provider，或直接 setState。统一通过 `ref.read(trueRandomProvider)` 获取真随机引擎，`ref.read(configProvider)` 读取配置。
+
+---
+
+## 8. 路由与品牌 Route & Branding
+
+- AppBar 标题统一居中，`letterSpacing: 6`，`goldBright` 色
+- 全 APP 透明 scaffold + Starfield 背景（`JeenithApp.builder` Stack 底层）
+- 仪式页与术主页均叠加 Starfield，视觉连续
+
+---
+
+## 9. 路由清单汇总 Route Summary
+
+| # | 路径 | 类型 | 页面/组件 | 转场 |
+|---|-----|-----|---------|-----|
+| 1 | `/` | 系统 | HomePage | 默认 |
+| 2 | `/history` | 系统 | HistoryPage | 默认 |
+| 3 | `/settings` | 系统 | SettingsPage | 默认 |
+| 4 | `/manual` | 系统 | ManualPage | 默认 |
+| 5 | `/ritual/xiaoliuren` | 仪式 | XiaoliurenRitual | 默认 |
+| 6 | `/ritual/zhouyi` | 仪式 | ZhouyiRitual | 默认 |
+| 7 | `/ritual/ziwei` | 仪式 | ZiweiRitual | 默认 |
+| 8 | `/ritual/qimen` | 仪式 | QimenRitual | 默认 |
+| 9 | `/ritual/daliuren` | 仪式 | DaliurenRitual | 默认 |
+| 10 | `/ritual/luopan` | 仪式 | LuopanRitual | 默认 |
+| 11 | `/ritual/meihua` | 仪式 | MeihuaRitual | 默认 |
+| 12 | `/ritual/jiaobei` | 仪式 | JiaobeiRitual | 默认 |
+| 13 | `/ritual/chouqian` | 仪式 | ChouqianRitual | 默认 |
+| 14 | `/ritual/cezi` | 仪式 | CeziRitual | 默认 |
+| 15 | `/tech/:id` | 术主页 | _TechPage（动态） | TechTransition |
+
+共计 **15 条路由**（4 系统 + 10 仪式 + 1 动态术主页，覆盖 12 术）。
+
+---
+
+*本文档由 HeYS-Snowe 维护 · Copyright (c) 2026 Qore. MIT License.*

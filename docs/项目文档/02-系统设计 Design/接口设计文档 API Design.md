@@ -1,855 +1,477 @@
-# 接口设计文档 API Design Document
+# 接口设计文档 Internal API Design Document
+
+> 志极 Jeenith · 内部接口设计（Dart 接口 + Provider + 服务）
 
 ## 文档信息 Document Information
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
-| 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 最后修改 Last Modified | YYYY-MM-DD |
-| 接口设计师 API Designer | |
-| 基础URL Base URL | https://api.example.com |
+| 项目名称 Project | 志极 / Jeenith |
+| 组织 Organization | Qore Origins（叩心） |
+| 包名 Package | `com.qore.jeenith` |
+| 文档版本 Version | v2.3.3 |
+| 当前版本 App Version | 2.3.3+23（release，2026-07-15） |
+| 开发者 Developer | HeYS-Snowe |
+| 许可证 License | MIT · Copyright (c) 2026 Qore |
 
 ---
 
 ## 修改记录 Change History
 
-| 版本 Version | 日期 Date | 修改人 Modifier | 审核人 Reviewer | 修改内容 Description |
-|-------------|---------|---------------|---------------|-------------------|
-| v1.0.0 | YYYY-MM-DD | [Name] | | 初始版本 Initial Version |
+| 版本 Version | 日期 Date | 修改内容 Description |
+|-------------|---------|-------------------|
+| v1.0.0 | 2026-01 | 初版：DivinationTech/EntropyCollector/HistoryStore 接口 |
+| v2.3.0 | 2026-06 | ConfigNotifier 接口拆分（setAnimationSetting/setAllAnimations） |
+| v2.3.3 | 2026-07-15 | 同步当前接口签名与 Provider 清单 |
 
 ---
 
-## 目录 Table of Contents
+## 1. 接口设计概述 Interface Overview
 
-1. [接口概述 API Overview](#1-接口概述-api-overview)
-2. [接口规范 API Specifications](#2-接口规范-api-specifications)
-3. [通用接口 Common APIs](#3-通用接口-common-apis)
-4. [用户模块 APIs](#4-用户模块-apis)
-5. [订单模块 APIs](#5-订单模块-apis)
-6. [产品模块 APIs](#6-产品模块-apis)
-7. [错误码定义 Error Codes](#7-错误码定义-error-codes)
+### 1.1 接口分类 Interface Categories
 
----
+志极 Jeenith 为纯客户端应用，无网络 API，所有「接口」均为 Dart 内部契约，分四类：
 
-## 1. 接口概述 API Overview
+| 类型 Type | 形式 Form | 作用 Role |
+|---------|---------|---------|
+| 抽象接口 abstract interface | `abstract class` | 跨实现多态（DivinationTech / EntropyCollector） |
+| 服务类 Service | 静态方法类 | 无状态能力（HistoryStore / LunarService / HistoryExport） |
+| Provider | Riverpod Provider | 依赖注入与响应式订阅 |
+| 数据模型 Data Model | `@immutable class` | 数据载体（AppConfig / DivinationResult 等） |
 
-### 1.1 接口设计原则 Design Principles
+### 1.2 设计约定 Conventions
 
-| 原则 Principle | 说明 Description |
-|--------------|---------------|
-| RESTful | 遵循REST架构风格 |
-| 版本控制 | 通过URL进行版本控制，如 /api/v1/ |
-| 统一响应 | 使用统一的响应格式 |
-| 幂等性 | GET、PUT、DELETE操作保持幂等 |
-| 安全性 | 敏感操作需认证授权 |
-
-### 1.2 通用规范 General Specifications
-
-| 规范项 Specification | 规范内容 Content |
-|-------------------|----------------|
-| 协议 Protocol | HTTPS |
-| 数据格式 Data Format | JSON |
-| 字符编码 Charset | UTF-8 |
-| 时间格式 DateTime | ISO 8601 (yyyy-MM-dd'T'HH:mm:ss'Z') |
-| 布尔值 Boolean | true / false |
-
-### 1.3 接口分类 API Categories
-
-| 分类 Category | 前缀 Prefix | 说明 Description |
-|------------|-----------|---------------|
-| 公开接口 Public | /api/v1/public/ | 无需认证即可访问 |
-| 用户接口 User | /api/v1/user/ | 用户相关接口 |
-| 订单接口 Order | /api/v1/order/ | 订单相关接口 |
-| 产品接口 Product | /api/v1/product/ | 产品相关接口 |
-| 管理接口 Admin | /api/v1/admin/ | 管理后台接口 |
+- 所有公开类/方法有文档注释（`///`）
+- 不可变数据模型用 `@immutable` + `const` 构造 + `copyWith`
+- 异步操作返回 `Future`，不阻塞 UI 线程
+- 失败优先静默降级，不抛异常崩溃（除 debug assert）
 
 ---
 
-## 2. 接口规范 API Specifications
+## 2. 核心抽象接口 Core Abstract Interfaces
 
-### 2.1 请求规范 Request Specification
+### 2.1 DivinationTech —— 卜算术接口
 
-#### 请求头 Request Headers
+**文件**：`core/divination/divination_tech.dart`
+**角色**：每种术实现的统一契约，框架据此注册发现与路由。
 
-| 头部 Header | 是否必需 Required | 说明 Description | 示例 Example |
-|-----------|----------------|---------------|-------------|
-| Content-Type | 是 | 请求内容类型 | application/json |
-| Accept | 是 | 响应内容类型 | application/json |
-| Authorization | 条件 | 认证令牌 | Bearer {token} |
-| X-Request-ID | 否 | 请求追踪ID | uuid |
-| X-Client-Version | 否 | 客户端版本 | 1.0.0 |
-| User-Agent | 是 | 用户代理 | MyApp/1.0.0 (iOS) |
+```dart
+abstract class DivinationTech {
+  const DivinationTech();
 
-#### 请求方法 HTTP Methods
+  /// 唯一标识（路由参数 /tech/:id）。须全 APP 唯一。
+  String get id;
 
-| 方法 Method | 说明 Description | 幂等性 Idempotent |
-|-----------|---------------|----------------|
-| GET | 获取资源 | 是 |
-| POST | 创建资源 | 否 |
-| PUT | 完整更新资源 | 是 |
-| PATCH | 部分更新资源 | 否 |
-| DELETE | 删除资源 | 是 |
+  /// 展示元数据（首页卡片 + 排序 + 功能开关）。
+  TechMeta get meta;
 
-#### 分页参数 Pagination
-
-| 参数 Parameter | 类型 Type | 默认值 Default | 说明 Description |
-|--------------|---------|--------------|---------------|
-| page | Integer | 1 | 当前页码(从1开始) |
-| size | Integer | 20 | 每页数量(1-100) |
-| sort | String | created_at | 排序字段 |
-| order | String | desc | 排序方向: asc/desc |
-
-### 2.2 响应规范 Response Specification
-
-#### 统一响应结构 Unified Response Structure
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {},
-  "timestamp": 1234567890,
-  "requestId": "uuid"
+  /// 构建该术主页面。框架注入 [ref] 供访问全局 providers。
+  Widget buildPage(BuildContext context, WidgetRef ref);
 }
 ```
 
-| 字段 Field | 类型 Type | 说明 Description |
-|----------|---------|---------------|
-| code | Integer | 响应码，200表示成功 |
-| message | String | 响应消息 |
-| data | Object/Array | 响应数据 |
-| timestamp | Long | 响应时间戳(秒) |
-| requestId | String | 请求追踪ID |
+**实现约束**：
+- `id` 必须全 APP 唯一（注册表 assert 检测）
+- 实例应为 `const`（注册表无运行时开销）
+- `buildPage` 内部自管输入采集、起卦、动画、结果展示
 
-#### 分页响应结构 Pagination Response
+**实现清单**：XiaoliurenTech / ZhouyiTech / MeihuaTech / JiaobeiTech / ZiweiTech / QimenTech / ChouqianTech / CeziTech / DaliurenTech / LuopanTech / NameTestTech / BaziTech（共 12 个）。
 
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "items": [],
-    "pagination": {
-      "page": 1,
-      "size": 20,
-      "total": 100,
-      "totalPages": 5,
-      "hasNext": true,
-      "hasPrev": false
-    }
-  }
+### 2.2 EntropyCollector —— 熵源接口
+
+**文件**：`core/rng/entropy_source.dart`
+**角色**：真随机引擎的可插拔熵源契约。
+
+```dart
+abstract class EntropyCollector {
+  /// 熵源名称（UI 展示用）。
+  String get name;
+
+  /// 当前是否可用（如在线源未启用时返回 false）。
+  bool get isAvailable;
+
+  /// 采样一次，返回展示值 + 用于 SHA256 混合的字节。
+  /// 失败应抛异常，由 TrueRandom 捕获并标记 failed。
+  Future<({String display, Uint8List bytes})> sample();
 }
 ```
 
-### 2.3 认证授权 Authentication & Authorization
-
-#### JWT令牌认证 JWT Authentication
-
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
-#### 令牌刷新 Token Refresh
-
-**请求:**
-
-```http
-POST /api/v1/auth/refresh
-Content-Type: application/json
-
-{
-  "refreshToken": "refresh_token_string"
-}
-```
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "accessToken": "new_access_token",
-    "refreshToken": "new_refresh_token",
-    "expiresIn": 7200
-  }
-}
-```
+**实现**：
+- `SystemEntropySource`：`Random.secure` 系统熵
+- `TouchEntropySource`：`TouchTracker` 指针轨迹
+- `OnlineEntropySource`：random.org HTTP 大气噪声（受 `useOnline` 开关控制）
 
 ---
 
-## 3. 通用接口 Common APIs
+## 3. 服务类接口 Service Interfaces
 
-### 3.1 文件上传 File Upload
+### 3.1 TrueRandom —— 真随机引擎
 
-#### POST /api/v1/common/upload
+**文件**：`core/rng/true_random.dart`
 
-**请求:**
+```dart
+class TrueRandom {
+  final List<EntropyCollector> sources;
+  TrueRandom(this.sources);
 
-| 参数 Parameter | 类型 Type | 必填 Required | 说明 Description |
-|--------------|---------|------------|---------------|
-| file | File | 是 | 上传的文件 |
-| type | String | 否 | 文件类型: image/document/other |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "上传成功",
-  "data": {
-    "fileId": "f_1234567890",
-    "fileName": "example.jpg",
-    "fileSize": 102400,
-    "fileType": "image/jpeg",
-    "url": "https://cdn.example.com/files/f_1234567890.jpg",
-    "thumbnail": "https://cdn.example.com/files/f_1234567890_thumb.jpg"
-  }
+  /// 生成 count 个 [1, vmax] 整数，附带各源采样详情。
+  Future<EntropySample> generate({int count = 3, int vmax = 9});
 }
 ```
 
-### 3.2 获取配置 Get Configuration
+**契约**：
+- `count`：需求数个数（小六壬=3，周易=6）
+- `vmax`：上界（小六壬=6/9，周易=64 等）
+- 返回 `EntropySample`，含 `numbers`（结果）+ `sources`（各源采样展示）+ `timestamp`
+- 任一源失败不影响整体，混合时跳过该源 bytes
 
-#### GET /api/v1/common/config
+### 3.2 HistoryStore —— 历史存储
 
-**请求参数 Query Parameters:**
+**文件**：`core/history/history_store.dart`
 
-| 参数 Parameter | 类型 Type | 必填 Required | 说明 Description |
-|--------------|---------|------------|---------------|
-| keys | String | 否 | 配置键，多个用逗号分隔 |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "siteName": "My Project",
-    "siteLogo": "https://cdn.example.com/logo.png",
-    "uploadMaxSize": 10485760
-  }
+```dart
+class HistoryStore {
+  static Future<List<HistoryEntry>> load();                 // 读全部（最新在前）
+  static Future<void> add(HistoryEntry e);                  // 新增（串行化原子写）
+  static Future<void> updateNote(String id, String? note);  // 改备注
+  static Future<void> remove(String id);                    // 删除单条
+  static Future<void> clear();                              // 清空
+  static String generateId();                               // 生成唯一 ID
 }
 ```
+
+**契约**：
+- 所有写操作经 `_serialize` 串行化，保证原子性
+- `load()` 解析失败返回空列表，不抛异常
+- `add` 后最新记录在 index 0
+
+### 3.3 LunarService —— 农历服务
+
+**文件**：`core/calendar/lunar_service.dart`
+
+```dart
+class LunarService {
+  LunarService._();
+
+  /// 当前时刻农历月、日。
+  /// 返回 (month: 正月=1..腊月=12, day: 初一=1..三十=30, display: '五月十八')
+  static ({int month, int day, String display}) nowLunarMonthDay();
+}
+```
+
+**契约**：底层封装 `lunar` 包的 `Lunar.fromDate(DateTime.now())`，各术可自行调用 lunar 原始 API 完成复杂排盘。
+
+### 3.4 HistoryExport —— 历史导出
+
+**文件**：`core/history/history_export.dart`
+
+```dart
+class HistoryExport {
+  HistoryExport._();
+
+  static Future<File> exportJson(List<HistoryEntry> list);     // JSON（可重导入）
+  static Future<File> exportMarkdown(List<HistoryEntry> list); // Markdown（可读）
+  static Future<File> exportCsv(List<HistoryEntry> list);      // CSV（Excel）
+}
+```
+
+**契约**：均写入 `getTemporaryDirectory()`，文件名 `jeenith_history_<ms>.<ext>`，调用方走 `share_plus` 分享。
+
+### 3.5 PlatformInfo —— 平台检测
+
+**文件**：`core/config/platform_info.dart`
+
+```dart
+class PlatformInfo {
+  static final DeviceFamily family;   // mobile / desktop / web
+  static final String label;          // Android/iOS/Windows/...
+  static bool get isMobile;
+  static bool get isDesktop;
+  static bool get isWeb;
+  static bool get isAndroid;
+  static bool get isWindows;
+  // ...
+}
+```
+
+**契约**：运行时一次性判定，基于 `defaultTargetPlatform` + `kIsWeb`，不依赖 dart:io。
 
 ---
 
-## 4. 用户模块 APIs
+## 4. Provider 接口 Provider Interfaces
 
-### 4.1 用户注册 Register
+### 4.1 配置 Provider
 
-#### POST /api/v1/public/user/register
+**文件**：`core/config/config_providers.dart`
 
-**请求体 Request Body:**
+```dart
+final configProvider = AsyncNotifierProvider<ConfigNotifier, AppConfig>(
+  ConfigNotifier.new,
+);
 
-```json
-{
-  "username": "newuser",
-  "email": "newuser@example.com",
-  "password": "password123",
-  "phone": "13800138000"
+class ConfigNotifier extends AsyncNotifier<AppConfig> {
+  Future<AppConfig> build();                                      // 异步读 prefs
+  Future<void> setShowDetails(bool v);
+  Future<void> setUseOnline(bool v);
+  Future<void> setAnimationsEnabled(bool v);
+  Future<void> setAnimationSetting(String techId, AnimationKind kind, bool v);
+  Future<void> setAllAnimations(List<String> techIds, bool v);
+  Future<void> setThemeMode(ThemeMode v);
 }
 ```
 
-**字段验证 Validation:**
+**契约**：
+- 初始为 `AsyncLoading`，读 prefs 完成后转 `AsyncData<AppConfig>`
+- 每个 setter：先写 prefs，再 `state = AsyncData(current.copyWith(...))`
+- `setAllAnimations` 批量开关所有术的所有 kind
 
-| 字段 Field | 验证规则 Validation |
-|----------|------------------|
-| username | 3-50字符，字母数字下划线 |
-| email | 有效邮箱格式 |
-| password | 6-20字符 |
-| phone | 有效手机号(可选) |
+### 4.2 RNG Provider
 
-**响应:**
+**文件**：`core/rng/rng_providers.dart`
 
-```json
-{
-  "code": 200,
-  "message": "注册成功",
-  "data": {
-    "userId": 1001,
-    "username": "newuser",
-    "email": "newuser@example.com"
-  }
-}
+```dart
+final touchTrackerProvider = Provider<TouchTracker>((ref) => TouchTracker());
+
+final trueRandomProvider = Provider<TrueRandom>((ref) {
+  final config = ref.watch(configProvider).valueOrNull ?? AppConfig.defaults;
+  final tracker = ref.watch(touchTrackerProvider);
+  return TrueRandom([
+    SystemEntropySource(),
+    TouchEntropySource(tracker),
+    OnlineEntropySource(config.useOnline),
+  ]);
+});
 ```
 
-### 4.2 用户登录 Login
+**契约**：
+- `trueRandomProvider` watch `configProvider`，`useOnline` 变化时重建引擎
+- `touchTrackerProvider` 单例，由 `JeenithApp` 的 `Listener` 全局喂数据
 
-#### POST /api/v1/public/user/login
+### 4.3 注册表 Provider
 
-**请求体 Request Body:**
+**文件**：`core/divination/divination_registry.dart`
 
-```json
-{
-  "account": "user@example.com",
-  "password": "password123",
-  "captcha": "1234",
-  "captchaKey": "uuid"
-}
+```dart
+final divinationTechsProvider = Provider<List<DivinationTech>>((ref) { ... });
+final techByIdProvider = Provider.family<DivinationTech?, String>((ref, id) { ... });
+final visibleTechsProvider = Provider<List<DivinationTech>>((ref) { ... });
 ```
 
-**响应:**
+**契约**：
+- `divinationTechsProvider`：全部注册术（含 disabled）
+- `techByIdProvider`：按 id 查找（路由用），未找到返回 null
+- `visibleTechsProvider`：过滤 `enabled` + 按 `sortOrder` 排序（首页 grid 用）
 
-```json
-{
-  "code": 200,
-  "message": "登录成功",
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "refresh_token_string",
-    "tokenType": "Bearer",
-    "expiresIn": 7200,
-    "user": {
-      "id": 1001,
-      "username": "user@example.com",
-      "email": "user@example.com",
-      "avatar": "https://cdn.example.com/avatar/1001.jpg",
-      "roles": ["USER"]
-    }
-  }
-}
+### 4.4 路由 Provider
+
+**文件**：`router/app_router.dart`
+
+```dart
+final routerProvider = Provider<GoRouter>((ref) { ... });
 ```
 
-### 4.3 获取用户信息 Get User Profile
+**契约**：暴露 GoRouter 实例，`JeenithApp` 通过 `ref.watch(routerProvider)` 注入 `MaterialApp.router`。
 
-#### GET /api/v1/user/profile
+### 4.5 Providers Barrel
 
-**请求头 Headers:**
+**文件**：`providers/providers.dart`
 
-```
-Authorization: Bearer {token}
-```
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "id": 1001,
-    "username": "user",
-    "email": "user@example.com",
-    "phone": "13800138000",
-    "avatar": "https://cdn.example.com/avatar/1001.jpg",
-    "status": "ACTIVE",
-    "createdAt": "2024-01-01T00:00:00Z",
-    "lastLoginAt": "2024-01-15T12:30:00Z"
-  }
-}
+```dart
+export '../core/config/config_providers.dart';
+export '../core/rng/rng_providers.dart';
 ```
 
-### 4.4 更新用户信息 Update User Profile
-
-#### PUT /api/v1/user/profile
-
-**请求头 Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
-**请求体 Request Body:**
-
-```json
-{
-  "username": "newusername",
-  "phone": "13900139000",
-  "avatar": "https://cdn.example.com/new-avatar.jpg"
-}
-```
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "更新成功",
-  "data": {
-    "id": 1001,
-    "username": "newusername",
-    "email": "user@example.com",
-    "phone": "13900139000",
-    "avatar": "https://cdn.example.com/new-avatar.jpg"
-  }
-}
-```
-
-### 4.5 修改密码 Change Password
-
-#### POST /api/v1/user/change-password
-
-**请求头 Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
-**请求体 Request Body:**
-
-```json
-{
-  "oldPassword": "oldPassword123",
-  "newPassword": "newPassword123"
-}
-```
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "密码修改成功",
-  "data": null
-}
-```
+各处统一 `import 'providers/providers.dart'` 即得 config + rng providers。
 
 ---
 
-## 5. 订单模块 APIs
+## 5. 数据模型接口 Data Model Interfaces
 
-### 5.1 创建订单 Create Order
+### 5.1 AppConfig
 
-#### POST /api/v1/orders
+```dart
+enum AnimationKind { entrance, transition, painter, reveal }
 
-**请求头 Headers:**
+class AppConfig {
+  final bool showDetails;
+  final bool useOnline;
+  final bool animationsEnabled;
+  final Map<String, Map<String, bool>> animationSettings;
+  final ThemeMode themeMode;
 
-```
-Authorization: Bearer {token}
-```
-
-**请求体 Request Body:**
-
-```json
-{
-  "items": [
-    {
-      "productId": 1001,
-      "skuId": 2001,
-      "quantity": 2
-    },
-    {
-      "productId": 1002,
-      "skuId": 2002,
-      "quantity": 1
-    }
-  ],
-  "remark": "备注信息"
+  bool isAnimationEnabled(String techId, AnimationKind kind);  // 缺省 true
+  AppConfig copyWith({...});
+  static const AppConfig defaults;
 }
 ```
 
-**响应:**
+### 5.2 TechMeta
 
-```json
-{
-  "code": 200,
-  "message": "订单创建成功",
-  "data": {
-    "orderId": 5001,
-    "orderNo": "202401151234567890123456",
-    "totalAmount": 299.00,
-    "payAmount": 299.00,
-    "status": "PENDING",
-    "items": [
-      {
-        "productId": 1001,
-        "productName": "商品A",
-        "skuId": 2001,
-        "skuSpecs": "颜色:红色;尺寸:L",
-        "quantity": 2,
-        "price": 99.00,
-        "totalAmount": 198.00
-      }
-    ],
-    "createdAt": "2024-01-15T12:34:56Z"
-  }
+```dart
+class TechMeta {
+  final String id, displayName, subtitle, description;
+  final Color accentColor;
+  final int sortOrder;
+  final bool enabled;
 }
 ```
 
-### 5.2 获取订单详情 Get Order Detail
+### 5.3 DivinationResult
 
-#### GET /api/v1/orders/{orderId}
-
-**请求头 Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
-**路径参数 Path Parameters:**
-
-| 参数 Parameter | 类型 Type | 说明 Description |
-|--------------|---------|---------------|
-| orderId | Long | 订单ID |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "orderId": 5001,
-    "orderNo": "202401151234567890123456",
-    "userId": 1001,
-    "totalAmount": 299.00,
-    "discountAmount": 0.00,
-    "payAmount": 299.00,
-    "status": "PAID",
-    "statusText": "已支付",
-    "payType": "WECHAT",
-    "payTime": "2024-01-15T12:35:00Z",
-    "items": [
-      {
-        "itemId": 6001,
-        "productId": 1001,
-        "productName": "商品A",
-        "productImage": "https://cdn.example.com/product/1001.jpg",
-        "skuId": 2001,
-        "skuSpecs": "颜色:红色;尺寸:L",
-        "quantity": 2,
-        "price": 99.00,
-        "totalAmount": 198.00
-      }
-    ],
-    "createdAt": "2024-01-15T12:34:56Z",
-    "updatedAt": "2024-01-15T12:35:00Z",
-    "timeline": [
-      {
-        "status": "PENDING",
-        "statusText": "待支付",
-        "time": "2024-01-15T12:34:56Z"
-      },
-      {
-        "status": "PAID",
-        "statusText": "已支付",
-        "time": "2024-01-15T12:35:00Z"
-      }
-    ]
-  }
+```dart
+class DivinationResult {
+  final String techId;
+  final String primaryName;
+  final String? primarySubtitle, secondaryName, secondarySubtitle;
+  final List<ChangingPosition>? changingPositions;
+  final Verdict? verdict;
+  final List<DetailDimension>? details;
+  final List<ResultCardData> cards;        // 必填
+  final List<int>? inputNumbers;
+  final EntropySample? entropy;
+  final DateTime timestamp;                 // 必填
+  final Object? raw;                        // 术特定原始数据（escape hatch）
 }
 ```
 
-### 5.3 订单列表 Order List
+### 5.4 EntropySample
 
-#### GET /api/v1/orders
+```dart
+class EntropySample {
+  final List<int> numbers;                  // 起卦用随机数
+  final List<EntropySourceResult> sources;  // 各源采样详情（UI 展示）
+  final DateTime timestamp;
+}
 
-**请求头 Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
-**查询参数 Query Parameters:**
-
-| 参数 Parameter | 类型 Type | 必填 Required | 说明 Description |
-|--------------|---------|------------|---------------|
-| status | String | 否 | 订单状态筛选 |
-| page | Integer | 否 | 页码，默认1 |
-| size | Integer | 否 | 每页数量，默认20 |
-| sort | String | 否 | 排序字段，默认created_at |
-| order | String | 否 | 排序方向，默认desc |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "items": [
-      {
-        "orderId": 5001,
-        "orderNo": "202401151234567890123456",
-        "totalAmount": 299.00,
-        "payAmount": 299.00,
-        "status": "PAID",
-        "statusText": "已支付",
-        "items": [
-          {
-            "productName": "商品A",
-            "productImage": "https://cdn.example.com/product/1001.jpg",
-            "quantity": 2
-          }
-        ],
-        "createdAt": "2024-01-15T12:34:56Z"
-      }
-    ],
-    "pagination": {
-      "page": 1,
-      "size": 20,
-      "total": 50,
-      "totalPages": 3,
-      "hasNext": true,
-      "hasPrev": false
-    }
-  }
+class EntropySourceResult {
+  final String name, display;
+  final bool succeeded;
 }
 ```
 
-### 5.4 取消订单 Cancel Order
+### 5.5 HistoryEntry
 
-#### POST /api/v1/orders/{orderId}/cancel
+```dart
+class HistoryEntry {
+  final String id, techId, techName, summary, detail;
+  final DateTime time;
+  final String? note;
 
-**请求头 Headers:**
-
-```
-Authorization: Bearer {token}
-```
-
-**请求体 Request Body:**
-
-```json
-{
-  "reason": "不想要了"
+  Map<String, dynamic> toJson();
+  factory HistoryEntry.fromJson(Map<String, dynamic> j);
+  HistoryEntry copyWith({String? note});
 }
 ```
 
-**响应:**
+### 5.6 结果辅助模型 Result Helpers
 
-```json
-{
-  "code": 200,
-  "message": "订单已取消",
-  "data": {
-    "orderId": 5001,
-    "orderNo": "202401151234567890123456",
-    "status": "CANCELLED"
-  }
-}
+```dart
+class DetailDimension { final String label, content; }       // 单维断辞
+class Verdict { final String grade; final Color tone; final String description; }  // 吉凶分级
+class ChangingPosition { final int index; final String label; }  // 变爻位
+class ResultCardData { final String order, title; final String? subtitle, badge, poem, meaning;
+  final Color? badgeColor, accentColor; final List<DetailDimension>? details; }  // 结果卡
+```
+
+详细字段表见《数据模型与 API 契约》。
+
+---
+
+## 6. 接口契约示例 Contract Examples
+
+### 6.1 起卦调用契约 Divination Call
+
+```dart
+// 术页面内
+final sample = await ref.read(trueRandomProvider).generate(count: 6, vmax: 64);
+final numbers = sample.numbers;  // [12, 45, 7, 33, 58, 21]
+final result = ZhouyiAlgorithm.divine(numbers);
+// result: DivinationResult { techId: 'zhouyi', primaryName: '乾为天', cards: [...], ... }
+```
+
+### 6.2 历史记录契约 History Record
+
+```dart
+final entry = HistoryEntry(
+  id: HistoryStore.generateId(),
+  techId: result.techId,
+  techName: '周易',
+  time: result.timestamp,
+  summary: '本卦：乾为天 → 变卦：天风姤',
+  detail: buildCopyText(result),  // 同复制文本
+);
+await HistoryStore.add(entry);  // 串行化原子写
+```
+
+### 6.3 配置变更契约 Config Change
+
+```dart
+await ref.read(configProvider.notifier)
+    .setAnimationSetting('zhouyi', AnimationKind.reveal, false);
+// 内部：prefs.setBool('anim_zhouyi_reveal', false) → state 更新
+// watch(configProvider) 的 UI 自动重建
+```
+
+### 6.4 路由解析契约 Route Resolution
+
+```dart
+// /tech/zhouyi
+GoRoute(path: '/tech/:id', pageBuilder: (ctx, state) {
+  final id = state.pathParameters['id']!;          // 'zhouyi'
+  final tech = ref.read(techByIdProvider(id));     // ZhouyiTech
+  final page = (tech == null) ? _UnknownPage() : _TechPage(tech: tech);
+  final trans = ref.read(configProvider).valueOrNull
+      ?.isAnimationEnabled(id, AnimationKind.transition) ?? true;
+  return TechTransition.build(child: page, techId: id, transitionsEnabled: trans);
+});
 ```
 
 ---
 
-## 6. 产品模块 APIs
+## 7. 接口依赖关系 Interface Dependencies
 
-### 6.1 产品列表 Product List
-
-#### GET /api/v1/products
-
-**查询参数 Query Parameters:**
-
-| 参数 Parameter | 类型 Type | 必填 Required | 说明 Description |
-|--------------|---------|------------|---------------|
-| categoryId | Long | 否 | 分类ID |
-| keyword | String | 否 | 搜索关键词 |
-| page | Integer | 否 | 页码，默认1 |
-| size | Integer | 否 | 每页数量，默认20 |
-| sort | String | 否 | 排序字段 |
-| order | String | 否 | 排序方向 |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "items": [
-      {
-        "productId": 1001,
-        "productName": "商品A",
-        "subtitle": "商品副标题",
-        "mainImage": "https://cdn.example.com/product/1001.jpg",
-        "price": 99.00,
-        "originalPrice": 129.00,
-        "sales": 1000,
-        "stock": 500
-      }
-    ],
-    "pagination": {
-      "page": 1,
-      "size": 20,
-      "total": 100,
-      "totalPages": 5,
-      "hasNext": true,
-      "hasPrev": false
-    }
-  }
-}
 ```
+DivinationTech ──► TechMeta (core/divination)
+                ──► WidgetRef (riverpod)
 
-### 6.2 产品详情 Product Detail
+TrueRandom ──► EntropyCollector (core/rng)
+           ──► EntropySample (core/divination/divination_result)
 
-#### GET /api/v1/products/{productId}
+ConfigNotifier ──► AppConfig (core/config)
+              ──► SharedPreferences
 
-**路径参数 Path Parameters:**
+trueRandomProvider ──► configProvider (watch useOnline)
+                  ──► touchTrackerProvider
+                  ──► TrueRandom / 3 EntropySource
 
-| 参数 Parameter | 类型 Type | 说明 Description |
-|--------------|---------|---------------|
-| productId | Long | 产品ID |
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "productId": 1001,
-    "productName": "商品A",
-    "subtitle": "商品副标题",
-    "mainImage": "https://cdn.example.com/product/1001.jpg",
-    "images": [
-      "https://cdn.example.com/product/1001_1.jpg",
-      "https://cdn.example.com/product/1001_2.jpg"
-    ],
-    "detail": "<p>产品详情HTML内容</p>",
-    "price": 99.00,
-    "originalPrice": 129.00,
-    "sales": 1000,
-    "stock": 500,
-    "categoryId": 101,
-    "categoryName": "分类名称",
-    "skus": [
-      {
-        "skuId": 2001,
-        "skuName": "红色-L",
-        "specs": {
-          "颜色": "红色",
-          "尺寸": "L"
-        },
-        "price": 99.00,
-        "stock": 200
-      },
-      {
-        "skuId": 2002,
-        "skuName": "蓝色-L",
-        "specs": {
-          "颜色": "蓝色",
-          "尺寸": "L"
-        },
-        "price": 99.00,
-        "stock": 300
-      }
-    ]
-  }
-}
-```
-
-### 6.3 产品分类 Product Categories
-
-#### GET /api/v1/products/categories
-
-**响应:**
-
-```json
-{
-  "code": 200,
-  "message": "success",
-  "data": [
-    {
-      "categoryId": 101,
-      "categoryName": "分类A",
-      "parentId": 0,
-      "level": 1,
-      "sort": 1,
-      "children": [
-        {
-          "categoryId": 102,
-          "categoryName": "分类A-1",
-          "parentId": 101,
-          "level": 2,
-          "sort": 1,
-          "children": []
-        }
-      ]
-    }
-  ]
-}
+routerProvider ──► configProvider (read transition setting)
+              ──► techByIdProvider
+              ──► TechTransition
 ```
 
 ---
 
-## 7. 错误码定义 Error Codes
+## 8. 错误处理契约 Error Handling Contract
 
-### 7.1 HTTP状态码 HTTP Status Codes
-
-| 状态码 Status Code | 说明 Description |
-|-----------------|---------------|
-| 200 | 成功 |
-| 201 | 创建成功 |
-| 204 | 成功，无返回内容 |
-| 400 | 请求参数错误 |
-| 401 | 未认证 |
-| 403 | 无权限 |
-| 404 | 资源不存在 |
-| 422 | 验证失败 |
-| 429 | 请求过于频繁 |
-| 500 | 服务器内部错误 |
-| 503 | 服务不可用 |
-
-### 7.2 业务错误码 Business Error Codes
-
-| 错误码 Error Code | HTTP状态 Status | 错误消息 Error Message | 说明 Description |
-|----------------|---------------|---------------------|---------------|
-| 0 | 200 | success | 成功 |
-| 400 | 400 | 请求参数错误 | 参数错误 |
-| 401 | 401 | 未认证 | 未登录或token失效 |
-| 403 | 403 | 无权限 | 无权限访问 |
-| 404 | 404 | 资源不存在 | 请求的资源不存在 |
-| 10001 | 400 | 用户名已存在 | 用户名已被注册 |
-| 10002 | 400 | 邮箱已存在 | 邮箱已被注册 |
-| 10003 | 401 | 用户名或密码错误 | 登录凭证错误 |
-| 10004 | 401 | 账号已被禁用 | 账号状态异常 |
-| 10005 | 404 | 用户不存在 | 用户不存在 |
-| 20001 | 400 | 库存不足 | 商品库存不足 |
-| 20002 | 404 | 订单不存在 | 订单ID无效 |
-| 20003 | 400 | 订单状态不允许此操作 | 订单状态校验失败 |
-| 30001 | 404 | 商品不存在 | 商品ID无效 |
-| 30002 | 400 | 商品已下架 | 商品已下架 |
-| 50000 | 500 | 系统错误 | 服务器内部错误 |
-| 50001 | 503 | 服务维护中 | 系统维护中 |
-
-### 7.3 错误响应示例 Error Response Example
-
-```json
-{
-  "code": 10001,
-  "message": "用户名已存在",
-  "data": null,
-  "timestamp": 1234567890,
-  "requestId": "uuid",
-  "errors": [
-    {
-      "field": "username",
-      "message": "该用户名已被注册，请更换"
-    }
-  ]
-}
-```
+| 接口 Interface | 失败场景 Failure | 处理 Handling |
+|-------------|--------------|------------|
+| `EntropyCollector.sample()` | 采样异常 | TrueRandom catch，标记 failed，跳过该源 |
+| `TrueRandom.generate()` | 全部源失败 | 仍返回（仅时间戳+系统熵加盐），不抛异常 |
+| `HistoryStore.load()` | JSON 解析失败 | catch 返回空列表 |
+| `HistoryStore.add()` | 写失败 | Future error，调用方可 catch 静默 |
+| `techByIdProvider(id)` | 未知 id | 返回 null，路由渲染占位页 |
+| `LunarService.nowLunarMonthDay()` | 不会失败 | lunar 包内部容错 |
+| `ConfigNotifier.build()` | prefs 不可用 | 回退 `AppConfig.defaults` |
 
 ---
 
-## 附录 Appendix
+## 9. 接口演进原则 Interface Evolution
 
-### 附录A：接口测试工具 API Testing Tools
-
-| 工具 Tool | 说明 Description |
-|---------|---------------|
-| Postman | API测试工具 |
-| cURL | 命令行工具 |
-| Swagger/OpenAPI | API文档生成 |
-
-### 附录B：接口版本管理 API Versioning
-
-| 版本 Version | 状态 Status | 说明 Description |
-|-----------|---------|---------------|
-| v1 | 当前版本 Current | 稳定版本 |
-| v2 | 开发中 In Development | 下一版本 |
+- **新增**：新方法/字段直接加，向后兼容
+- **废弃**：旧方法保留但标 `@Deprecated`，下一大版本移除
+- **不破坏**：`buildPage` / `generate` / `add` 等核心签名自 v1.0 稳定
+- **扩展点**：新熵源实现 `EntropyCollector`；新术实现 `DivinationTech`
 
 ---
 
-## 审批与签署 Approvals
-
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 接口设计师 API Designer | | | |
-| 后端负责人 Backend Lead | | | |
-| 前端负责人 Frontend Lead | | | |
-
----
-
-**文档结束 End of Document**
+*本文档由 HeYS-Snowe 维护 · Copyright (c) 2026 Qore. MIT License.*

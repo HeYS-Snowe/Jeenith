@@ -1,531 +1,395 @@
 # 架构设计文档 Architecture Design Document
 
+> 志极 Jeenith · 卜算合集移动应用整体架构设计
+
 ## 文档信息 Document Information
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
-| 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 最后修改 Last Modified | YYYY-MM-DD |
-| 架构师 Architect | |
+| 项目名称 Project | 志极 / Jeenith |
+| 组织 Organization | Qore Origins（叩心）· 简称 Qore |
+| 包名 Package | `com.qore.jeenith` |
+| 文档版本 Version | v2.3.3 |
+| 当前版本 App Version | 2.3.3+23（release，2026-07-15） |
+| 开发者 Developer | HeYS-Snowe（唯一开发者） |
+| 技术栈 Stack | Flutter 3.x（Dart 3.11+）· Riverpod · go_router · lunar |
+| 许可证 License | MIT · Copyright (c) 2026 Qore |
+| 仓库 Repository | https://github.com/1010523654/Jeenith |
 
 ---
 
 ## 修改记录 Change History
 
-| 版本 Version | 日期 Date | 修改人 Modifier | 审核人 Reviewer | 修改内容 Description |
-|-------------|---------|---------------|---------------|-------------------|
-| v1.0.0 | YYYY-MM-DD | [Name] | | 初始版本 Initial Version |
-
----
-
-## 目录 Table of Contents
-
-1. [架构概述 Architecture Overview](#1-架构概述-architecture-overview)
-2. [架构原则 Architecture Principles](#2-架构原则-architecture-principles)
-3. [逻辑架构 Logical Architecture](#3-逻辑架构-logical-architecture)
-4. [部署架构 Deployment Architecture](#4-部署架构-deployment-architecture)
-5. [数据架构 Data Architecture](#5-数据架构-data-architecture)
-6. [安全架构 Security Architecture](#6-安全架构-security-architecture)
-7. [性能架构 Performance Architecture](#7-性能架构-performance-architecture)
-8. [可靠性架构 Reliability Architecture](#8-可靠性架构-reliability-architecture)
+| 版本 Version | 日期 Date | 修改内容 Description |
+|-------------|---------|-------------------|
+| v1.0.0 | 2026-01 | 初始架构：core/features 分层，DivinationTech 注册机制 |
+| v2.0.0 | 2026-03 | 体验深化：品牌定调、动效总开关、真随机引擎重构 |
+| v2.1.0 | 2026-04 | 仪式动画体系 Phase 1-3：周易/紫微/奇门/大六壬/罗盘入场 |
+| v2.2.0 | 2026-05 | 仪式动画 Phase 4-6：梅花/掷筊/抽签/测字入场 + 转场 |
+| v2.3.0 | 2026-06 | 新增八字/测名字，紫微盘重构，AnimationKind 拆分 |
+| v2.3.3 | 2026-07-15 | 首页间距修复、MIT LICENSE、Windows 图标归档 |
 
 ---
 
 ## 1. 架构概述 Architecture Overview
 
-### 1.1 架构目标 Architecture Goals
+### 1.1 项目定位 Product Positioning
 
-| 目标维度 Goal Dimension | 目标描述 Target Description |
-|---------------------|--------------------------|
-| 业务目标 Business | 支持XX万用户，XX万日活 |
-| 性能目标 Performance | 响应时间<200ms (P95)，吞吐量>10000 QPS |
-| 可用性 Availability | 99.9% SLA |
-| 可扩展性 Scalability | 支持水平扩展 |
-| 安全性 Security | 通过安全审计 |
+志极 Jeenith 是一款**叩问本心的卜算合集移动 App**，汇聚十二种传统术数：小六壬、周易（金钱卦）、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘、八字推演、测名字，外加使用手册。核心理念「志于本心，知于极处 —— Question the core. Return to origins.」。
 
-### 1.2 架构视图 Architecture Views
+应用采用**可扩展卜算框架**：每种术独立成模块，通过统一接口与注册表接入，新增一术仅需「新建 feature 目录 + 实现接口 + 注册表追加一行」，无需改动核心层或共享层。
 
-| 视图类型 View Type | 说明 Description |
-|-----------------|---------------|
-| 逻辑架构视图 Logical View | 系统功能模块划分 |
-| 部署架构视图 Deployment View | 物理部署拓扑 |
-| 数据架构视图 Data View | 数据流转和存储 |
-| 安全架构视图 Security View | 安全防护体系 |
+### 1.2 架构目标 Architecture Goals
+
+| 目标维度 Goal | 目标描述 Description |
+|-------------|-------------------|
+| 可扩展 Extensibility | 加新术成本 ≤ 1 个 feature 目录 + 1 行注册；核心层零改动 |
+| 沉浸感 Immersion | 全 APP 星空背景 + 仪式入场动画 + 微交互动效，可按术/按类开关 |
+| 严肃性 Seriousness | 多源 SHA256 真随机引擎，杜绝伪随机操纵感，保证起卦不可预知 |
+| 跨平台 Cross-Platform | Android 触摸 + Windows 桌面鼠标，统一交互范式切换 |
+| 离线自洽 Offline-First | 纯客户端无后端，所有计算本地完成；在线熵源可降级为离线 |
+| 体验可调 Personalization | 动画/熵源/主题均可细粒度配置并持久化 |
+
+### 1.3 架构特征 Architecture Characteristics
+
+- **纯客户端架构**：无后端服务，无网络依赖（除可选的 random.org 在线熵源）
+- **分层 + 注册表混合**：core/data/features 分层 + divination_registry 插件化注册
+- **Riverpod 响应式状态**：配置/熵源/路由均以 Provider 暴露，UI 自动订阅
+- **声明式路由 + 仪式前置**：go_router 声明路由表，`/ritual/<id>` 作为各术入场前置
+- **品牌一致视觉层**：深紫鎏金主题 + Starfield 星空背景全 APP 穿透
 
 ---
 
 ## 2. 架构原则 Architecture Principles
 
-### 2.1 核心设计原则 Core Design Principles
+### 2.1 核心设计原则 Core Principles
 
-| 原则 Principle | 说明 Description | 应用示例 Example |
-|--------------|---------------|--------------|
-| 分层原则 Layered | 系统按职责分层 | 表现层/业务层/数据层 |
-| 单一职责 SRP | 每个模块专注一个业务 | 用户模块专注用户业务 |
-| 开闭原则 OCP | 对扩展开放，对修改关闭 | 通过接口扩展，不改代码 |
-| 依赖倒置 DIP | 高层不依赖低层 | 依赖抽象接口 |
-| 接口隔离 ISP | 接口最小化 | 细分接口避免臃肿 |
+| 原则 Principle | 在本项目的体现 Manifestation |
+|--------------|--------------------------|
+| **开闭原则 OCP** | DivinationTech 接口对扩展开放，registry 对修改关闭；新术不改 core |
+| **单一职责 SRP** | 每层边界清晰：core 提供能力，features 实现术，shared 提供组件 |
+| **依赖倒置 DIP** | features 依赖 core 的抽象接口（DivinationTech/EntropyCollector），不依赖具体实现 |
+| **KISS** | 无后端、无数据库、无复杂 ORM；SharedPreferences JSON 持久化足矣 |
+| **YAGNI** | 不预设账号体系/云同步；按需演进，暂未实现的不预留接口 |
+| **DRY** | 真随机引擎、历史存储、农历服务全 APP 共用，禁止各术自造 |
 
-### 2.2 架构风格 Architecture Style
+### 2.2 项目定制规则 Project Conventions
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      客户端层 Client Layer                       │
-│                 Web/Mobile/Desktop Applications                 │
-└─────────────────────────────────────────────────────────────────┘
-                              │ HTTPS
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      网关层 Gateway Layer                       │
-│           API Gateway / Load Balancer / CDN                     │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     应用层 Application Layer                     │
-│         ┌──────────┐  ┌──────────┐  ┌──────────┐              │
-│         │ 用户服务   │  │ 业务服务   │  │ 支付服务   │              │
-│         │ Service  │  │ Service  │  │ Service  │              │
-│         └──────────┘  └──────────┘  └──────────┘              │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      数据层 Data Layer                          │
-│    ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐         │
-│    │ MySQL   │  │ Redis   │  │ MongoDB │  │  OSS    │         │
-│    └─────────┘  └─────────┘  └─────────┘  └─────────┘         │
-└─────────────────────────────────────────────────────────────────┘
-```
+- 先看再改，理解上下文后动手
+- 身份信息（组织/包名/署名）以 `D:\Code\.Rules\OrganizationAndUser.md` 为唯一事实来源，不硬编码
+- 加新卜算术 = 新建 `features/xxx/` + 实现 `DivinationTech` + registry 注册一行
+- 微交互动画统一封装在 `core/theme/animations.dart`，所有动效可通过设置页全局/分术开关（`AppConfig.animationsEnabled` + `animationSettings`）
+- CustomPainter 实现必须显式 `dispose` TextPainter，防止 native handle 泄漏
+- HistoryStore 写操作必须串行化（原子读-改-写），防止快速连续卜算丢数据
 
 ---
 
 ## 3. 逻辑架构 Logical Architecture
 
-### 3.1 分层架构 Layered Architecture
-
-#### 表现层 Presentation Layer
-
-| 组件 Component | 职责 Responsibility | 技术选型 Technology |
-|--------------|-------------------|-------------------|
-| Web前端 | 用户界面展示 | React/Vue |
-| 移动端 | 移动应用 | React Native/Flutter/原生 |
-| 桌面端 | 桌面应用 | Electron/原生 |
-
-#### 网关层 Gateway Layer
-
-| 组件 Component | 职责 Responsibility |
-|--------------|-------------------|
-| API网关 | 统一入口、路由转发、认证鉴权、限流熔断 |
-| 负载均衡 | 请求分发、健康检查 |
-| CDN | 静态资源分发 |
-
-#### 业务层 Business Layer
-
-| 服务 Service | 职责 Responsibility |
-|-----------|-------------------|
-| 用户服务 User Service | 用户注册、登录、信息管理 |
-| 认证服务 Auth Service | 令牌颁发、验证、刷新 |
-| 订单服务 Order Service | 订单创建、查询、状态管理 |
-| 产品服务 Product Service | 产品管理、库存管理 |
-| 支付服务 Payment Service | 支付对接、退款处理 |
-| 通知服务 Notification Service | 消息推送、邮件发送 |
-
-#### 数据层 Data Layer
-
-| 组件 Component | 职责 Responsibility |
-|--------------|-------------------|
-| 数据访问层 DAO | 数据库CRUD操作 |
-| 缓存层 Cache | 热点数据缓存 |
-| 文件存储 FileStorage | 文件上传下载 |
-
-### 3.2 服务拆分 Service Decomposition
+### 3.1 分层总览 Layered Overview
 
 ```
-系统应用 System
-    │
-    ├── 网关服务 Gateway Service
-    │       ├── 路由转发 Route
-    │       ├── 认证鉴权 Auth
-    │       ├── 限流熔断 Rate Limit
-    │       └── 日志监控 Logging
-    │
-    ├── 用户中心 User Center
-    │       ├── 用户管理 User Management
-    │       ├── 认证授权 Authentication
-    │       ├── 权限管理 Permission
-    │       └── 个人资料 Profile
-    │
-    ├── 订单中心 Order Center
-    │       ├── 订单管理 Order Management
-    │       ├── 购物车 Shopping Cart
-    │       ├── 收货地址 Address
-    │       └── 订单状态机 State Machine
-    │
-    ├── 商品中心 Product Center
-    │       ├── 商品管理 Product Management
-    │       ├── 分类管理 Category Management
-    │       ├── 库存管理 Inventory Management
-    │       └── 搜索服务 Search Service
-    │
-    ├── 支付中心 Payment Center
-    │       ├── 支付对接 Payment Integration
-    │       ├── 退款处理 Refund Processing
-    │       └── 对账服务 Reconciliation Service
-    │
-    └── 通知中心 Notification Center
-            ├── 短信通知 SMS
-            ├── 邮件通知 Email
-            ├── 站内消息 In-App Message
-            └── 推送通知 Push Notification
+┌─────────────────────────────────────────────────────────────┐
+│                     app.dart (JeenithApp)                    │
+│   MaterialApp.router + Starfield 背景 + 主题模式 + 触摸监听    │
+├─────────────────────────────────────────────────────────────┤
+│  router/ (app_router.dart)                                    │
+│  GoRouter · / · /history · /settings · /manual · /ritual/:id · /tech/:id │
+├─────────────────────────────────────────────────────────────┤
+│  features/ (12 术 + 4 系统页)                                  │
+│  每术: algorithm/ data/ state/ ui/ xxx_tech.dart              │
+│  系统页: home / history / settings / manual                   │
+├─────────────────────────────────────────────────────────────┤
+│  shared/widgets/ (14 个共享组件)                               │
+│  GoldButton · DarkButton · InteractableCard · Starfield ...   │
+├─────────────────────────────────────────────────────────────┤
+│  core/ (能力层)                                                │
+│  divination/ · rng/ · config/ · history/ · calendar/ ·        │
+│  theme/ · animation/ · branding                               │
+├─────────────────────────────────────────────────────────────┤
+│  data/ (yijing 卦象数据)                                       │
+│  64 卦 + 八卦数据，周易/梅花共用                                │
+├─────────────────────────────────────────────────────────────┤
+│  providers/ (barrel 聚合 config + rng providers)              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### 3.3 核心业务流程 Core Business Flows
+### 3.2 各层职责 Layer Responsibilities
 
-#### 用户购买流程 User Purchase Flow
+#### 3.2.1 core/ —— 能力层 Capability Layer
+
+提供全 APP 共用的基础设施，**对 features 完全无反向依赖**。
+
+| 子模块 Sub-module | 职责 Responsibility |
+|----------------|------------------|
+| `divination/` | DivinationTech 抽象接口、TechMeta 元数据、DivinationResult 统一结果模型 |
+| `divination/divination_registry.dart` | **核心注册表**：techsProvider / techByIdProvider / visibleTechsProvider |
+| `rng/` | 真随机引擎：EntropyCollector 接口 + 3 源（System/Touch/Online）+ TrueRandom SHA256 混合 |
+| `config/` | AppConfig 配置模型 + ConfigNotifier（AsyncNotifier）+ PlatformInfo 平台检测 |
+| `history/` | HistoryStore 原子存储 + HistoryEntry 模型 + HistoryExport 导出（JSON/MD/CSV） |
+| `calendar/` | LunarService 农历服务（封装 lunar 包） |
+| `theme/` | AppColors/AppColorsLight 色彩 + AppFonts 字体 + appTheme 主题 + AppAnimations 动效常量 |
+| `animation/` | 仪式动画（ritual/）、转场（transitions/）、揭示（reveal/）、粒子（particles/）、绘制（painters/） |
+| `branding.dart` | 品牌身份常量（appName/orgCn/slogan/copyright） |
+
+#### 3.2.2 data/ —— 数据层 Data Layer
+
+| 子模块 | 职责 |
+|-------|----|
+| `yijing/` | 64 卦象数据 + 八卦属性数据，周易（金钱卦）与梅花易数共用，避免重复定义 |
+
+#### 3.2.3 features/ —— 功能层 Feature Layer
+
+每个术独立成目录，内部遵循统一子结构：
 
 ```
-┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐   ┌─────────┐
-│ 浏览商品  │──▶│ 加入购物车│──▶│ 下单支付 │──▶│ 订单完成 │──▶│ 物流配送 │
-│ Browse  │   │  Cart   │   │  Pay    │   │ Complete │   │ Delivery│
-└─────────┘   └─────────┘   └─────────┘   └─────────┘   └─────────┘
-                  │               │
-                  ▼               ▼
-             ┌─────────┐   ┌─────────┐
-             │ 库存预占 │   │ 支付网关 │
-             │ Stock   │   │ Payment │
-             └─────────┘   └─────────┘
+features/<tech>/
+  algorithm/    # 起卦算法（纯逻辑，无 UI 依赖）
+  data/         # 术特定静态数据（如六宫、签文、字库）
+  state/        # Riverpod providers（术状态管理）
+  ui/           # 页面、自定义组件、仪式动画
+  <tech>_tech.dart  # DivinationTech 实现 + TechMeta 元数据
+```
+
+当前已注册 12 术（按 sortOrder 排序）：
+
+| # | id | 显示名 | 副标题 | sortOrder |
+|---|----|-------|-------|-----------|
+| 1 | xiaoliuren | 小六壬 | 掐指神课 | 0 |
+| 2 | zhouyi | 周易 | 金钱卦 | 1 |
+| 3 | meihua | 梅花易数 | 心易万物 | 2 |
+| 4 | jiaobei | 掷筊 | 圣杯问神 | 3 |
+| 5 | ziwei | 紫微斗数 | 帝星命盘 | 4 |
+| 6 | qimen | 奇门遁甲 | 九宫飞布 | 5 |
+| 7 | chouqian | 抽签 | 天机一签 | 6 |
+| 8 | cezi | 测字 | 字藏玄机 | 7 |
+| 9 | daliuren | 大六壬 | 三传四课 | 8 |
+| 10 | luopan | 风水罗盘 | 二十四山 | 9 |
+| 11 | name_test | 测名字 | 名姓五行 | 10 |
+| 12 | bazi | 八字推演 | 四柱命理 | 11 |
+
+系统页（非术）：`home/`（首页 grid）、`history/`（历史）、`settings/`（设置）、`manual/`（手册）。
+
+#### 3.2.4 shared/widgets/ —— 共享组件层 Shared Widgets
+
+14 个全 APP 复用的展示组件，所有动效受 `AppConfig.animationsEnabled` 总开关约束：
+
+`GoldButton`（鎏金主按钮，物理反馈）· `DarkButton`（暗色次按钮）· `InteractableCard`（可交互卡片，错峰上浮）· `DecorativePanel`（装饰面板）· `SectionTitle`（分节标题）· `SvgIcon`（SVG 图标）· `AnimatedExpandIcon`（展开图标旋转）· `HoverableIconButton`（桌面 hover 态）· `EntranceItem`（错峰入场封装）· `Starfield`（星空粒子背景）· `DivinationLoadingIndicator`（起卦加载态）· `CopyResultButton`（复制结果）· `ShareResultButton`（分享结果）· `GuideDialog`（引导弹窗）。
+
+#### 3.2.5 providers/ —— 聚合层 Barrel
+
+`providers/providers.dart` 是 barrel 文件，统一 `export` config_providers + rng_providers，各处一处 import 即得全部 providers。
+
+#### 3.2.6 router/ —— 路由层 Router
+
+`router/app_router.dart` 声明 GoRouter 路由表，`routerProvider` 暴露。`/tech/:id` 路由通过 `techByIdProvider` 动态解析术并注入 `TechTransition` 转场（按术动画开关降级为 fade）。
+
+---
+
+## 4. 依赖关系 Dependency Graph
+
+### 4.1 层间依赖方向
+
+```
+app.dart ──► router ──► features ──► core (divination/rng/config/history/calendar/theme)
+                  │          │
+                  │          └──► shared/widgets ──► core/theme
+                  │          └──► data/yijing (仅 zhouyi/meihua)
+                  └──► core (config/animation/transitions)
+features ──► providers (barrel) ──► core/config + core/rng
+```
+
+**依赖方向铁律**：
+- core **不依赖** features / shared / router（无反向依赖）
+- shared/widgets **只依赖** core/theme
+- features 依赖 core + shared + data，**不依赖** 其他 features（术间隔离）
+- router 依赖 core（config/divination）+ features 的页面入口
+
+### 4.2 关键 Provider 依赖链
+
+```
+configProvider (AsyncNotifier<AppConfig>)
+   │
+   ├──► trueRandomProvider (watch config.useOnline)
+   │        └──► TouchEntropySource(touchTrackerProvider)
+   ├──► routerProvider (read config.isAnimationEnabled for transitions)
+   └──► JeenithApp (watch config.themeMode)
+
+divinationTechsProvider (List<DivinationTech>)
+   ├──► visibleTechsProvider (filter enabled + sort)
+   └──► techByIdProvider.family (route resolution)
 ```
 
 ---
 
-## 4. 部署架构 Deployment Architecture
+## 5. 扩展机制 Extension Mechanism
 
-### 4.1 网络拓扑 Network Topology
+### 5.1 新增卜算术流程 Adding a New Tech
 
-```
-                    ┌─────────────────┐
-                    │   Internet     │
-                    └────────┬────────┘
-                             │ HTTPS
-                             ▼
-                    ┌─────────────────┐
-                    │  DNS / CDN      │
-                    └────────┬────────┘
-                             │
-                             ▼
-┌────────────────────────────────────────────────────────────────┐
-│                         DMZ 区域                               │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │   WAF        │  │   LB/SLB     │  │   CDN节点     │         │
-│  │  防火墙      │  │  负载均衡     │  │  内容分发     │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-└────────────────────────────────────────────────────────────────┘
-                             │
-                             ▼
-┌────────────────────────────────────────────────────────────────┐
-│                        应用区域                                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │  Web服务器组  │  │  应用服务器组  │  │  任务服务器组  │         │
-│  │  Nginx/K8s   │  │  App Service  │  │  Job/Cron     │         │
-│  │  [x3]        │  │  [xN]         │  │  [x2]         │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-└────────────────────────────────────────────────────────────────┘
-                             │
-                             ▼
-┌────────────────────────────────────────────────────────────────┐
-│                        数据区域                                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │  MySQL主从    │  │  Redis集群    │  │  文件存储     │         │
-│  │  [M-S]       │  │  [Cluster]   │  │  OSS/NAS     │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-│  ┌──────────────┐  ┌──────────────┐                         │
-│  │  MongoDB副本集 │  │  ES集群       │                         │
-│  │  [ReplicaSet] │  │  [Cluster]   │                         │
-│  └──────────────┘  └──────────────┘                         │
-└────────────────────────────────────────────────────────────────┘
-                             │
-                             ▼
-┌────────────────────────────────────────────────────────────────┐
-│                        管理区域                                │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │  监控系统     │  │  日志系统     │  │  跳板机       │         │
-│  │  Prometheus  │  │  ELK/EFK     │  │  Bastion     │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-└────────────────────────────────────────────────────────────────┘
-```
+以「紫微斗数」为例（已落地）：
 
-### 4.2 服务器规格 Server Specifications
+1. **新建目录**：`features/ziwei/`（含 algorithm/data/state/ui/ziwei_tech.dart）
+2. **实现接口**：
+   ```dart
+   class ZiweiTech extends DivinationTech {
+     @override String get id => 'ziwei';
+     @override TechMeta get meta => const TechMeta(id: 'ziwei', ...);
+     @override Widget buildPage(BuildContext context, WidgetRef ref) => const ZiweiPage();
+   }
+   ```
+3. **注册一行**：在 `divination_registry.dart` 的 techs 列表追加 `ZiweiTech()`
 
-| 服务器类型 Server Type | 数量 Count | 配置规格 Specification | 用途 Usage |
-|---------------------|----------|---------------------|----------|
-| 负载均衡 LB | 2 | 4C8G | 负载均衡 |
-| 应用服务器 App Server | 3+ | 8C16G | 应用服务 |
-| 数据库主库 DB Master | 1 | 16C32G + SSD | 主数据库 |
-| 数据库从库 DB Slave | 1+ | 16C32G + SSD | 从数据库 |
-| 缓存服务器 Redis | 3 | 8C16G | 缓存集群 |
-| 文件服务器 File Server | - | 对象存储 | 文件存储 |
+**完成。** 无需修改 core/ 或 shared/ 任何代码。首页 grid 自动出现卡片，`/tech/ziwei` 路由自动可用，历史记录/复制/分享自动接入。
 
-### 4.3 容器化部署 Container Deployment
+### 5.2 注册表的自动发现 Automatic Discovery
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Kubernetes Cluster                       │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                   Namespace: prod                    │   │
-│  │                                                      │   │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐          │   │
-│  │  │ Gateway  │  │  User    │  │  Order   │          │   │
-│  │  │  [3Pod]  │  │  [3Pod]  │  │  [3Pod]  │          │   │
-│  │  └──────────┘  └──────────┘  └──────────┘          │   │
-│  │                                                      │   │
-│  │  ┌──────────┐  ┌──────────┐                        │   │
-│  │  │ Product  │  │ Payment  │                        │   │
-│  │  │  [2Pod]  │  │  [2Pod]  │                        │   │
-│  │  └──────────┘  └──────────┘                        │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                   Ingress Controller                │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
+- `visibleTechsProvider` 过滤 `meta.enabled` 并按 `sortOrder` 排序，首页 grid 自动渲染
+- `techByIdProvider.family` 按路由参数 `:id` 查找，`/tech/:id` 自动路由
+- 注册表带 `assert` 检测 id 重复，避免静默命中错误项
+- 仪式动画通过 `core/animation/ritual/` 下对应 `<tech>_ritual.dart` + 路由 `/ritual/<id>` 接入
+
+### 5.3 动效可扩展性 Animation Extensibility
+
+新增术的动画开关自动纳入设置页（`animationSettings[techId]` 缺省时 `isAnimationEnabled` 返回 true），无需额外注册。AnimationKind 四类（entrance/transition/painter/reveal）对新术即开即用。
 
 ---
 
-## 5. 数据架构 Data Architecture
+## 6. 跨平台架构 Cross-Platform Architecture
 
-### 5.1 数据分层 Data Layering
+### 6.1 平台检测 Platform Detection
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      应用数据层 Application                  │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │ 用户数据  │  │ 订单数据  │  │ 商品数据  │                 │
-│  │UserData  │  │OrderData │  │Product  │                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      数据访问层 Data Access                  │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │  DAO/ORM │  │  Cache   │  │  Search  │                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      存储层 Storage                          │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
-│  │  MySQL   │  │  Redis   │  │ MongoDB  │  │    OSS   │  │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
-└─────────────────────────────────────────────────────────────┘
-```
+`PlatformInfo`（基于 `defaultTargetPlatform` + `kIsWeb`，不依赖 dart:io）一次性判定设备大类：
 
-### 5.2 数据流转 Data Flow
+| 设备大类 Family | 平台 Platforms | 交互范式 Interaction |
+|--------------|--------------|-------------------|
+| `mobile` | Android / iOS | 触摸拖拽、DraggableScrollableSheet、触摸轨迹熵源 |
+| `desktop` | Windows / macOS / Linux | 鼠标滚轮、分栏布局、hover 轨迹熵源 |
+| `web` | Web | 暂按 mobile 范式 |
 
-**写数据流程 Write Flow:**
+### 6.2 交互范式切换 Interaction Switching
 
-```
-Client Request
-    │
-    ▼
-[验证] Validate
-    │
-    ▼
-[业务处理] Business Processing
-    │
-    ├─▶ [写缓存] Write Cache (Optional)
-    │
-    ├─▶ [写消息队列] Message Queue (Async)
-    │
-    └─▶ [写数据库] Write Database
-         │
-         ▼
-    Return Response
-```
-
-**读数据流程 Read Flow:**
-
-```
-Client Request
-    │
-    ▼
-[读缓存] Read Cache
-    │
-    ├─ 命中 Hit ──▶ Return Data
-    │
-    └─ 未命中 Miss
-         │
-         ▼
-    [读数据库] Read Database
-         │
-         ├─▶ [回写缓存] Write Back Cache
-         │
-         └─▶ Return Data
-```
-
-### 5.3 数据一致性 Data Consistency
-
-| 策略 Strategy | 应用场景 Scenario | 实现方式 Implementation |
-|-------------|----------------|----------------------|
-| 强一致性 Strong Consistency | 金融交易、库存扣减 | 分布式事务、2PC |
-| 最终一致性 Eventual Consistency | 订单状态同步、消息推送 | 消息队列、事件溯源 |
-| 补偿模式 Compensation | 支付失败回滚 | Saga模式 |
+- 触摸轨迹熵源（`TouchEntropySource`）在桌面降级为 hover 采样（`onPointerHover`）
+- 风水罗盘（`luopan`）陀螺仪/磁场（`sensors_plus`）在无传感器平台降级为触摸/鼠标交互
+- `HoverableIconButton` 仅桌面显示 hover 态
 
 ---
 
-## 6. 安全架构 Security Architecture
+## 7. 数据架构 Data Architecture
 
-### 6.1 安全分层 Security Layers
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      网络安全 Network                        │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │  防火墙   │  │  DDoS防护 │  │  WAF     │                 │
-│  │ Firewall │  │ Protection│  │  Web防火墙│                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      应用安全 Application                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │  身份认证 │  │  权限控制 │  │  数据加密 │                 │
-│  │ AuthN    │  │  AuthZ    │  │ Encryption│                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-└─────────────────────────────────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      数据安全 Data                            │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                 │
-│  │  敏感加密 │  │  访问控制 │  │  审计日志 │                 │
-│  │ Encryption│  │  Access   │  │  Audit   │                 │
-│  └──────────┘  └──────────┘  └──────────┘                 │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 6.2 安全措施 Security Measures
-
-| 安全领域 Security Area | 措施 Measures |
-|---------------------|--------------|
-| 网络安全 | HTTPS、TLS 1.3、防火墙规则 |
-| 认证安全 | JWT、OAuth2、多因素认证 |
-| 授权安全 | RBAC、ABAC权限模型 |
-| 数据安全 | 传输加密、存储加密、数据脱敏 |
-| 应用安全 | 输入验证、SQL注入防护、XSS防护 |
-| 运维安全 | 最小权限原则、操作审计 |
-
----
-
-## 7. 性能架构 Performance Architecture
-
-### 7.1 性能优化策略 Performance Optimization
-
-| 层面 Layer | 优化策略 Optimization Strategy |
-|----------|---------------------------|
-| 前端 | CDN、懒加载、资源压缩、HTTP缓存 |
-| 网络 | HTTP/2、长连接、压缩传输 |
-| 网关 | 负载均衡、连接池、限流 |
-| 应用 | 异步处理、连接池、线程池 |
-| 数据 | 索引优化、查询优化、分库分表 |
-| 缓存 | 多级缓存、缓存预热、缓存穿透防护 |
-
-### 7.2 多级缓存 Multi-Level Cache
+### 7.1 数据流向 Data Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      客户端缓存 Client                       │
-│                    Browser Cache / App Cache                │
-└─────────────────────────────────────────────────────────────┘
-                            │ Miss
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      CDN缓存 Edge                            │
-│                      CDN Edge Cache                         │
-└─────────────────────────────────────────────────────────────┘
-                            │ Miss
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      应用缓存 Local                           │
-│                    Guava / Caffeine                         │
-└─────────────────────────────────────────────────────────────┘
-                            │ Miss
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      分布式缓存 Distributed                   │
-│                      Redis Cluster                         │
-└─────────────────────────────────────────────────────────────┘
-                            │ Miss
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      数据库 Database                         │
-│                      MySQL / PostgreSQL                     │
-└─────────────────────────────────────────────────────────────┘
+用户输入 ──► TouchTracker（轨迹熵）──┐
+系统熵（Random.secure）─────────────┤
+random.org 大气噪声（http）─────────┤
+                                    ▼
+                        TrueRandom.generate() (SHA256 混合)
+                                    │
+                                    ▼
+                        EntropySample (numbers + sources)
+                                    │
+                                    ▼
+                    各术 algorithm 起卦 ──► DivinationResult
+                                    │
+                    ┌───────────────┤
+                    ▼               ▼
+              UI 渲染结果     HistoryStore.add (持久化)
+                                    │
+                                    ▼
+                        SharedPreferences (JSON)
 ```
 
----
+### 7.2 持久化策略 Persistence
 
-## 8. 可靠性架构 Reliability Architecture
+| 数据 Data | 存储 Storage | Key | 说明 |
+|---------|------------|-----|----|
+| 卜算历史 | SharedPreferences | `divination_history` | JSON 数组，串行化原子写 |
+| 配置-展示详情 | SharedPreferences | `showDetails` | bool |
+| 配置-在线熵源 | SharedPreferences | `useOnline` | bool |
+| 配置-动画总开关 | SharedPreferences | `animationsEnabled` | bool |
+| 配置-主题模式 | SharedPreferences | `themeMode` | light/dark/system |
+| 配置-分术动画 | SharedPreferences | `anim_<techId>_<kind>` | bool |
 
-### 8.1 高可用设计 High Availability Design
-
-| 组件 Component | HA方案 HA Solution |
-|--------------|------------------|
-| 应用服务器 | 多实例部署 + 健康检查 |
-| 数据库 | 主从复制 + 自动故障转移 |
-| 缓存 | 集群模式 + 哨兵/Cluster |
-| 消息队列 | 集群模式 + 镜像队列 |
-
-### 8.2 容错设计 Fault Tolerance
-
-| 策略 Strategy | 说明 Description |
-|------------|---------------|
-| 超时重试 Retry | 失败请求自动重试，指数退避 |
-| 熔断器 Circuit Breaker | 连续失败触发熔断，快速失败 |
-| 限流 Rate Limit | 限制请求量，保护系统 |
-| 降级 Fallback | 服务异常时降级处理 |
-| 隔离 Isolation | 资源隔离，防止雪崩 |
-
-### 8.3 容灾设计 Disaster Recovery
-
-| 方案 Scenario | RTO | RPO | 策略 Strategy |
-|-------------|-----|-----|-------------|
-| 同城双机房 | 分钟级 | 分钟级 | 数据同步，应用双活 |
-| 异地多活 | 小时级 | 小时级 | 异地数据复制 |
+详见《数据库设计说明书》。
 
 ---
 
-## 附录 Appendix
+## 8. 安全与可靠性 Security & Reliability
 
-### 附录A：架构决策记录 Architecture Decision Records
+### 8.1 真随机性保障 True Randomness
 
-| 决策 ID Decision ID | 决策内容 Decision | 理由 Rationale | 后果 Consequences |
-|------------------|----------------|--------------|-----------------|
-| ADR-001 | 采用微服务架构 | 业务复杂度高，需要独立部署 | 运维复杂度增加 |
-| ADR-002 | 选择MySQL作为主数据库 | 成熟稳定，团队熟悉 | 大表性能需优化 |
+- **多源混合**：系统熵 + 触摸轨迹 + 在线大气噪声，任一源失败不影响整体
+- **SHA256 链式扩展**：避免简单切片相关性，每个数独立哈希
+- **收尾加盐**：时间戳 + 16 字节系统熵，防止重放
+- **降级策略**：在线源失败时静默跳过，离线仍可用
 
-### 附录B：技术债务 Technical Debt
+### 8.2 数据可靠性 Data Reliability
 
-| 债务项 Debt Item | 优先级 Priority | 计划偿还计划 Payback Plan |
-|----------------|---------------|------------------------|
-| | | |
+- **HistoryStore 串行化**：所有写操作经 `_serialize` 链式排队，杜绝 load→modify→save 竞态
+- **ID 单调性**：`generateId` = `microsecondsSinceEpoch` + 自增计数（& 0xFFFF），避免同帧碰撞
+- **JSON 容错**：`load()` 解析失败返回空列表，不抛异常崩溃
+
+### 8.3 内存安全 Memory Safety
+
+- CustomPainter 必须 `dispose` TextPainter，防 native handle 泄漏
+- AnimationController 在 State.dispose 中释放
+- 粒子系统（Starfield）定时清理离屏粒子
+
+### 8.4 无敏感信息 No Sensitive Data
+
+- 纯本地无网络上报，无用户账号，无个人隐私上传
+- random.org 仅请求随机字节，不携带任何用户数据
 
 ---
 
-## 审批与签署 Approvals
+## 9. 部署架构 Deployment Architecture
 
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 架构师 Architect | | | |
-| 技术总监 Tech Director | | | |
-| CTO | | | |
+### 9.1 构建产物 Build Artifacts
+
+| 平台 Platform | 命令 Command | 产物 Artifact | 归档 Archive |
+|-------------|------------|-------------|------------|
+| Android | `pwsh -File scripts/build_apk.ps1 -Status release` | APK | `builds/android/` |
+| Windows | `flutter build windows --release` | exe + dll | `builds/windows/`（手动 zip） |
+
+### 9.2 版本与归档 Versioning & Archive
+
+- 版本号格式：`major.minor.patch+build`（如 `2.3.3+23`）
+- 构建脚本自动更新 pubspec.yaml 版本 + 归档 + 双份历史（`build_history.json` + `release_history.json`）
+- 构建规范见 `docs/FLUTTER_APK_BUILD_PIPELINE.md`
 
 ---
 
-**文档结束 End of Document**
+## 10. 技术决策记录 Architecture Decision Records
+
+| 决策 Decision | 选择 Choice | 理由 Rationale |
+|-------------|-----------|--------------|
+| 框架 | Flutter | 一套代码 Android + Windows 桌面，声明式 UI 契合仪式动画 |
+| 状态管理 | Riverpod | 编译时安全、Provider family 适合 techById 路由解析 |
+| 路由 | go_router | 声明式路由表 + path 参数 + pageBuilder 转场控制 |
+| 历法 | lunar（寿星天文历） | 业内权威，覆盖 1900-2100，干支/节气/八字一体 |
+| 随机 | 多源 SHA256 | 严肃卜算需不可预知，单源 Random 不可信 |
+| 持久化 | SharedPreferences | 无关系数据，K/V 足矣，零依赖 |
+| 无后端 | 纯客户端 | 隐私自洽 + 离线可用 + 维护成本最低 |
+
+---
+
+## 附录：核心源文件索引 Source Index
+
+| 文件 File | 作用 Role |
+|---------|--------|
+| `mobile/lib/app.dart` | 应用根组件 |
+| `mobile/lib/main.dart` | 入口（ProviderScope + 桌面窗口初始化） |
+| `mobile/lib/core/divination/divination_tech.dart` | DivinationTech 接口 + TechMeta |
+| `mobile/lib/core/divination/divination_registry.dart` | 核心注册表 |
+| `mobile/lib/core/divination/divination_result.dart` | 统一结果模型 |
+| `mobile/lib/core/rng/true_random.dart` | 真随机引擎 |
+| `mobile/lib/core/config/app_config.dart` | 配置模型 + AnimationKind |
+| `mobile/lib/core/config/config_providers.dart` | ConfigNotifier |
+| `mobile/lib/core/history/history_store.dart` | 原子历史存储 |
+| `mobile/lib/router/app_router.dart` | GoRouter 路由表 |
+| `mobile/lib/core/theme/app_theme.dart` | 主题与色彩 |
+| `mobile/lib/core/theme/animations.dart` | 动效常量 |
+
+---
+
+*本文档由 HeYS-Snowe 维护 · Copyright (c) 2026 Qore. MIT License.*

@@ -4,30 +4,33 @@
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
+| 项目名称 Project Name | 志极 Jeenith |
 | 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 技术负责人 Tech Lead | |
+| 创建日期 Created Date | 2026-07-15 |
+| 技术栈 Tech Stack | Flutter 3.x（Dart 3.11+） |
+| 开发者 Developer | HeYS-Snowe |
 
 ---
 
 ## 修改记录 Change History
 
-| 版本 Version | 日期 Date | 修改人 Modifier | 审核人 Reviewer | 修改内容 Description |
-|-------------|---------|---------------|---------------|-------------------|
-| v1.0.0 | YYYY-MM-DD | [Name] | | 初始版本 Initial Version |
+| 版本 Version | 日期 Date | 修改人 Modifier | 修改内容 Description |
+|-------------|---------|---------------|-------------------|
+| v1.0.0 | 2026-07-15 | HeYS-Snowe | 初始版本，基于项目实际代码风格提炼 |
 
 ---
 
 ## 目录 Table of Contents
 
 1. [规范概述 Standards Overview](#1-规范概述-standards-overview)
-2. [通用编码规范 General Coding Standards](#2-通用编码规范-general-coding-standards)
+2. [目录结构 Directory Structure](#2-目录结构-directory-structure)
 3. [命名规范 Naming Conventions](#3-命名规范-naming-conventions)
-4. [注释规范 Comment Standards](#4-注释规范-comment-standards)
-5. [代码格式化 Code Formatting](#5-代码格式化-code-formatting)
-6. [错误与异常处理 Error & Exception Handling](#6-错误与异常处理-error--exception-handling)
-7. [安全编码规范 Security Coding](#7-安全编码规范-security-coding)
-8. [测试规范 Testing Standards](#8-测试规范-testing-standards)
+4. [Dart/Flutter 风格 Dart/Flutter Style](#4-dartflutter-风格-dartflutter-style)
+5. [状态管理 State Management](#5-状态管理-state-management)
+6. [路由管理 Routing](#6-路由管理-routing)
+7. [动效与组件 Animation & Widgets](#7-动效与组件-animation--widgets)
+8. [硬约束 Hard Constraints](#8-硬约束-hard-constraints)
+9. [注释规范 Comment Standards](#9-注释规范-comment-standards)
 
 ---
 
@@ -35,443 +38,356 @@
 
 ### 1.1 规范目的 Purpose
 
-本文档定义项目中使用的编码规范，确保代码的一致性、可读性和可维护性。
+本文档定义志极 Jeenith 项目的编码规范，确保代码的一致性、可读性和可维护性。所有规范均从项目实际代码风格提炼，遵循 SOLID、DRY、KISS、YAGNI 原则。
 
 ### 1.2 适用范围 Scope
 
-| 语言/平台 Language/Platform | 适用 Applicable |
-|--------------------------|----------------|
-| Java | ✅ 是 |
-| JavaScript/TypeScript | ✅ 是 |
-| SQL | ✅ 是 |
-| HTML/CSS | ✅ 是 |
+适用于 `mobile/lib/` 下全部 Dart 代码，涵盖 core/ 框架层、data/ 数据层、features/ 术数层、shared/ 共享组件层、providers/ 与 router/ 聚合层。
 
----
-
-## 2. 通用编码规范 General Coding Standards
-
-### 2.1 基本原则 Basic Principles
+### 1.3 核心原则 Core Principles
 
 | 原则 Principle | 说明 Description |
 |--------------|---------------|
-| KISS Keep It Simple | 保持简单，避免过度设计 |
-| DRY Don't Repeat Yourself | 避免重复代码 |
-| YAGNI You Aren't Gonna Need It | 只实现当前需要的功能 |
-| SOLID | 遵循SOLID原则 |
+| 先看再改 Read before edit | 修改前必须理解上下文与现有风格 |
+| 框架与内容分离 Framework/Content Split | core/ 提供框架，features/ 实现术数，互不侵入 |
+| 可扩展性 Extensibility | 加新术 = 新建 feature 目录 + 实现 DivinationTech + registry 注册一行 |
+| 身份不硬编码 No hardcoded identity | 身份信息以 `D:\Code\.Rules\OrganizationAndUser.md` 为准，代码内通过 Branding 类引用 |
 
-### 2.2 代码质量标准 Code Quality Standards
+---
 
-| 指标 Metric | 标准 Standard |
-|----------|-------------|
-| 函数长度 Function Length | ≤ 50行 |
-| 文件长度 File Length | ≤ 500行 |
-| 圈复杂度 Cyclomatic Complexity | ≤ 10 |
-| 代码重复率 Duplication | < 5% |
-| 测试覆盖率 Test Coverage | ≥ 70% |
+## 2. 目录结构 Directory Structure
+
+```
+mobile/lib/
+├── main.dart                    # 入口（async + ProviderScope + 桌面窗口初始化）
+├── app.dart                     # JeenithApp（MaterialApp.router + Starfield + 主题）
+├── core/                        # 核心框架层（不依赖 features）
+│   ├── animation/               # 动效体系（ritual/transitions/reveal/particles/painters）
+│   ├── calendar/                # 农历服务（lunar_service.dart）
+│   ├── config/                  # 配置（AppConfig + ConfigNotifier + PlatformInfo）
+│   ├── divination/              # 卜算框架（Tech/Registry/Result）
+│   ├── history/                 # 历史存储与导出
+│   ├── rng/                     # 真随机引擎（多源熵 + TrueRandom）
+│   ├── theme/                   # 主题与动效常量（app_theme + animations）
+│   └── branding.dart            # 品牌身份常量
+├── data/                        # 数据层
+│   └── yijing/                  # 周易 64 卦 + 八卦数据（周易/梅花共用）
+├── features/                    # 术数实现层（每术一个目录）
+│   ├── home/                    # 首页
+│   ├── xiaoliuren/              # 小六壬（algorithm/ + ui/ + state/ + data/ + xiaoliuren_tech.dart）
+│   ├── zhouyi/                  # 周易
+│   ├── meihua/                  # 梅花易数
+│   ├── ...（每术结构相同）
+│   ├── manual/                  # 使用手册
+│   ├── settings/                # 设置
+│   └── history/                 # 历史记录页
+├── providers/                   # barrel 聚合（providers.dart）
+├── router/                      # 路由（app_router.dart，GoRouter + 仪式路由）
+└── shared/                      # 共享组件
+    └── widgets/                 # GoldButton/DarkButton/Starfield/InteractableCard 等
+```
+
+### 2.1 术数 feature 目录约定 Tech Feature Convention
+
+每个术数 feature 目录遵循统一结构：
+
+```
+features/<tech_id>/
+├── <tech_id>_tech.dart          # 实现 DivinationTech 接口（必须）
+├── algorithm/
+│   └── divine.dart              # 起卦算法（纯函数，必须）
+├── ui/
+│   └── <tech_id>_page.dart      # 主页面（必须）
+├── data/                        # 常量数据表（可选）
+└── state/                       # Riverpod providers（可选）
+```
 
 ---
 
 ## 3. 命名规范 Naming Conventions
 
-### 3.1 通用命名规则 General Naming Rules
+| 类型 Type | 风格 Style | 示例 Example |
+|----------|----------|------------|
+| 类名 Class | UpperCamelCase | `DivinationTech`、`TrueRandom`、`HistoryStore` |
+| 变量/方法 Variable/Method | lowerCamelCase | `trueRandomProvider`、`generateId` |
+| 常量 Constant | lowerCamelCase | `pressDown`、`cardStagger` |
+| 私有成员 Private | 前缀下划线 | `_serialize`、`_chain`、`_key` |
+| 文件名 File | lowerCamelCase / snake_case | `divination_tech.dart`、`app_config.dart` |
+| Provider | lowerCamelCase + Provider 后缀 | `configProvider`、`trueRandomProvider` |
+| 路由路径 Route Path | 小写 + 斜杠 | `/tech/xiaoliuren`、`/ritual/zhouyi` |
+| Tech ID | 小写无下划线 / 小写 | `xiaoliuren`、`name_test` |
 
-| 规则 Rule | 说明 Description | 示例 Example |
-|---------|---------------|-------------|
-| 有意义 Meaningful | 名称应描述用途 | `getUserInfo()` ✅ / `getData()` ❌ |
-| 避免缩写 Avoid Abbreviations | 除通用缩写外 | `userId` ✅ / `uid` ❌ |
-| 避免中文 No Chinese | 使用英文 | `userName` ✅ / `yongHuMing` ❌ |
+### 3.1 文件头版权声明 File Header
 
-### 3.2 Java命名规范 Java Naming
+所有 Dart 文件以版权声明开头：
 
-| 类型 Type | 规范 Convention | 示例 Example |
-|----------|---------------|-------------|
-| 类名 Class | PascalCase | `UserService`, `OrderController` |
-| 接口 Interface | PascalCase, 可选I前缀 | `UserService`, `IUserService` |
-| 方法 Method | camelCase | `getUserById()`, `calculateTotal()` |
-| 变量 Variable | camelCase | `userName`, `orderCount` |
-| 常量 Constant | UPPER_SNAKE_CASE | `MAX_COUNT`, `DEFAULT_PAGE_SIZE` |
-| 包名 Package | 小写点分隔 | `com.example.project.service` |
-
-### 3.3 JavaScript/TypeScript命名规范 JS/TS Naming
-
-| 类型 Type | 规范 Convention | 示例 Example |
-|----------|---------------|-------------|
-| 类/组件 Class/Component | PascalCase | `UserService`, `UserProfile` |
-| 函数/方法 Function | camelCase | `getUserInfo()`, `handleSubmit()` |
-| 常量 Const | UPPER_SNAKE_CASE | `API_BASE_URL`, `MAX_RETRY` |
-| 变量/属性 Variable/Property | camelCase | `userName`, `isLoading` |
-| 接口 Interface | PascalCase, I前缀可选 | `IUser`, `UserService` |
-| 类型 Type | PascalCase | `UserType`, `OrderStatus` |
-| 布尔值 Boolean | is/has/should前缀 | `isValid`, `hasPermission` |
-
-### 3.4 数据库命名规范 Database Naming
-
-| 类型 Type | 规范 Convention | 示例 Example |
-|----------|---------------|-------------|
-| 表名 Table | 小写下划线, t_前缀 | `t_user`, `t_order_item` |
-| 字段名 Column | 小写下划线 | `user_id`, `created_at` |
-| 索引 Index | idx_表名_字段名 | `idx_t_user_email` |
-| 唯一索引 Unique | uk_表名_字段名 | `uk_t_user_username` |
-| 主键 Primary | pk_表名 | `pk_t_user` |
-| 外键 Foreign | fk_表名_引用表 | `fk_t_order_t_user` |
-
-### 3.5 API命名规范 API Naming
-
-| 类型 Type | 规范 Convention | 示例 Example |
-|----------|---------------|-------------|
-| RESTful路径 Path | 小写短横线 | `/api/v1/user-profiles` |
-| Query参数 | camelCase | `?pageNo=1&pageSize=20` |
-| Header | 短横线 | `X-Request-ID`, `Content-Type` |
-
----
-
-## 4. 注释规范 Comment Standards
-
-### 4.1 注释原则 Comment Principles
-
-| 原则 Principle | 说明 Description |
-|--------------|---------------|
-| 为什么 Why | 注释解释"为什么"而非"是什么" |
-| 及时 Timely | 代码修改时同步更新注释 |
-| 准确 Accurate | 注释必须与代码一致 |
-| 不过度 No Over-comment | 代码自解释时无需注释 |
-
-### 4.2 Java注释规范 Java Comments
-
-**类注释 Class Comment:**
-
-```java
-/**
- * 用户服务实现类
- *
- * <p>提供用户相关的业务逻辑处理，包括用户注册、登录、信息管理等功能。</p>
- *
- * @author 张三
- * @version 1.0.0
- * @since 2024-01-01
- */
-public class UserServiceImpl implements UserService {
-    // ...
-}
-```
-
-**方法注释 Method Comment:**
-
-```java
-/**
- * 根据用户ID获取用户信息
- *
- * @param userId 用户ID，不能为null
- * @return 用户信息，如果不存在返回null
- * @throws IllegalArgumentException 如果userId为null
- * @see User
- */
-public User getUserById(Long userId) {
-    // ...
-}
-```
-
-**字段注释 Field Comment:**
-
-```java
-/** 默认页面大小 */
-private static final int DEFAULT_PAGE_SIZE = 20;
-
-/** 用户数据访问对象 */
-private final UserRepository userRepository;
-```
-
-### 4.3 JavaScript/TypeScript注释规范 JS/TS Comments
-
-**函数注释 Function Comment (JSDoc):**
-
-```typescript
-/**
- * 根据用户ID获取用户信息
- *
- * @param {number} userId - 用户ID
- * @returns {Promise<User>} 用户信息
- * @throws {Error} 当用户不存在时抛出错误
- *
- * @example
- * ```typescript
- * const user = await getUserById(123);
- * ```
- */
-async function getUserById(userId: number): Promise<User> {
-    // ...
-}
-```
-
-### 4.4 行内注释 Inline Comments
-
-```java
-// ✅ 好的注释：解释为什么
-// 使用缓存减少数据库查询
-String cachedUser = redis.get("user:" + userId);
-
-// ❌ 不好的注释：重复代码含义
-// 将userId赋值给userId变量
-String userId = userId;
+```dart
+// Copyright (c) 2026 Qore. All rights reserved.
 ```
 
 ---
 
-## 5. 代码格式化 Code Formatting
+## 4. Dart/Flutter 风格 Dart/Flutter Style
 
-### 5.1 缩进与空格 Indentation & Spacing
+### 4.1 不可变模型 Immutable Models
 
-| 语言 Language | 缩进 Indent | 空格 Spacing |
-|-------------|-----------|------------|
-| Java | 4空格 | 运算符两边加空格 |
-| JavaScript | 2空格 | 运算符两边加空格 |
-| SQL | 2空格 | 关键字大写，缩进对齐 |
+数据模型使用 `@immutable` 注解 + `const` 构造函数：
 
-### 5.2 行长度 Line Length
-
-| 语言 Language | 最大长度 Max Length |
-|-------------|-------------------|
-| Java | 120字符 |
-| JavaScript | 100字符 |
-| SQL | 80字符（推荐） |
-
-### 5.3 大括号 Braces
-
-**K&R风格（推荐）:**
-
-```java
-// ✅ 推荐
-public void method() {
-    if (condition) {
-        doSomething();
-    }
-}
-
-// ❌ 不推荐
-public void method()
-{
-    if (condition)
-    {
-        doSomething();
-    }
+```dart
+@immutable
+class TechMeta {
+  final String id;
+  final String displayName;
+  // ...
+  const TechMeta({required this.id, required this.displayName, ...});
 }
 ```
 
-### 5.4 配置工具 Configuration Tools
+### 4.2 抽象接口 Abstract Interfaces
 
-| 语言 Language | 工具 Tool | 配置文件 Config |
-|-------------|---------|---------------|
-| Java | Checkstyle, Google Java Format | `checkstyle.xml` |
-| JavaScript | ESLint, Prettier | `.eslintrc.js`, `.prettierrc` |
-| TypeScript | ESLint, Prettier | `.eslintrc.js` |
+框架层用 `abstract class` 定义接口，子类用 `const` 构造函数：
 
----
-
-## 6. 错误与异常处理 Error & Exception Handling
-
-### 6.1 Java异常处理 Java Exception Handling
-
-| 规则 Rule | 说明 Description |
-|------|---------------|
-| 具体异常 Specific | 使用具体异常而非Exception |
-| 早期失败 Fail Fast | 尽早检测和抛出异常 |
-| 日志记录 Log | 记录异常堆栈信息 |
-| 消息有意义 Meaningful Message | 提供清晰的错误消息 |
-
-```java
-// ✅ 好的做法
-public User getUserById(Long userId) {
-    if (userId == null) {
-        throw new IllegalArgumentException("用户ID不能为空");
-    }
-    if (userId <= 0) {
-        throw new IllegalArgumentException("用户ID必须为正数");
-    }
-    try {
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new BusinessException("用户不存在: " + userId));
-    } catch (DataAccessException e) {
-        log.error("数据库访问异常, userId={}", userId, e);
-        throw new SystemException("系统错误，请稍后重试", e);
-    }
-}
-
-// ❌ 不好的做法
-public User getUserById(Long userId) {
-    try {
-        return userRepository.findById(userId).get();
-    } catch (Exception e) {
-        // 吞掉异常
-        return null;
-    }
+```dart
+abstract class DivinationTech {
+  const DivinationTech();
+  String get id;
+  TechMeta get meta;
+  Widget buildPage(BuildContext context, WidgetRef ref);
 }
 ```
 
-### 6.2 JavaScript错误处理 JS Error Handling
+### 4.3 工具类私有构造 Private Constructor
 
-```typescript
-// ✅ 好的做法
-async function getUserById(userId: number): Promise<User> {
-    if (!userId || userId <= 0) {
-        throw new Error('Invalid user ID');
-    }
-    try {
-        const user = await apiClient.get(`/users/${userId}`);
-        return user.data;
-    } catch (error) {
-        logger.error('Failed to fetch user', { userId, error });
-        throw new Error(`Failed to get user: ${error.message}`);
-    }
+工具类/常量类用私有构造函数防止实例化：
+
+```dart
+class AppAnimations {
+  AppAnimations._();
+  static const int pressDown = 110;
 }
+```
+
+### 4.4 枚举 Enum
+
+```dart
+enum AnimationKind { entrance, transition, painter, reveal }
 ```
 
 ---
 
-## 7. 安全编码规范 Security Coding
+## 5. 状态管理 State Management
 
-### 7.1 输入验证 Input Validation
+### 5.1 Riverpod Provider 模式
 
-| 规则 Rule | 说明 Description |
-|------|---------------|
-| 白名单 Whitelist | 使用白名单验证而非黑名单 |
-| 长度限制 Length Limit | 限制输入字符串长度 |
-| 类型验证 Type Check | 验证数据类型 |
-| 编码 Encoding | 正确处理编码 |
+项目使用 `flutter_riverpod ^2.5`，采用手写 Provider/AsyncNotifier（非 codegen）：
 
-```java
-// ✅ 输入验证
-public void setUsername(String username) {
-    if (username == null || username.length() < 3 || username.length() > 50) {
-        throw new ValidationException("用户名长度必须在3-50字符之间");
-    }
-    if (!username.matches("^[a-zA-Z0-9_]+$")) {
-        throw new ValidationException("用户名只能包含字母、数字和下划线");
-    }
-    this.username = username;
-}
+```dart
+// 简单 Provider
+final touchTrackerProvider = Provider<TouchTracker>((ref) => TouchTracker());
+
+// 依赖其他 Provider
+final trueRandomProvider = Provider<TrueRandom>((ref) {
+  final config = ref.watch(configProvider).valueOrNull ?? AppConfig.defaults;
+  final tracker = ref.watch(touchTrackerProvider);
+  return TrueRandom([...]);
+});
+
+// AsyncNotifierProvider（配置持久化）
+final configProvider = AsyncNotifierProvider<ConfigNotifier, AppConfig>(
+  ConfigNotifier.new,
+);
+
+// Provider.family（按 ID 查找）
+final techByIdProvider = Provider.family<DivinationTech?, String>((ref, id) {
+  return ref.watch(divinationTechsProvider).where((t) => t.id == id).firstOrNull;
+});
 ```
 
-### 7.2 SQL注入防护 SQL Injection Prevention
+### 5.2 Provider 命名约定
 
-```java
-// ❌ 危险：SQL注入风险
-String query = "SELECT * FROM users WHERE username = '" + username + "'";
+- 简单值：`xxxProvider`
+- AsyncNotifier：`xxxProvider`（类名 `XxxNotifier`）
+- Family：`xxxByIdProvider`
 
-// ✅ 安全：使用参数化查询
-String query = "SELECT * FROM users WHERE username = ?";
-User user = jdbcTemplate.queryForObject(query, User.class, username);
-```
+### 5.3 barrel 聚合
 
-### 7.3 XSS防护 XSS Prevention
-
-```java
-// ✅ 输出编码
-String safeOutput = HtmlUtils.htmlEscape(userInput);
-```
-
-### 7.4 敏感数据处理 Sensitive Data Handling
-
-| 规则 Rule | 说明 Description |
-|------|---------------|
-| 不记录日志 No Logging | 敏感信息不写入日志 |
-| 加密存储 Encrypted Storage | 密码等加密存储 |
-| 传输加密 Encrypted Transmission | 使用HTTPS |
-| 脱敏展示 Masking | 日志和展示时脱敏 |
-
-```java
-// ✅ 日志脱敏
-log.info("用户登录成功, userId={}, username={}", user.getId(), maskEmail(user.getEmail()));
-
-private String maskEmail(String email) {
-    if (email == null) return null;
-    int at = email.indexOf('@');
-    if (at <= 2) return "***" + email.substring(at);
-    return email.substring(0, 2) + "***" + email.substring(at);
-}
-```
+`providers/providers.dart` 作为 barrel 文件聚合 config + rng providers，供 features 层统一导入。
 
 ---
 
-## 8. 测试规范 Testing Standards
+## 6. 路由管理 Routing
 
-### 8.1 单元测试规范 Unit Test Standards
+### 6.1 GoRouter 配置
 
-| 规范 Specification | 要求 Requirement |
-|-----------------|--------------|
-| 命名 Naming | 应该描述被测试方法和场景 |
-| 独立性 Independence | 测试之间相互独立 |
-| 可重复 Repeatable | 多次运行结果一致 |
-| 快速 Fast | 单元测试应该快速执行 |
+路由集中于 `router/app_router.dart`，通过 `routerProvider` 提供：
 
-**命名格式:** `methodName_scenario_expectedResult`
+```dart
+final routerProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const HomePage()),
+      GoRoute(path: '/tech/:id', pageBuilder: (context, state) { ... }),
+      GoRoute(path: '/ritual/:id', builder: ...),  // 仪式入场动画
+      // ...
+    ],
+  );
+});
+```
 
-```java
-@Test
-@DisplayName("根据ID获取用户 - 用户存在 - 返回用户信息")
-void getUserById_whenUserExists_thenReturnUser() {
-    // Given
-    Long userId = 1L;
-    User expectedUser = new User(userId, "test@example.com");
-    when(userRepository.findById(userId)).thenReturn(Optional.of(expectedUser));
+### 6.2 路由约定
 
-    // When
-    User actualUser = userService.getUserById(userId);
+| 路径 Path | 用途 Purpose |
+|----------|------------|
+| `/` | 首页（选术） |
+| `/tech/:id` | 术数主页面（动态路由） |
+| `/ritual/:id` | 仪式入场动画（路由前置过渡） |
+| `/history` | 历史记录 |
+| `/settings` | 设置 |
+| `/manual` | 使用手册 |
 
-    // Then
-    assertThat(actualUser).isNotNull();
-    assertThat(actualUser.getId()).isEqualTo(userId);
-    assertThat(actualUser.getUsername()).isEqualTo("test@example.com");
-    verify(userRepository).findById(userId);
+### 6.3 转场动画
+
+`/tech/:id` 路由使用 `TechTransition.build()` 实现每术专属转场，根据 `AppConfig.isAnimationEnabled(id, AnimationKind.transition)` 控制开关。
+
+---
+
+## 7. 动效与组件 Animation & Widgets
+
+### 7.1 全局动效常量 Global Animation Constants
+
+所有微交互动效的时长、曲线、错峰间隔集中定义于 `core/theme/animations.dart`，禁止在业务代码中硬编码：
+
+```dart
+class AppAnimations {
+  static const int pressDown = 110;
+  static const int pressRelease = 260;
+  static const Curve pressReleaseCurve = Cubic(0.34, 1.56, 0.64, 1);
+  // ...
 }
 ```
 
-### 8.2 测试覆盖率要求 Coverage Requirements
+### 7.2 动效开关 Animation Toggle
 
-| 覆盖类型 Coverage Type | 要求 Requirement |
-|-------------------|--------------|
-| 行覆盖率 Line Coverage | ≥ 70% |
-| 分支覆盖率 Branch Coverage | ≥ 60% |
-| 核心业务模块 Core Modules | ≥ 90% |
+所有动效可通过设置页全局/分类开关：
 
----
+- 总开关：`AppConfig.animationsEnabled`
+- 分类开关：`AppConfig.isAnimationEnabled(techId, AnimationKind)`（4 类：entrance/transition/painter/reveal）
+- 关闭后降级为静态组件，不影响核心功能
 
-## 附录 Appendix
+### 7.3 共享组件 Shared Widgets
 
-### 附录A：代码审查清单 Code Review Checklist
-
-**功能性 Functionality:**
-
-- [ ] 代码实现符合需求
-- [ ] 边界条件处理正确
-- [ ] 错误处理完善
-
-**可读性 Readability:**
-
-- [ ] 命名清晰有意义
-- [ ] 代码逻辑清晰
-- [ ] 注释恰当
-
-**安全性 Security:**
-
-- [ ] 输入验证充分
-- [ ] 无SQL注入风险
-- [ ] 敏感数据处理正确
-
-**性能 Performance:**
-
-- [ ] 无明显性能问题
-- [ ] 数据库查询优化
-- [ ] 资源正确释放
+| 组件 Widget | 用途 Purpose |
+|------------|------------|
+| GoldButton / DarkButton | 主按钮（自带物理反馈） |
+| InteractableCard | 可交互卡片 |
+| Starfield | 星尘背景 |
+| CopyResultButton / ShareResultButton | 结果复制/分享 |
+| GuideDialog | 引导弹窗 |
+| DivinationLoadingIndicator | 中国风加载指示器 |
+| HoverableIconButton | 悬停反馈图标按钮 |
 
 ---
 
-## 审批与签署 Approvals
+## 8. 硬约束 Hard Constraints
 
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 技术负责人 Tech Lead | | | |
-| 架构师 Architect | | | |
+以下为项目不可违反的硬约束：
+
+### 8.1 CustomPainter 必须 dispose TextPainter
+
+```dart
+class _MyPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final tp = TextPainter(text: ..., textDirection: TextDirection.ltr);
+    tp.layout();
+    tp.paint(canvas, offset);
+    tp.dispose();  // 必须！防止 native handle 泄漏
+  }
+}
+```
+
+### 8.2 HistoryStore 原子读-改-写
+
+历史记录写操作必须通过 `_serialize()` 串行化，防止并发 load/save 竞态：
+
+```dart
+static Future<void> add(HistoryEntry e) => _serialize(() async {
+  final list = await load();
+  list.insert(0, e);
+  await _save(list);
+});
+```
+
+### 8.3 Registry 注册唯一性
+
+`divinationTechsProvider` 列表中的 Tech ID 必须唯一，注册表含 assert 校验：
+
+```dart
+assert(
+  techs.map((t) => t.id).toSet().length == techs.length,
+  'Duplicate DivinationTech id detected',
+);
+```
+
+### 8.4 身份信息不硬编码
+
+品牌身份信息通过 `core/branding.dart` 的 `Branding` 类引用，单一事实来源为 `D:\Code\.Rules\OrganizationAndUser.md`：
+
+```dart
+Branding.appName      // '志极'
+Branding.appNameEn    // 'Jeenith'
+Branding.orgEn        // 'Qore'
+Branding.copyright    // 'Copyright (c) 2026 Qore'
+```
+
+### 8.5 加新术流程
+
+加新卜算术的标准化流程：
+
+1. 新建 `features/<tech_id>/` 目录（algorithm/ + ui/ + <tech_id>_tech.dart）
+2. 实现 `DivinationTech` 接口（id / meta / buildPage）
+3. 在 `core/divination/divination_registry.dart` 列表追加一行 `XxxTech(),`
+4. 完成。无需修改 core/ 或 shared/ 任何代码
+
+---
+
+## 9. 注释规范 Comment Standards
+
+### 9.1 文档注释 Doc Comments
+
+公开类与接口使用 `///` 文档注释：
+
+```dart
+/// 卜算术抽象。
+///
+/// 每种术实现此接口，页面内自行管理输入采集、起卦调用、动画与结果展示。
+/// 框架只统一提供：注册发现、RNG 服务、配置、主题、共享组件。
+abstract class DivinationTech { ... }
+```
+
+### 9.2 行内注释 Inline Comments
+
+复杂算法逻辑用 `//` 行内注释说明意图（中文优先）：
+
+```dart
+// 多源 SHA256 混合
+var digest = sha256.convert(<int>[]).bytes;
+for (final b in parts) {
+  digest = sha256.convert([...digest, ...b]).bytes;
+}
+```
+
+### 9.3 版本标记 Version Tags
+
+重要变更用版本号标记：
+
+```dart
+/// v2.3.2: 进一步细分为 `animationSettings: Map<String, Map<String, bool>>`
+```
 
 ---
 
 **文档结束 End of Document**
+
+志极 Jeenith · 志于本心，知于极处

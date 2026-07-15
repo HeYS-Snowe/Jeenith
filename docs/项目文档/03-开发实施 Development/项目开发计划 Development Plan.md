@@ -4,30 +4,31 @@
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
+| 项目名称 Project Name | 志极 Jeenith |
 | 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 计划周期 Planning Period | |
-| 项目经理 Project Manager | |
+| 创建日期 Created Date | 2026-07-15 |
+| 开发者 Developer | HeYS-Snowe |
+| 当前版本 Current Version | 2.3.3+23 |
+| 项目仓库 Repository | https://github.com/1010523654/Jeenith |
 
 ---
 
 ## 修改记录 Change History
 
-| 版本 Version | 日期 Date | 修改人 Modifier | 审核人 Reviewer | 修改内容 Description |
-|-------------|---------|---------------|---------------|-------------------|
-| v1.0.0 | YYYY-MM-DD | [Name] | | 初始版本 Initial Version |
+| 版本 Version | 日期 Date | 修改人 Modifier | 修改内容 Description |
+|-------------|---------|---------------|-------------------|
+| v1.0.0 | 2026-07-15 | HeYS-Snowe | 初始版本，回顾 v1.0.0 → v2.3.3 迭代历程并规划后续 |
 
 ---
 
 ## 目录 Table of Contents
 
 1. [项目概述 Project Overview](#1-项目概述-project-overview)
-2. [开发阶段划分 Development Phases](#2-开发阶段划分-development-phases)
-3. [详细开发计划 Detailed Development Plan](#3-详细开发计划-detailed-development-plan)
+2. [迭代计划 Iteration Plan](#2-迭代计划-iteration-plan)
+3. [里程碑 Milestones](#3-里程碑-milestones)
 4. [资源计划 Resource Plan](#4-资源计划-resource-plan)
 5. [风险管理 Risk Management](#5-风险管理-risk-management)
-6. [质量管理 Quality Management](#6-质量管理-quality-management)
-7. [沟通管理 Communication Management](#7-沟通管理-communication-management)
+6. [后续规划 Future Planning](#6-后续规划-future-planning)
 
 ---
 
@@ -37,272 +38,188 @@
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
-| 项目名称 Project Name | |
-| 项目代号 Project Code | |
-| 开发周期 Development Period | YYYY-MM-DD ~ YYYY-MM-DD |
-| 项目经理 Project Manager | |
-| 技术负责人 Tech Lead | |
+| 中文名称 Chinese Name | 志极 |
+| 英文名称 English Name | Jeenith |
+| 组织 Organization | Qore（叩心） |
+| 应用包名 Package Name | com.qore.jeenith |
+| 项目类型 Project Type | Flutter 移动 App（Android + Windows 桌面），无后端纯客户端 |
+| 技术栈 Tech Stack | Flutter 3.x（Dart 3.11+）、Riverpod、go_router、lunar、flutter_svg、sensors_plus |
+| 开发周期 Development Period | 2026-07-11 ~ 至今 |
+| 开发者 Developer | HeYS-Snowe（唯一开发者） |
+| 许可证 License | MIT |
 
-### 1.2 开发目标 Development Goals
+### 1.2 产品定位 Product Positioning
 
-| 目标类型 Goal Type | 目标描述 Goal Description | 成功标准 Success Criteria |
-|----------------|---------------------|------------------------|
-| 功能目标 Functional Goal | | 功能完成率100% |
-| 质量目标 Quality Goal | | Bug密度 < 2个/千行 |
-| 性能目标 Performance Goal | | 响应时间 < 200ms |
-| 交付目标 Delivery Goal | | 按时交付率100% |
+志极是一款叩问本心的卜算合集——收录 12 种传统术数（小六壬、周易、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘、八字推演、测名字），配以使用手册与可扩展框架。一个 APP 首页选术，加新术仅需新建 feature 目录 + 注册一行。
 
----
+**品牌精神**：志于本心，知于极处。
 
-## 2. 开发阶段划分 Development Phases
+### 1.3 开发目标 Development Goals
 
-### 2.1 阶段总览 Phase Overview
-
-| 阶段 Phase | 名称 Name | 工期 Duration | 起止日期 Dates | 产出 Output |
-|----------|---------|-------------|--------------|-----------|
-| Phase 1 | 需求确认 Requirements Confirmation | 1周 | - | 需求基线 |
-| Phase 2 | 系统设计 System Design | 2周 | - | 设计文档 |
-| Phase 3 | 开发实施 Development | X周 | - | 可运行系统 |
-| Phase 4 | 测试验证 Testing | 2周 | - | 测试报告 |
-| Phase 5 | 部署上线 Deployment | 1周 | - | 生产环境 |
-
-### 2.2 依赖关系 Dependencies
-
-```
-[Phase 1] ──▶ [Phase 2] ──▶ [Phase 3] ──▶ [Phase 4] ──▶ [Phase 5]
-   需求确认       系统设计        开发实施       测试验证       部署上线
-```
+| 目标类型 Goal Type | 目标描述 Goal Description | 达成状态 Status |
+|----------------|---------------------|--------|
+| 功能目标 Functional | 12 种术数全部实现 + 可扩展框架 | ✓ 已达成 |
+| 质量目标 Quality | flutter analyze 0 issue + TextPainter 全 dispose | ✓ 已达成 |
+| 体验目标 Experience | 仪式动画 + 路由转场 + 物理反馈 | ✓ 已达成 |
+| 开源目标 Open Source | MIT LICENSE + README + 产物归档 | ✓ 已达成 |
 
 ---
 
-## 3. 详细开发计划 Detailed Development Plan
+## 2. 迭代计划 Iteration Plan
 
-### 3.1 迭代规划 Iteration Planning
+### 2.1 已完成迭代 Completed Iterations
 
-| 迭代 Iteration | 周期 Duration | 开始日期 Start | 结束日期 End | 主要功能 Main Features |
-|--------------|-------------|--------------|------------|---------------------|
-| Iteration 0 (Sprint 0) | 1周 | | | 环境搭建、脚手架 |
-| Iteration 1 | 2周 | | | 用户模块、认证模块 |
-| Iteration 2 | 2周 | | | 产品模块、分类模块 |
-| Iteration 3 | 2周 | | | 订单模块、购物车 |
-| Iteration 4 | 2周 | | | 支付模块、通知模块 |
-| Iteration 5 | 1周 | | | 联调测试、Bug修复 |
-| **Total** | **10周** | | | |
+#### 阶段一：框架奠基与首版（v1.0.0 ~ v1.1.x）
 
-### 3.2 Sprint 0: 项目初始化
+| 版本 Version | 日期 Date | 主题 Theme | 核心交付 Key Deliverables |
+|-------------|---------|----------|--------------------------|
+| v1.0.0 | 2026-07-11 | 首版发布 | DivinationTech 框架 + TrueRandom 引擎 + 6 术（小六壬/周易/梅花/紫微/奇门/掷筊）+ 首页 + 手册 |
+| v1.1.0 | 2026-07-12 | 工程迁移 | Flutter 工程迁移至 mobile/ 子目录 + Windows 桌面支持 |
 
-| 任务 Task | 负责人 Owner | 工作量 Estimate | 状态 Status |
-|----------|------------|---------------|-----------|
-| 开发环境搭建 | DevOps | 2天 | |
-| 代码仓库初始化 | Tech Lead | 0.5天 | |
-| 项目脚手架搭建 | Frontend/Backend | 1天 | |
-| CI/CD配置 | DevOps | 1天 | |
-| 开发规范制定 | Tech Lead | 0.5天 | |
+#### 阶段二：内容深化与全术集齐（v1.2.0 ~ v1.7.0）
 
-### 3.3 Sprint 1: 用户认证模块
+| 版本 Version | 日期 Date | 主题 Theme | 核心交付 Key Deliverables |
+|-------------|---------|----------|--------------------------|
+| v1.2.0 | 2026-07-13 | 卦辞爻辞 | 64 卦 386 爻 JSON 数据 + 周易/梅花结果页展示 |
+| v1.3.0 | 2026-07-13 | 紫微 v2 | 14 主星 + 六吉六煞 + 博士十二神 + 环形命盘 |
+| v1.4.0 | 2026-07-13 | 奇门 v2 | 四盘九宫（天地人神）+ 值符值使 + 洛书布局 |
+| v1.5.0 | 2026-07-13 | 体验完善 | 主题切换 + 结果截图分享 + 历史导出（JSON/MD/CSV） |
+| v1.6.0 | 2026-07-13 | 扩展性 | 抽签求签 + 测字（验证框架可扩展性） |
+| v1.7.0 | 2026-07-13 | 终章 | 大六壬四课三传 + 风水罗盘磁力计接入 |
 
-| 功能模块 Module | 任务 Task | 负责人 Owner | 工作量 Estimate | 优先级 Priority |
-|--------------|---------|------------|---------------|--------------|
-| 用户注册 | 接口开发 | Backend | 1天 | P0 |
-| 用户注册 | 页面开发 | Frontend | 1天 | P0 |
-| 用户登录 | 接口开发 | Backend | 1天 | P0 |
-| 用户登录 | 页面开发 | Frontend | 1天 | P0 |
-| JWT认证 | 接口开发 | Backend | 1天 | P0 |
-| 个人中心 | 页面开发 | Frontend | 2天 | P1 |
-| 单元测试 | 测试开发 | Developer | 1天 | P0 |
+#### 阶段三：品牌定调与动效体系（v2.0.0 ~ v2.2.0）
 
-### 3.4 Sprint 2: 产品模块
+| 版本 Version | 日期 Date | 主题 Theme | 核心交付 Key Deliverables |
+|-------------|---------|----------|--------------------------|
+| v2.0.0 | 2026-07-14 | 品牌定调 | 按钮物理反馈 + 图标状态切换 + 全局动效开关 |
+| v2.1.0 | 2026-07-14 | 动效 Phase 1 | 仪式动画基类 + 5 套仪式（周易/紫微/奇门/大六壬/罗盘） |
+| v2.2.0 | 2026-07-14 | 动效 Phase 2 | 4 套仪式补全（梅花/掷筊/抽签/测字）+ 路由转场差异化 + 加载指示器 |
 
-| 功能模块 Module | 任务 Task | 负责人 Owner | 工作量 Estimate | 优先级 Priority |
-|--------------|---------|------------|---------------|--------------|
-| 产品管理 | 后台接口 | Backend | 2天 | P0 |
-| 产品列表 | 前端页面 | Frontend | 1.5天 | P0 |
-| 产品详情 | 前端页面 | Frontend | 2天 | P0 |
-| 分类管理 | 后台接口 | Backend | 1天 | P1 |
-| 分类导航 | 前端组件 | Frontend | 1天 | P1 |
-| 搜索功能 | 后台接口 | Backend | 1.5天 | P1 |
-| 搜索页面 | 前端页面 | Frontend | 1.5天 | P1 |
+#### 阶段四：功能扩展与开源就绪（v2.3.0 ~ v2.3.3）
 
-### 3.5 Sprint 3: 订单模块
+| 版本 Version | 日期 Date | 主题 Theme | 核心交付 Key Deliverables |
+|-------------|---------|----------|--------------------------|
+| v2.3.0 | 2026-07-14 | 功能扩展 | 八字推演 + 测名字 + 紫微命盘重构 + 动画 Map 化 |
+| v2.3.1 | 2026-07-15 | BUG 修复 | 起卦按钮修复 + 动效曲线优化 |
+| v2.3.2 | 2026-07-15 | 动画细分 | 4 类 AnimationKind 独立开关 + Windows 图标修复 |
+| v2.3.3 | 2026-07-15 | 开源就绪 | 首页间距修复 + MIT LICENSE + Windows 图标归档 |
 
-| 功能模块 Module | 任务 Task | 负责人 Owner | 工作量 Estimate | 优先级 Priority |
-|--------------|---------|------------|---------------|--------------|
-| 购物车 | 后台接口 | Backend | 1.5天 | P0 |
-| 购物车 | 前端页面 | Frontend | 1.5天 | P0 |
-| 订单创建 | 后台接口 | Backend | 2天 | P0 |
-| 订单确认 | 前端页面 | Frontend | 1.5天 | P0 |
-| 订单列表 | 后台接口 | Backend | 1天 | P0 |
-| 订单列表 | 前端页面 | Frontend | 1天 | P0 |
-| 订单详情 | 前端页面 | Frontend | 1天 | P1 |
+### 2.2 迭代节奏 Iteration Rhythm
 
-### 3.6 Sprint 4: 支付通知模块
+志极采用**快速密集迭代**模式，由唯一开发者 HeYS-Snowe 推进：
 
-| 功能模块 Module | 任务 Task | 负责人 Owner | 工作量 Estimate | 优先级 Priority |
-|--------------|---------|------------|---------------|--------------|
-| 支付接口对接 | Backend | Backend | 2天 | P0 |
-| 支付页面 | Frontend | Frontend | 1天 | P0 |
-| 支付回调处理 | Backend | Backend | 1天 | P0 |
-| 短信通知 | Backend | Backend | 1天 | P1 |
-| 邮件通知 | Backend | Backend | 0.5天 | P2 |
-| 站内消息 | Backend + Frontend | 1天 | P1 |
+- **版本号规则**：`主版本.次版本.修订号+构建号`（如 2.3.3+23）
+- **发布节奏**：每个版本完成即构建归档，不设固定冲刺周期
+- **构建命令**：`pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "x.y.z"`（cwd=mobile）
+- **质量门禁**：每次构建前 `flutter analyze` 必须为 0 issue
+- **归档规范**：APK + Windows ZIP + release_notes + build_history.json + release_history.json
 
-### 3.7 Sprint 5: 联调测试
+---
 
-| 任务 Task | 负责人 Owner | 工作量 Estimate | 说明 Description |
-|----------|------------|---------------|-----------------|
-| 接口联调 | All | 2天 | 前后端联调 |
-| 功能测试 | QA | 2天 | 功能测试 |
-| Bug修复 | Developer | 2天 | 修复发现的Bug |
-| 性能优化 | Developer | 1天 | 性能优化 |
-| 代码重构 | Developer | 1天 | 代码质量提升 |
+## 3. 里程碑 Milestones
+
+| 里程碑 Milestone | 版本 Version | 日期 Date | 验收标准 Acceptance Criteria |
+|----------------|-------------|---------|---------------------------|
+| M1 首版发布 Initial Release | v1.0.0 | 2026-07-11 | 6 术可用 + 框架成型 + TrueRandom 引擎 |
+| M2 内容深化 Content Depth | v1.2.0 | 2026-07-13 | 64 卦 386 爻数据资产落地 |
+| M3 全术集齐 All Techs Complete | v1.7.0 | 2026-07-13 | 10 术全部实现 + 框架可扩展性验证 |
+| M4 体验完善 Experience Polish | v1.5.0 | 2026-07-13 | 主题/分享/导出三大完善性功能 |
+| M5 品牌定调 Brand Defining | v2.0.0 | 2026-07-14 | 按钮物理反馈 + 全局动效开关体系 |
+| M6 仪式化 Ritualization | v2.2.0 | 2026-07-14 | 10 套仪式动画 + 路由转场差异化 |
+| M7 功能扩展 Feature Expansion | v2.3.0 | 2026-07-14 | 12 术集齐（+ 八字 + 测名字） |
+| M8 开源就绪 Open Source Ready | v2.3.3 | 2026-07-15 | MIT LICENSE + Windows 图标 + 0 issue |
 
 ---
 
 ## 4. 资源计划 Resource Plan
 
-### 4.1 人员分配 Staff Allocation
+### 4.1 人力资源 Human Resources
 
-| 角色 Role | 人员姓名 Name | 投入比例 Allocation (%) | 主要职责 Responsibilities |
-|----------|-------------|----------------------|------------------------|
-| 项目经理 PM | | 100% | 项目管理、协调、风险控制 |
-| 产品经理 PO | | 50% | 需求管理、验收 |
-| 技术负责人 Tech Lead | | 100% | 架构设计、技术决策 |
-| 前端开发 Frontend | | 100% | 前端开发 |
-| 后端开发 Backend | | 100% | 后端开发 |
-| 测试工程师 QA | | 50% | 测试执行 |
-| UI设计师 Designer | | 30% | UI设计 |
+| 角色 Role | 人员 Person | 职责 Responsibility |
+|----------|----------|-------------------|
+| 开发者 Developer | HeYS-Snowe | 全栈开发（架构/算法/UI/动效/构建/文档） |
 
-### 4.2 环境资源 Environment Resources
+> 志极为个人开源项目，由 HeYS-Snowe 独立完成全部开发工作。
 
-| 环境类型 Environment | 配置 Specification | 用途 Usage | 成本 Cost |
-|-----------------|------------------|----------|---------|
-| 开发环境 Dev | 2C4G × 2 | 日常开发 | ¥ |
-| 测试环境 Test | 4C8G × 2 | 测试验证 | ¥ |
-| 预发布环境 Staging | 4C16G × 2 | 上线前验证 | ¥ |
-| 生产环境 Production | 8C32G × 3 | 正式运行 | ¥ |
+### 4.2 技术资源 Technical Resources
+
+| 资源 Resource | 说明 Description |
+|-------------|---------------|
+| 开发环境 Development Env | Windows + Flutter 3.x（Dart 3.11+） |
+| 代码托管 Code Hosting | GitHub（main 分支）：https://github.com/1010523654/Jeenith |
+| 农历历法 Calendar | lunar ^1.7.8（寿星天文历） |
+| 真随机 True Random | Random.secure + 触摸轨迹 + random.org |
+| 配置存储 Config Storage | shared_preferences ^2.2 |
+| 设备传感器 Sensors | sensors_plus ^6.0.0（磁力计，风水罗盘） |
+
+### 4.3 依赖清单 Dependencies
+
+| 依赖 Dependency | 版本 Version | 用途 Purpose |
+|----------------|------------|------------|
+| flutter_riverpod | ^2.5 | 状态管理 |
+| go_router | ^14.0 | 路由管理 |
+| lunar | ^1.7.8 | 农历/八字/节气 |
+| flutter_svg | ^2.0 | SVG 图标 |
+| shared_preferences | ^2.2 | 配置持久化 |
+| sensors_plus | ^6.0.0 | 陀螺仪/磁场 |
+| share_plus | ^10.0.0 | 结果分享 |
+| path_provider | ^2.1.0 | 历史导出文件路径 |
+| crypto | — | SHA256 熵混合 |
+| http | — | random.org 在线熵源 |
+| flutter_launcher_icons | ^0.14 | APP 图标生成 |
 
 ---
 
 ## 5. 风险管理 Risk Management
 
-### 5.1 风险识别 Risk Identification
+### 5.1 已应对风险 Resolved Risks
 
-| 风险ID Risk ID | 风险描述 Risk Description | 概率 Probability | 影响程度 Impact | 风险等级 Risk Level |
-|--------------|----------------------|---------------|---------------|------------------|
-| R001 | 需求变更频繁 | 高 | 高 | 高 |
-| R002 | 技术难度超预期 | 中 | 高 | 高 |
-| R003 | 人员变动 | 低 | 高 | 中 |
-| R004 | 第三方服务不稳定 | 中 | 中 | 中 |
-| R005 | 进度延期 | 中 | 中 | 中 |
+| 风险 Risk | 影响 Impact | 应对措施 Mitigation | 状态 Status |
+|----------|-----------|-------------------|-----------|
+| 触摸轨迹熵源竞态 | 随机数质量 | TouchTracker 采样隔离 | ✓ 已解决 |
+| 历史记录并发覆盖 | 数据丢失 | HistoryStore 串行化原子读-改-写 | ✓ 已解决 |
+| TextPainter native handle 泄漏 | 内存泄漏 | 全项目 10 处显式 dispose | ✓ 已解决 |
+| Windows exe 图标未应用 | 品牌不一致 | flutter clean + 重构建 .ico 资源 | ✓ 已解决 |
+| 动画开关粒度不足 | 用户可控性差 | v2.3.2 拆分为 4 类 AnimationKind | ✓ 已解决 |
+| RepaintBoundary 顶出起卦按钮 | 功能不可用 | v2.3.0 修复布局 | ✓ 已解决 |
 
-### 5.2 风险应对计划 Risk Response Plan
+### 5.2 持续关注风险 Ongoing Risks
 
-| 风险ID Risk ID | 应对策略 Strategy | 具体措施 Actions | 责任人 Owner |
-|--------------|----------------|----------------|------------|
-| R001 | 减轻 Mitigate | 需求冻结，变更走评审流程 | PM |
-| R002 | 规避 Avoid | 提前技术预研，PoC验证 | Tech Lead |
-| R003 | 转移 Transfer | 代码审查，知识共享 | Tech Lead |
-| R004 | 减轻 Mitigate | 准备备用方案 | Backend |
-| R005 | 接受 Accept | 预留缓冲时间 | PM |
-
----
-
-## 6. 质量管理 Quality Management
-
-### 6.1 质量目标 Quality Goals
-
-| 指标 Indicator | 目标值 Target | 测量方式 Measurement |
-|--------------|------------|-------------------|
-| 代码覆盖率 Code Coverage | ≥ 70% | 工具检测 |
-| Bug密度 Bug Density | < 2个/千行 | 缺陷跟踪 |
-| 代码审查覆盖率 Review Coverage | 100% | 人工统计 |
-| 静态分析通过率 Static Analysis Pass | 100% | 工具检测 |
-
-### 6.2 质量保证活动 QA Activities
-
-| 活动 Activity | 频率 Frequency | 负责人 Owner | 参与人 Participants |
-|-----------|--------------|------------|------------------|
-| 代码审查 Code Review | 每次提交 | Tech Lead | 团队成员 |
-| 单元测试 Unit Test | 持续 | Developer | - |
-| 集成测试 Integration Test | 每日 | CI系统 | - |
-| 功能测试 Functional Test | 每迭代 | QA | 全员 |
-| 回归测试 Regression Test | 发版前 | QA | - |
+| 风险 Risk | 影响 Impact | 监控措施 Monitoring |
+|----------|-----------|-------------------|
+| random.org 服务不可用 | 在线熵源降级 | 自动降级为系统熵 + 触摸熵（2 源） |
+| 磁力计精度受设备影响 | 罗盘方位偏差 | UI 提示用户保持设备水平 |
+| sensors_plus 7.x 需 AGP 8.12+ | 升级阻塞 | 当前锁定 ^6.0.0 |
+| 思源宋体字体缺失 | 浅色主题字体不理想 | 后续可补充打包 |
 
 ---
 
-## 7. 沟通管理 Communication Management
+## 6. 后续规划 Future Planning
 
-### 7.1 会议计划 Meeting Plan
+### 6.1 短期规划 Short-term
 
-| 会议类型 Meeting Type | 频率 Frequency | 时长 Duration | 参与人 Participants | 议程 Agenda |
-|------------------|--------------|----------|------------------|------------|
-| 每日站会 Daily Standup | 每日 Daily | 15分钟 | 开发团队 | 昨日完成、今日计划、阻碍 |
-| 周例会 Weekly Meeting | 每周 Weekly | 1小时 | 全体 | 进度汇报、问题讨论 |
-| 迭代评审 Iteration Review | 每迭代 Per Iteration | 1小时 | 全体+干系人 | 演示、反馈 |
-| 迭代回顾 Retrospective | 每迭代 Per Iteration | 1小时 | 开发团队 | 总结、改进 |
+| 任务 Task | 优先级 Priority | 说明 Description |
+|----------|---------------|---------------|
+| 思源宋体字体打包 | 中 | 浅色主题字体优化 |
+| 首次使用引导遮罩 | 中 | 新用户引导 |
+| 主题浅色对齐细节 | 低 | 浅色主题色系统一 |
 
-### 7.2 汇报机制 Reporting Mechanism
+### 6.2 中期规划 Mid-term
 
-| 报告类型 Report Type | 频率 Frequency | 接收人 Recipient | 内容 Content |
-|-----------------|--------------|---------------|-----------|
-| 日报 Daily Report | 每日 Daily | PM | 任务完成情况、问题 |
-| 周报 Weekly Report | 每周 Weekly | 干系人 | 进度、风险、下周计划 |
-| 里程碑报告 Milestone Report | 里程碑 Milestone | 干系人 | 达成情况、偏差分析 |
+| 任务 Task | 优先级 Priority | 说明 Description |
+|----------|---------------|---------------|
+| 紫微 v2 深化 | 中 | 四化星 + 大限流年 |
+| 奇门 v2 深化 | 中 | 更多格局判断 |
+| 大六壬深化 | 中 | 完整九宗门 + 天将加临详断 |
 
----
+### 6.3 长期方向 Long-term Direction
 
-## 8. 变更管理 Change Management
-
-### 8.1 变更控制流程 Change Control Process
-
-```
-变更请求 → 影响分析 → CCB评审 → 决策 → 实施 → 验证
-Change Request → Impact Analysis → CCB Review → Decision → Implement → Verify
-```
-
-### 8.2 变更控制委员会 CCB (Change Control Board)
-
-| 成员 Member | 角色 Role | 职责 Responsibility |
-|-----------|---------|-------------------|
-| | 主席 | 主持会议，最终决策 |
-| | 技术代表 | 技术影响评估 |
-| | 业务代表 | 业务影响评估 |
-
----
-
-## 附录 Appendix
-
-### 附录A：项目日历 Project Calendar
-
-| 日期 Date | 事件 Event | 说明 Notes |
-|----------|---------|-----------|
-| YYYY-MM-DD | 项目启动 Kickoff | |
-| YYYY-MM-DD | Sprint 0 开始 | |
-| YYYY-MM-DD | Sprint 1 开始 | |
-| YYYY-MM-DD | Alpha 版本 | |
-| YYYY-MM-DD | Beta 版本 | |
-| YYYY-MM-DD | 正式发布 Launch | |
-
-### 附录B：里程碑 Milestones
-
-| 里程碑 Milestone | 日期 Date | 交付物 Deliverables | 验收标准 Acceptance |
-|--------------|---------|-------------------|-------------------|
-| M1 项目启动 | | 项目章程、开发计划 | 文档齐全 |
-| M2 设计完成 | | 设计文档 | 设计评审通过 |
-| M3 Alpha版本 | | 可演示版本 | 核心功能可用 |
-| M4 Beta版本 | | 测试版本 | 功能完整 |
-| M5 正式发布 | | 生产环境 | 验收通过 |
-
----
-
-## 审批与签署 Approvals
-
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 项目经理 PM | | | |
-| 技术负责人 Tech Lead | | | |
-| 产品负责人 PO | | | |
+- 加新术仅需新建 features/xxx/ + 实现 DivinationTech + registry 注册一行，框架已就绪
+- 桌面端（Windows）体验持续优化
+- 历史记录云同步（若引入后端）
 
 ---
 
 **文档结束 End of Document**
+
+志极 Jeenith · 志于本心，知于极处

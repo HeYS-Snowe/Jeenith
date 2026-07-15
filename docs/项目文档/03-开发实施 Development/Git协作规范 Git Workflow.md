@@ -4,9 +4,20 @@
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
+| 项目名称 Project Name | 志极 Jeenith |
 | 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 技术负责人 Tech Lead | |
+| 创建日期 Created Date | 2026-07-15 |
+| 仓库地址 Repository | https://github.com/1010523654/Jeenith |
+| 默认分支 Default Branch | main |
+| 开发者 Developer | HeYS-Snowe |
+
+---
+
+## 修改记录 Change History
+
+| 版本 Version | 日期 Date | 修改人 Modifier | 修改内容 Description |
+|-------------|---------|---------------|-------------------|
+| v1.0.0 | 2026-07-15 | HeYS-Snowe | 初始版本 |
 
 ---
 
@@ -15,8 +26,9 @@
 1. [Git工作流 Git Workflow](#1-git工作流-git-workflow)
 2. [分支管理 Branch Management](#2-分支管理-branch-management)
 3. [提交规范 Commit Convention](#3-提交规范-commit-convention)
-4. [代码审查 Code Review](#4-代码审查-code-review)
-5. [常用命令 Common Commands](#5-常用命令-common-commands)
+4. [版本号规则 Version Numbering](#4-版本号规则-version-numbering)
+5. [构建与归档 Build & Archive](#5-构建与归档-build--archive)
+6. [常用命令 Common Commands](#6-常用命令-common-commands)
 
 ---
 
@@ -24,29 +36,27 @@
 
 ### 1.1 工作流选择 Workflow Selection
 
-本项目采用 **Git Flow** 工作流
+志极 Jeenith 为个人开源项目，由唯一开发者 HeYS-Snowe 推进，采用**简化版主干开发（Trunk-based）**工作流：
 
 ```
-                    main (生产)
+                  main（唯一长期分支）
                        │
-                       ▼ merge
-                   develop (开发)
-                       │
-        ┌──────────────┼──────────────┐
-        ▼              ▼              ▼
-    feature/*     release/*      hotfix/*
-    (功能分支)      (发布分支)      (紧急修复)
+       ┌───────────────┼───────────────┐
+       │               │               │
+    直接提交         功能开发         发布打 tag
+   （小修复）       （本地分支）     （v2.3.3 等）
 ```
 
-### 1.2 分支类型说明 Branch Types
+### 1.2 工作流说明 Workflow Description
 
-| 分支类型 Branch Type | 命名规范 Naming | 生命周期 Lifecycle | 说明 Description |
-|------------------|---------------|----------------|---------------|
-| main | main | 长期 | 生产环境代码 |
-| develop | develop | 长期 | 开发环境代码 |
-| feature | feature/功能名称 | 临时 | 新功能开发 |
-| release | release/版本号 | 临时 | 发布准备 |
-| hotfix | hotfix/问题描述 | 临时 | 紧急问题修复 |
+| 场景 Scenario | 方式 Method |
+|-------------|-----------|
+| 小修复/文档更新 | 直接在 main 分支提交 |
+| 较大功能开发 | 本地创建临时分支，完成后合并回 main |
+| 版本发布 | main 分支打 tag（如 v2.3.3） |
+| 紧急修复 | 直接在 main 修复并发布 hotfix 版本 |
+
+> 志极不设 develop/release/hotfix 长期分支，保持 main 为唯一事实来源。所有发布均从 main 构建。
 
 ---
 
@@ -54,427 +64,261 @@
 
 ### 2.1 分支策略 Branch Strategy
 
-#### main分支
+| 分支 Branch | 生命周期 Lifecycle | 用途 Purpose |
+|------------|------------------|------------|
+| main | 永久 | 唯一长期分支，所有发布从此构建 |
+| feat/* | 临时（本地） | 较大功能开发，完成后删除 |
+| fix/* | 临时（本地） | Bug 修复，完成后删除 |
 
-| 属性 Attribute | 说明 Description |
-|-------------|---------------|
-| 保护 Protected | ✅ 是 |
-| 直接推送 Direct Push | ❌ 禁止 |
-| 合并要求 Merge Req | 需要Pull Request + 审查 |
-
-#### develop分支
-
-| 属性 Attribute | 说明 Description |
-|-------------|---------------|
-| 保护 Protected | ✅ 是 |
-| 直接推送 Direct Push | ❌ 禁止 |
-| 合并要求 Merge Req | 需要Pull Request + 审查 |
-
-#### feature分支
-
-| 属性 Attribute | 说明 Description |
-|-------------|---------------|
-| 来源 From | develop |
-| 合并到 Merge To | develop |
-| 命名 Naming | feature/功能描述 或 feature/任务编号 |
-| 删除 Delete | 合并后删除 |
-
-**命名示例:**
+### 2.2 分支命名规范 Branch Naming
 
 ```
-feature/user-login
-feature/123-shopping-cart
-feature/product-search
+feat/<tech-id>-<feature>     # 如 feat/ziwei-star-placement
+fix/<scope>-<issue>          # 如 fix/home-button-spacing
+docs/<topic>                 # 如 docs/api-documentation
 ```
 
-#### hotfix分支
+### 2.3 分支保护 Branch Protection
 
-| 属性 Attribute | 说明 Description |
-|-------------|---------------|
-| 来源 From | main |
-| 合并到 Merge To | main + develop |
-| 命名 Naming | hotfix/问题描述 |
-| 删除 Delete | 合并后删除 |
-
-**命名示例:**
-
-```
-hotfix/payment-error
-hotfix/security-fix
-```
-
-### 2.2 分支操作流程 Branch Operations
-
-#### 功能开发流程 Feature Development Flow
-
-```
-1. 从develop创建feature分支
-   git checkout develop
-   git pull origin develop
-   git checkout -b feature/功能名称
-
-2. 开发并提交
-   git add .
-   git commit -m "feat: 功能描述"
-
-3. 推送到远程
-   git push -u origin feature/功能名称
-
-4. 创建Pull Request到develop
-
-5. 代码审查通过后合并
-
-6. 删除feature分支
-   git branch -d feature/功能名称
-```
-
-#### 紧急修复流程 Hotfix Flow
-
-```
-1. 从main创建hotfix分支
-   git checkout main
-   git pull origin main
-   git checkout -b hotfix/问题描述
-
-2. 修复并提交
-   git add .
-   git commit -m "fix: 问题描述"
-
-3. 推送到远程
-   git push -u origin hotfix/问题描述
-
-4. 创建Pull Request到main
-
-5. 审查通过后合并到main
-
-6. 同步回develop
-   git checkout develop
-   git merge hotfix/问题描述
-   git push origin develop
-```
+- main 分支应始终保持可构建状态（`flutter analyze` 0 issue）
+- 发布前确保 main 分支为最新且通过质量门禁
+- 不强制使用 Pull Request（个人项目可本地合并），但鼓励清晰的 commit 历史
 
 ---
 
 ## 3. 提交规范 Commit Convention
 
-### 3.1 提交消息格式 Commit Message Format
+### 3.1 Commit Message 格式
+
+采用 Conventional Commits 规范：
 
 ```
-<类型>(<范围>): <主题>
+<type>: <subject>
 
-<body>
-
-<footer>
+[可选 body]
 ```
 
-### 3.2 提交类型 Commit Types
+### 3.2 Type 类型
 
-| 类型 Type | 说明 Description | 示例 Example |
-|----------|---------------|-------------|
-| feat | 新功能 | feat: 添加用户登录功能 |
-| fix | Bug修复 | fix: 修复支付回调处理错误 |
-| docs | 文档更新 | docs: 更新API文档 |
-| style | 代码格式(不影响功能) | style: 格式化代码 |
-| refactor | 重构(不是新功能也不是修复) | refactor: 重构用户服务 |
-| perf | 性能优化 | perf: 优化查询性能 |
-| test | 测试相关 | test: 添加单元测试 |
-| chore | 构建/工具相关 | chore: 更新依赖版本 |
-| revert | 回滚提交 | revert: 回滚提交abc123 |
+| Type | 说明 Description | 示例 Example |
+|------|---------------|------------|
+| feat | 新功能 | `feat: 新增八字推演术数` |
+| fix | Bug 修复 | `fix: 首页右上角按钮间距过近` |
+| refactor | 重构 | `refactor: 设置页动画开关 Map 化` |
+| perf | 性能优化 | `perf: 紫微命盘径向排版优化` |
+| style | 代码风格 | `style: 统一 Curves.linear 为 easeInOutCubic` |
+| docs | 文档 | `docs: 添加 MIT LICENSE` |
+| chore | 构建/工具 | `chore: 更新 pubspec 版本号` |
+| build | 构建系统 | `build: Windows 图标资源修复` |
 
-### 3.3 提交范围 Commit Scopes
+### 3.3 Subject 规范
 
-| 范围 Scope | 说明 Description |
-|----------|---------------|
-| user | 用户模块 |
-| order | 订单模块 |
-| product | 产品模块 |
-| payment | 支付模块 |
-| auth | 认证模块 |
-| ui | 前端界面 |
-| api | 接口相关 |
-| config | 配置相关 |
-| database | 数据库相关 |
+- 使用中文描述（与项目文档语言一致）
+- 不超过 50 字
+- 不加句号结尾
+- 使用祈使句（如「修复」而非「修复了」）
 
 ### 3.4 提交示例 Commit Examples
 
-```bash
-# 简单提交
-git commit -m "feat(user): 添加用户注册功能"
+```
+feat: 新增大六壬四课三传算法
 
-# 带说明的提交
-git commit -m "fix(order): 修复订单金额计算错误
+实现贼克/比用/涉害/别责四宗门，含十二天将与昼夜贵人定位。
+天盘环形图 CustomPainter 含 4 层同心圆。
 
-- 修复折扣计算时精度丢失问题
-- 使用BigDecimal替代double计算
-- 添加相关单元测试
+feat: 新增风水罗盘磁力计接入
 
-Closes #123"
+sensors_plus 6.1.2 磁力计订阅，24 山罗盘 CustomPainter，
+仅 Android 显示磁力计罗盘，桌面端显示占位说明。
 
-# 功能开发提交
-git commit -m "feat(product): 添加产品搜索功能
+fix: 首页右上角使用手册与设置按钮间距过近
 
-- 实现关键词搜索
-- 支持按分类筛选
-- 添加搜索结果分页
+在两个 HoverableIconButton 之间插入 SizedBox(width: 8)。
 
-Refs #45"
+docs: 添加 MIT LICENSE 并更新 README 版权说明
 ```
 
-### 3.5 提交最佳实践 Commit Best Practices
+### 3.5 提交粒度 Commit Granularity
 
-| 原则 Principle | 说明 Description |
-|--------------|---------------|
-| 原子性 Atomic | 每次提交只做一件事 |
-| 频繁提交 Frequent | 小步快跑，频繁提交 |
-| 清晰描述 Clear | 提交信息清晰描述变更 |
-| 不提交暂存 No Staging | 不要提交临时调试代码 |
+- 一个 commit 完成一个逻辑变更
+- 新增术数：算法、UI、注册可合为一个 commit 或拆分为多个
+- Bug 修复：一个 Bug 一个 commit
+- 避免混合不相关变更到一个 commit
 
 ---
 
-## 4. 代码审查 Code Review
+## 4. 版本号规则 Version Numbering
 
-### 4.1 Pull Request流程 PR Process
+### 4.1 版本号格式 Version Format
 
 ```
-开发完成 → 创建PR → 自动检查 → 人工审查 → 修改反馈 → 审查通过 → 合并 → 删除分支
+主版本.次版本.修订号+构建号
 ```
 
-### 4.2 PR模板 PR Template
+例如：`2.3.3+23`
 
-```markdown
-## 变更描述 Description
-<!-- 简要描述本次变更的内容 -->
+### 4.2 版本号递增规则 Increment Rules
 
-## 变更类型 Type of Change
-- [ ] 新功能 New Feature
-- [ ] Bug修复 Bug Fix
-- [ ] 重构 Refactor
-- [ ] 文档 Documentation
-- [ ] 其他 Other
+| 状态 Status | 规则 Rule | 示例 Example |
+|------------|---------|------------|
+| release（正式版） | 次版本+1，修订号归零 | 2.2.0 → 2.3.0 |
+| feature/beta/alpha 等 | 修订号+1 | 2.3.0 → 2.3.1 |
+| 构建号 | 每次构建+1 | +22 → +23 |
 
-## 相关 Issues Related Issues
-<!-- 关联的Issue编号，如 Closes #123 -->
-Resolves #
+### 4.3 状态类型 Status Types
 
-## 测试 Testing
-- [ ] 单元测试通过 Unit tests pass
-- [ ] 手动测试完成 Manual testing completed
-- [ ] 代码自审查完成 Self-review completed
+| 状态 Status | 含义 Meaning | 完整度 Completeness |
+|------------|------------|-------------------|
+| release | 正式版 | 完全体 |
+| beta | 测试版 | 非完全体 |
+| alpha | 内测版 | 非完全体 |
+| rc | 候选版 | 接近完全体 |
+| fix | 修复版 | 完全体 |
+| hotfix | 紧急修复版 | 完全体 |
+| feature | 功能版 | 非完全体 |
+| dev | 开发版 | 非完全体 |
+| debug | 调试版 | 非完全体 |
 
-## 截图 Screenshots
-<!-- 如果是UI变更，请提供截图 -->
+### 4.4 构建产物命名 Artifact Naming
 
-## 检查清单 Checklist
-- [ ] 代码符合项目规范
-- [ ] 添加了必要的注释
-- [ ] 更新了相关文档
-- [ ] 无新的警告产生
-
-## 其他说明 Additional Notes
-<!-- 其他需要说明的事项 -->
+```
+Jeenith_<status>_<version>_<date>_<sequence>.<ext>
 ```
 
-### 4.3 审查标准 Review Standards
+示例：
+- `Jeenith_release_2.3.3_20260715_01.apk`
+- `Jeenith_release_2.3.3_20260715_01_windows_x64.zip`
 
-| 检查项 Check Item | 标准 Standard |
-|----------------|-------------|
-| 功能正确性 Functionality | 实现符合需求，功能正确 |
-| 代码质量 Code Quality | 代码清晰，符合规范 |
-| 性能 Performance | 无明显性能问题 |
-| 安全性 Security | 无安全漏洞 |
-| 测试 Tests | 有足够的测试覆盖 |
-| 文档 Docs | 必要的文档已更新 |
+### 4.5 版本历史记录 Version History
 
-### 4.4 审查响应时间 Response Time
-
-| 优先级 Priority | 响应时间 Response Time |
-|--------------|----------------------|
-| 紧急 Urgent | 2小时 |
-| 高 High | 1个工作日 |
-| 普通 Normal | 2个工作日 |
-| 低 Low | 3个工作日 |
+每次构建自动更新两份历史记录：
+- `builds/build_history.json`：构建产物元数据（文件名/大小/SHA-256/日期）
+- `builds/release_history.json`：发布版本元数据（版本号/状态/变更摘要）
+- `builds/release_notes/release_notes_v<version>.md`：详细发布说明
 
 ---
 
-## 5. 常用命令 Common Commands
+## 5. 构建与归档 Build & Archive
 
-### 5.1 分支操作 Branch Operations
+### 5.1 构建命令 Build Command
 
 ```bash
-# 查看所有分支
-git branch -a
+# Android APK（cwd=mobile）
+pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "2.3.3"
 
-# 创建新分支
-git branch <branch-name>
-
-# 切换分支
-git checkout <branch-name>
-
-# 创建并切换分支
-git checkout -b <branch-name>
-
-# 删除本地分支
-git branch -d <branch-name>
-
-# 删除远程分支
-git push origin --delete <branch-name>
-
-# 重命名分支
-git branch -m <old-name> <new-name>
+# Windows 桌面
+flutter build windows --release
 ```
 
-### 5.2 提交操作 Commit Operations
+### 5.2 构建脚本职责 Build Script Responsibilities
+
+`scripts/build_apk.ps1` 自动完成：
+1. 读取/更新 pubspec.yaml 版本号
+2. 执行 `flutter build apk --release`
+3. 按命名规则重命名 APK
+4. 归档到 `builds/android/`
+5. 更新 `build_history.json` + `release_history.json`
+6. 生成 `release_notes/release_notes_v<version>.md` 模板
+
+### 5.3 归档目录结构 Archive Structure
+
+```
+builds/
+├── android/                    # APK 产物
+│   └── Jeenith_release_2.3.3_20260715_01.apk
+├── windows/                    # Windows ZIP 产物
+│   └── Jeenith_release_2.3.3_20260715_01_windows_x64.zip
+├── release_notes/              # 发布说明
+│   └── release_notes_v2.3.3.md
+├── build_history.json          # 构建历史
+└── release_history.json        # 发布历史
+```
+
+### 5.4 质量门禁 Quality Gate
+
+每次构建前必须满足：
+- `flutter analyze` 为 0 issue
+- TextPainter 全部 dispose（无 native handle 泄漏）
+- AnimationController 全部 dispose
+- 无硬编码身份信息
+
+---
+
+## 6. 常用命令 Common Commands
+
+### 6.1 日常开发 Daily Development
+
+```bash
+# 进入项目
+cd D:\Code\Project\Qore\Jeenith\mobile
+
+# 安装依赖
+flutter pub get
+
+# 静态分析（必须 0 issue）
+flutter analyze
+
+# 运行调试
+flutter run
+```
+
+### 6.2 Git 操作 Git Operations
 
 ```bash
 # 查看状态
 git status
 
-# 添加所有变更
-git add .
+# 查看最近提交
+git log --oneline -10
 
-# 添加指定文件
-git add <file>
+# 创建功能分支
+git checkout -b feat/new-tech
 
-# 提交变更
-git commit -m "message"
+# 合并回 main
+git checkout main
+git merge feat/new-tech
 
-# 修改最后一次提交
-git commit --amend
-
-# 查看提交历史
-git log
-git log --oneline
-git log --graph --oneline --all
+# 打发布 tag
+git tag v2.3.3
+git push origin v2.3.3
 ```
 
-### 5.3 远程操作 Remote Operations
+### 6.3 构建发布 Build & Release
 
 ```bash
-# 查看远程仓库
-git remote -v
+# APK 构建（自动版本号+归档+历史）
+pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "2.3.3"
 
-# 拉取更新
-git pull origin <branch>
+# Windows 桌面构建
+flutter build windows --release
 
-# 推送变更
-git push origin <branch>
-
-# 首次推送(建立关联)
-git push -u origin <branch>
-
-# 拉取远程分支
-git fetch origin
-git fetch origin <branch>
-```
-
-### 5.4 合并与冲突 Merge & Conflicts
-
-```bash
-# 合并分支
-git merge <branch>
-
-# 变基合并
-git rebase <branch>
-
-# 终止合并
-git merge --abort
-
-# 继续合并(解决冲突后)
-git merge --continue
-
-# 查看冲突文件
-git diff --name-only --diff-filter=U
-```
-
-### 5.5 撤销操作 Undo Operations
-
-```bash
-# 撤销工作区修改
-git checkout -- <file>
-
-# 撤销暂存区修改
-git reset HEAD <file>
-
-# 撤销最后一次提交(保留修改)
-git reset --soft HEAD~1
-
-# 撤销最后一次提交(不保留修改)
-git reset --hard HEAD~1
-
-# 回退到指定提交
-git reset --hard <commit-hash>
+# 手动打包 Windows ZIP
+Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath builds\windows\Jeenith_release_2.3.3_20260715_01_windows_x64.zip
 ```
 
 ---
 
-## 附录 Appendix
+## 附录：版本发布历史 Version Release History
 
-### 附录A：Git配置 Git Configuration
-
-```bash
-# 用户信息
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-
-# 默认分支名称
-git config --global init.defaultBranch main
-
-# 别名设置
-git config --global alias.st status
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.ci commit
-git config --global alias.unstage 'reset HEAD --'
-git config --global alias.last 'log -1 HEAD'
-git config --global alias.visual 'log --graph --oneline --all'
-```
-
-### 附录B：.gitignore模板 .gitignore Template
-
-```gitignore
-# 编译产物
-target/
-build/
-dist/
-out/
-
-# IDE
-.idea/
-.vscode/
-*.iml
-.DS_Store
-
-# 日志
-*.log
-logs/
-
-# 临时文件
-*.tmp
-*.bak
-*.swp
-*~
-
-# 依赖
-node_modules/
-vendor/
-
-# 环境配置
-.env
-.env.local
-
-# 测试覆盖率
-coverage/
-.nyc_output/
-```
-
----
-
-## 审批与签署 Approvals
-
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 技术负责人 Tech Lead | | | |
+| 版本 Version | 日期 Date | 状态 Status | 主题 Theme |
+|-------------|---------|------------|----------|
+| v1.0.0 | 2026-07-11 | release | 首版发布 |
+| v1.2.0 | 2026-07-13 | feature | 卦辞爻辞数据 |
+| v1.3.0 | 2026-07-13 | feature | 紫微斗数 v2 |
+| v1.4.0 | 2026-07-13 | feature | 奇门遁甲 v2 |
+| v1.5.0 | 2026-07-13 | feature | 主题/分享/导出 |
+| v1.6.0 | 2026-07-13 | feature | 抽签/测字 |
+| v1.7.0 | 2026-07-13 | feature | 大六壬/罗盘 |
+| v2.0.0 | 2026-07-14 | release | 品牌定调 |
+| v2.1.0 | 2026-07-14 | feature | 动效 Phase 1 |
+| v2.2.0 | 2026-07-14 | feature | 动效 Phase 2 |
+| v2.3.0 | 2026-07-14 | feature | 八字/测名字 |
+| v2.3.1 | 2026-07-15 | fix | BUG 修复 |
+| v2.3.2 | 2026-07-15 | release | 动画细分开关 |
+| v2.3.3 | 2026-07-15 | release | 开源就绪 |
 
 ---
 
 **文档结束 End of Document**
+
+志极 Jeenith · 志于本心，知于极处

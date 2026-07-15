@@ -1,326 +1,452 @@
 # 数据模型与 API 契约 Data Model & API Contract
 
+> 志极 Jeenith · 数据模型字段表与内部 API 契约
+
 ## 文档信息 Document Information
 
 | 项目 Item | 内容 Content |
-|---|---|
-| 文档版本 Version | v0.1.0 |
-| 创建日期 Created | 2026-07-05 |
-| 作者 Author | Claude（思维逻辑层） |
-| 后端 Stack | Python 3.11 + FastAPI · 数据库候选 PostgreSQL · AI 识别在边缘侧 |
-| 上游 Depends | 《预警状态机与业务规则》 |
-| 下游 Downstream | 后端实现、Flutter 数据层、Codex（字段渲染） |
-
-> 本文是**字段与接口的权威来源**。电商模板《数据库设计说明书》《接口设计文档》《API 接口文档》**已废弃**，不再适用。
+|---------|-------------|
+| 项目名称 Project | 志极 / Jeenith |
+| 组织 Organization | Qore Origins（叩心） |
+| 包名 Package | `com.qore.jeenith` |
+| 文档版本 Version | v2.3.3 |
+| 当前版本 App Version | 2.3.3+23（release，2026-07-15） |
+| 开发者 Developer | HeYS-Snowe |
+| 许可证 License | MIT · Copyright (c) 2026 Qore |
 
 ---
 
-## 1. 通用约定 Conventions
+## 修改记录 Change History
 
-### 1.1 统一响应信封 Unified Envelope
+| 版本 Version | 日期 Date | 修改内容 Description |
+|-------------|---------|-------------------|
+| v1.0.0 | 2026-01 | 初版：DivinationResult / TechMeta / AppConfig 字段表 |
+| v2.3.0 | 2026-06 | AppConfig.animationSettings 拆为二维 Map |
+| v2.3.3 | 2026-07-15 | 同步当前字段定义与 JSON 序列化契约 |
+
+---
+
+## 1. 模型概述 Model Overview
+
+志极 Jeenith 的数据模型分四类，均为 `@immutable` Dart 类，集中在 `core/`：
+
+| 类别 Category | 模型 Models | 文件 File |
+|------------|-----------|--------|
+| 配置 Config | AppConfig, AnimationKind | `core/config/app_config.dart` |
+| 卜算框架 Framework | DivinationTech, TechMeta | `core/divination/divination_tech.dart` |
+| 卜算结果 Result | DivinationResult, ResultCardData, Verdict, DetailDimension, ChangingPosition, EntropySample, EntropySourceResult | `core/divination/divination_result.dart` |
+| 历史 History | HistoryEntry | `core/history/history_store.dart` |
+
+所有模型遵循：
+- `@immutable` + `const` 构造
+- 可空字段用 `?`
+- 提供 `copyWith`（需变更的）
+- 序列化方法（`toJson` / `fromJson`）仅在需持久化时提供
+
+---
+
+## 2. 配置模型 Config Models
+
+### 2.1 AnimationKind
+
+**文件**：`core/config/app_config.dart`
+
+```dart
+enum AnimationKind { entrance, transition, painter, reveal }
+```
+
+| 枚举值 Value | name | 含义 Meaning |
+|------------|----|------------|
+| `entrance` | `"entrance"` | 入场仪式（仪式动画页/路由前置过渡） |
+| `transition` | `"transition"` | 路由转场（TechTransition） |
+| `painter` | `"painter"` | 绘制过程（CustomPainter progress 动画） |
+| `reveal` | `"reveal"` | 结果揭示（RevealAnimation 封装） |
+
+### 2.2 AppConfig
+
+**文件**：`core/config/app_config.dart`
+
+| 字段 Field | 类型 Type | 必填 Required | 默认 Default | 说明 Description |
+|---------|--------|-----------|-----------|---------------|
+| `showDetails` | `bool` | ✅ | `true` | 起卦后展示真随机采样详情 |
+| `useOnline` | `bool` | ✅ | `true` | 启用 random.org 在线熵源 |
+| `animationsEnabled` | `bool` | ❌ | `true` | 微交互动效总开关 |
+| `animationSettings` | `Map<String, Map<String, bool>>` | ❌ | `{}` | 分术分类型动画开关（外层 techId，内层 kind.name） |
+| `themeMode` | `ThemeMode` | ❌ | `ThemeMode.dark` | 主题模式 |
+
+**方法 Methods**：
+
+| 方法 | 签名 Signature | 说明 |
+|-----|--------------|-----|
+| `isAnimationEnabled` | `bool isAnimationEnabled(String techId, AnimationKind kind)` | 读取某术某类动画开关，缺省返回 `true` |
+| `copyWith` | `AppConfig copyWith({...})` | 不可变更新 |
+| `defaults` | `static const AppConfig` | 默认配置常量 |
+
+**持久化映射**：
+
+| 字段 | SharedPreferences Key | 类型 |
+|-----|---------------------|-----|
+| `showDetails` | `showDetails` | bool |
+| `useOnline` | `useOnline` | bool |
+| `animationsEnabled` | `animationsEnabled` | bool |
+| `themeMode` | `themeMode` | string（`light`/`dark`/`system`） |
+| `animationSettings[techId][kind]` | `anim_<techId>_<kind>` | bool |
+
+---
+
+## 3. 卜算框架模型 Framework Models
+
+### 3.1 TechMeta
+
+**文件**：`core/divination/divination_tech.dart`
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `id` | `String` | ✅ | 唯一标识（路由参数 `/tech/:id`） |
+| `displayName` | `String` | ✅ | 显示名（如「小六壬」） |
+| `subtitle` | `String` | ✅ | 副标题（如「掐指神课」） |
+| `description` | `String` | ✅ | 卡片描述 |
+| `accentColor` | `Color` | ✅ | 卡片主题色 |
+| `sortOrder` | `int` | ❌ | 首页排列顺序，默认 `99` |
+| `enabled` | `bool` | ❌ | 功能开关，默认 `true`（开发中可隐藏） |
+
+### 3.2 DivinationTech
+
+**文件**：`core/divination/divination_tech.dart`
+
+| 成员 Member | 类型 Type | 说明 Description |
+|-----------|--------|---------------|
+| `id` | `String`（getter） | 唯一标识，须与 `meta.id` 一致 |
+| `meta` | `TechMeta`（getter） | 展示元数据 |
+| `buildPage` | `Widget Function(BuildContext, WidgetRef)` | 构建术主页 |
+
+**契约**：抽象类，每种术实现。实例应为 `const`。
+
+---
+
+## 4. 卜算结果模型 Result Models
+
+### 4.1 DivinationResult
+
+**文件**：`core/divination/divination_result.dart`
+
+统一结果模型，兼容小六壬（三宫+七维+分级）与周易（本卦+变卦+变爻）等所有术。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `techId` | `String` | ✅ | 术标识 |
+| `primaryName` | `String` | ✅ | 主名（小六壬: 末宫名 / 周易: 本卦名） |
+| `primarySubtitle` | `String?` | ❌ | 主名副标题（如「木·东方」「天」） |
+| `secondaryName` | `String?` | ❌ | 副名（周易变卦名），无则 null |
+| `secondarySubtitle` | `String?` | ❌ | 副名副标题 |
+| `changingPositions` | `List<ChangingPosition>?` | ❌ | 变爻位（周易）/ 其他变位 |
+| `verdict` | `Verdict?` | ❌ | 综合断语（吉凶分级） |
+| `details` | `List<DetailDimension>?` | ❌ | 顶层多维断辞 |
+| `cards` | `List<ResultCardData>` | ✅ | 结构化卡片（小六壬 3 张落宫 / 周易 1~2 张卦卡） |
+| `inputNumbers` | `List<int>?` | ❌ | 输入随机数 |
+| `entropy` | `EntropySample?` | ❌ | 真随机采样详情 |
+| `timestamp` | `DateTime` | ✅ | 卜算时间 |
+| `raw` | `Object?` | ❌ | 术特定原始数据（escape hatch，保证灵活） |
+
+### 4.2 ResultCardData
+
+**文件**：`core/divination/divination_result.dart`
+
+单张结果卡的数据。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `order` | `String` | ✅ | 序号（「一」/「二」/「三」或「本」/「变」） |
+| `title` | `String` | ✅ | 标题（「大安」/「乾」） |
+| `subtitle` | `String?` | ❌ | 副标题（「木 · 青龙 · 东方」） |
+| `badge` | `String?` | ❌ | 徽章（「大吉」） |
+| `badgeColor` | `Color?` | ❌ | 徽章色 |
+| `poem` | `String?` | ❌ | 诗诀 |
+| `meaning` | `String?` | ❌ | 含义长文 |
+| `details` | `List<DetailDimension>?` | ❌ | 多维断辞（小六壬七维） |
+| `accentColor` | `Color?` | ❌ | 卡片主色 |
+
+### 4.3 Verdict
+
+**文件**：`core/divination/divination_result.dart`
+
+整体吉凶分级。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `grade` | `String` | ✅ | 分级名（「大吉之象」） |
+| `tone` | `Color` | ✅ | 分级主题色（参考 AppColors.grade*） |
+| `description` | `String` | ✅ | 断语 |
+
+### 4.4 DetailDimension
+
+**文件**：`core/divination/divination_result.dart`
+
+单维断辞（如 求谋/失物/出行 等）。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `label` | `String` | ✅ | 维度名（「求谋」） |
+| `content` | `String` | ✅ | 断辞内容（「可成，宜稳进，贵人扶助。」） |
+
+### 4.5 ChangingPosition
+
+**文件**：`core/divination/divination_result.dart`
+
+变位（周易变爻 / 未来其他术的变位）。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `index` | `int` | ✅ | 0-based 索引 |
+| `label` | `String` | ✅ | 标签（「初」/「二」/.../「上」） |
+
+### 4.6 EntropySample
+
+**文件**：`core/divination/divination_result.dart`
+
+真随机采样详情。
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `numbers` | `List<int>` | ✅ | 起卦用随机数 |
+| `sources` | `List<EntropySourceResult>` | ✅ | 各源采样详情（UI 展示） |
+| `timestamp` | `DateTime` | ✅ | 采样时间 |
+
+### 4.7 EntropySourceResult
+
+**文件**：`core/divination/divination_result.dart`
+
+| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
+|---------|--------|-----------|---------------|
+| `name` | `String` | ✅ | 熵源名称 |
+| `display` | `String` | ✅ | 展示值 |
+| `succeeded` | `bool` | ✅ | 是否采样成功 |
+
+---
+
+## 5. 历史模型 History Model
+
+### 5.1 HistoryEntry
+
+**文件**：`core/history/history_store.dart`
+
+| 字段 Field | 类型 Type | 必填 Required | JSON Key | 说明 Description |
+|---------|--------|-----------|---------|---------------|
+| `id` | `String` | ✅ | `id` | 唯一 ID |
+| `techId` | `String` | ✅ | `techId` | 术标识 |
+| `techName` | `String` | ✅ | `techName` | 术显示名（冗余存储） |
+| `time` | `DateTime` | ✅ | `time` | 卜算时间（ISO 8601） |
+| `summary` | `String` | ✅ | `summary` | 摘要（列表展示） |
+| `detail` | `String` | ✅ | `detail` | 详情文本（复制/导出用） |
+| `note` | `String?` | ❌ | `note` | 用户备注 |
+
+**方法 Methods**：
+
+| 方法 | 签名 | 说明 |
+|-----|-----|-----|
+| `toJson` | `Map<String, dynamic> toJson()` | 序列化 |
+| `fromJson` | `factory HistoryEntry.fromJson(Map<String, dynamic>)` | 反序列化 |
+| `copyWith` | `HistoryEntry copyWith({String? note})` | 仅支持改 note |
+
+---
+
+## 6. API 契约 API Contract
+
+### 6.1 TrueRandom.generate
+
+```dart
+Future<EntropySample> generate({int count = 3, int vmax = 9});
+```
+
+| 参数 Param | 类型 Type | 默认 Default | 说明 |
+|---------|--------|-----------|-----|
+| `count` | `int` | `3` | 生成随机数个数 |
+| `vmax` | `int` | `9` | 上界（结果 ∈ [1, vmax]） |
+
+**返回**：`EntropySample`（含 `numbers` 长度 = `count`）
+
+**各术调用约定**：
+
+| 术 Tech | count | vmax |
+|--------|------|-----|
+| 小六壬 | 3 | 6（或 9） |
+| 周易 | 6 | 64 |
+| 掷筊 | 3 | — |
+| 抽签 | 1 | 签总数 |
+
+### 6.2 HistoryStore API
+
+| 方法 Method | 签名 Signature | 返回 Return | 原子 Atomic |
+|-----------|--------------|----------|-----------|
+| `load` | `static Future<List<HistoryEntry>> load()` | 全部历史（最新在前） | 读 |
+| `add` | `static Future<void> add(HistoryEntry e)` | — | ✅ 串行化 |
+| `updateNote` | `static Future<void> updateNote(String id, String? note)` | — | ✅ 串行化 |
+| `remove` | `static Future<void> remove(String id)` | — | ✅ 串行化 |
+| `clear` | `static Future<void> clear()` | — | ✅ 串行化 |
+| `generateId` | `static String generateId()` | 唯一 ID | — |
+
+### 6.3 ConfigNotifier API
+
+| 方法 Method | 签名 Signature | 副作用 Side Effect |
+|-----------|--------------|-----------------|
+| `build` | `Future<AppConfig> build()` | 读 SharedPreferences |
+| `setShowDetails` | `Future<void> setShowDetails(bool v)` | 写 `showDetails` + 更新 state |
+| `setUseOnline` | `Future<void> setUseOnline(bool v)` | 写 `useOnline` + 更新 state |
+| `setAnimationsEnabled` | `Future<void> setAnimationsEnabled(bool v)` | 写 `animationsEnabled` + 更新 state |
+| `setAnimationSetting` | `Future<void> setAnimationSetting(String techId, AnimationKind kind, bool v)` | 写 `anim_<techId>_<kind>` + 更新 state |
+| `setAllAnimations` | `Future<void> setAllAnimations(List<String> techIds, bool v)` | 批量写所有术所有 kind + 更新 state |
+| `setThemeMode` | `Future<void> setThemeMode(ThemeMode v)` | 写 `themeMode` + 更新 state |
+
+### 6.4 Provider 契约 Provider Contract
+
+| Provider | 类型 Type | 值 Value | 重建条件 Rebuild On |
+|---------|--------|--------|------------------|
+| `configProvider` | `AsyncNotifierProvider<ConfigNotifier, AppConfig>` | `AsyncData<AppConfig>` | setter 调用 |
+| `trueRandomProvider` | `Provider<TrueRandom>` | TrueRandom 实例 | `configProvider` 的 `useOnline` 变化 |
+| `touchTrackerProvider` | `Provider<TouchTracker>` | TouchTracker 单例 | 不重建 |
+| `divinationTechsProvider` | `Provider<List<DivinationTech>>` | 12 术列表 | 不重建（编译期常量） |
+| `techByIdProvider` | `Provider.family<DivinationTech?, String>` | 按 id 查术 | 入参 id |
+| `visibleTechsProvider` | `Provider<List<DivinationTech>>` | enabled + sorted | `divinationTechsProvider` |
+| `routerProvider` | `Provider<GoRouter>` | GoRouter 实例 | 不重建 |
+
+---
+
+## 7. JSON 序列化契约 JSON Serialization
+
+### 7.1 HistoryEntry JSON
 
 ```json
 {
-  "code": 200,
-  "message": "success",
-  "data": {},
-  "timestamp": 1751750400,
-  "requestId": "uuid"
+  "id": "1784122714123456-0001",
+  "techId": "zhouyi",
+  "techName": "周易",
+  "time": "2026-07-15T14:30:25.123456",
+  "summary": "本卦：乾为天 → 变卦：天风姤",
+  "detail": "【周易·金钱卦】\n本卦：乾为天...",
+  "note": null
 }
 ```
 
-分页响应：`data = { "items": [...], "pagination": { "page":1, "size":20, "total":100, "totalPages":5, "hasNext":true } }`
-
-### 1.2 通用查询参数 Pagination & Filter
-
-| 参数 | 类型 | 默认 | 说明 |
-|---|---|---|---|
-| page | int | 1 | 页码，从 1 |
-| size | int | 20 | 每页，1-100 |
-| sort | string | detected_at | 排序字段 |
-| order | string | desc | asc/desc |
-
-### 1.3 错误码 Error Codes
-
-| code | HTTP | 含义 |
-|---|---|---|
-| 200 | 200 | 成功 |
-| 400 | 400 | 参数错误 |
-| 401 | 401 | 未认证 / token 失效 |
-| 403 | 403 | 无权限 / 区域越权 |
-| 404 | 404 | 资源不存在 |
-| 409 | 409 | 状态冲突（乐观锁失败 / 迁移非法） |
-| 422 | 422 | 校验失败（如闭环缺必填） |
-| 500 | 500 | 系统错误 |
-| 10101 | 401 | 账号已禁用 |
-| 10201 | 404 | 预警不存在 |
-| 10202 | 409 | 状态迁移非法 |
-| 10203 | 409 | 已被他人接警（version 不匹配） |
-| 10204 | 422 | 闭环缺少 handle_type / note |
-| 10301 | 403 | 区域越权（不在可见域） |
-
----
-
-## 2. 核心实体 Core Entities
-
-> 类型以 PostgreSQL 为准；主键统一 `BIGINT` 自增；时间 `TIMESTAMPTZ`；软删字段 `deleted_at TIMESTAMPTZ NULL`。
-
-### 2.1 user 账号
-
-| 字段 | 类型 | 必填 | 默认 | 说明 |
-|---|---|---|---|---|
-| id | BIGINT PK | Y | auto | |
-| username | VARCHAR(50) UK | Y | | 登录账号 |
-| name | VARCHAR(50) | Y | | 姓名 |
-| phone | VARCHAR(20) | N | | 手机 |
-| password_hash | VARCHAR(255) | Y | | bcrypt |
-| role | enum | Y | | `guard`/`manager`/`admin` |
-| region_ids | BIGINT[] | N | | 可见区域 id 列表（数据可见域） |
-| status | enum | Y | active | `active`/`disabled` |
-| last_login_at | TIMESTAMPTZ | N | | |
-| created_at / updated_at | TIMESTAMPTZ | Y | now | |
-
-### 2.2 region 监控区域（树形）
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| name | VARCHAR(100) | Y | 区域名（如"东区教学楼"） |
-| parent_id | BIGINT | N | 父区域 |
-| path | VARCHAR(255) | Y | 如 `/1/3/7`，便于按前缀查子树 |
-| level | INT | Y | 层级 |
-| manager_id | BIGINT | N | 负责 manager → user.id |
-| created_at / updated_at | TIMESTAMPTZ | Y | |
-
-### 2.3 camera 摄像头/设备
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| code | VARCHAR(64) UK | Y | 设备编号（边缘上报用） |
-| name | VARCHAR(100) | Y | |
-| region_id | BIGINT FK | Y | → region.id |
-| location | VARCHAR(255) | N | 安装位置描述 |
-| status | enum | Y | `online`/`offline`/`maintenance` |
-| edge_node_id | VARCHAR(64) | N | 边缘节点标识 |
-| stream_url | VARCHAR(255) | N | 仅管理用，**不下发 App** |
-| installed_at | DATE | N | |
-| created_at / updated_at | TIMESTAMPTZ | Y | |
-
-### 2.4 alert_rule 预警规则
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| behavior_type | enum | Y | 见状态机 §1 |
-| severity_default | enum | Y | high/medium/low |
-| confidence_threshold | REAL | Y | 低于此值不生成预警（如 0.6） |
-| dedup_window_sec | INT | Y | 去重合并窗口（默认 15） |
-| ack_sla_sec | INT | Y | 接警 SLA，超时自动升级 |
-| person_count_threshold | INT | N | crowd_gather 用 |
-| enabled | BOOL | Y | true |
-
-### 2.5 detection_record 边缘识别原始记录
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| camera_id | BIGINT FK | Y | |
-| behavior_type | enum | Y | |
-| confidence | REAL | Y | |
-| snapshot_url | VARCHAR(512) | Y | 抓拍图对象存储 URL |
-| person_count | INT | N | |
-| detected_at | TIMESTAMPTZ | Y | 边缘检测时刻 |
-| edge_node_id | VARCHAR(64) | N | |
-| alert_id | BIGINT FK | N | 合并进的预警单；null=未达阈值 |
-| ingested_at | TIMESTAMPTZ | Y | 服务端接收时刻 |
-
-### 2.6 alert 预警单（核心）★
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| alert_no | VARCHAR(32) UK | Y | 业务编号 |
-| camera_id | BIGINT FK | Y | |
-| region_id | BIGINT FK | Y | 冗余，便于区域查询 |
-| behavior_type | enum | Y | |
-| severity | enum | Y | high/medium/low |
-| status | enum | Y | pending/handling/closed/false_alarm/escalated/archived |
-| confidence | REAL | Y | 最新/最高置信度 |
-| snapshot_url | VARCHAR(512) | Y | 最新抓拍 |
-| video_clip_url | VARCHAR(512) | N | 短视频片段 |
-| person_count | INT | N | |
-| detected_at | TIMESTAMPTZ | Y | 首次检测时刻 |
-| merged_count | INT | Y | 合并的识别记录数，默认 1 |
-| acked_by | BIGINT FK | N | → user.id |
-| acked_at | TIMESTAMPTZ | N | |
-| handle_type | enum | N | 闭环时填，见状态机附录 B |
-| handling_note | TEXT | N | 处置说明 |
-| handled_by | BIGINT FK | N | |
-| handled_at | TIMESTAMPTZ | N | |
-| escalated_at | TIMESTAMPTZ | N | |
-| escalated_by | VARCHAR(32) | N | `auto` / `manual` / user_id |
-| version | INT | Y | **乐观锁**，默认 1，每次状态变更 +1 |
-| created_at / updated_at | TIMESTAMPTZ | Y | |
-
-**关键索引**：`(region_id, status)`、`(status, severity, detected_at desc)`、`(camera_id, behavior_type, status)`、`uk_alert_no`。
-
-### 2.7 alert_status_log 状态流转日志
-
-| 字段 | 类型 | 必填 | 说明 |
-|---|---|---|---|
-| id | BIGINT PK | Y | |
-| alert_id | BIGINT FK | Y | |
-| from_status | enum | N | |
-| to_status | enum | Y | |
-| event | VARCHAR(32) | Y | ack/handle/false_alarm/escalate/auto_escalate/reassign/force_close/archive |
-| operator_id | BIGINT | N | 系统操作为 null |
-| operator_role | enum | N | |
-| note | TEXT | N | |
-| created_at | TIMESTAMPTZ | Y | |
-
-> `push_ticket`（推送工单）、`stats_snapshot`（统计快照）：MVP 推送工单可表化以便追踪送达；统计**实时聚合**，暂不建快照表。
-
-### 2.8 实体关系 ER
-
-```
-region 1──N camera 1──N detection_record
-                 1──N alert 1──N alert_status_log
-                          N──1 user (acked_by / handled_by)
-alert N──1 detection_record (合并)        user N──M region (region_ids 可见域)
-```
-
----
-
-## 3. API 端点 Endpoints
-
-### 3.1 认证 Auth
-
-| 方法 | 端点 | 说明 | 鉴权 |
-|---|---|---|---|
-| POST | /api/v1/auth/login | 登录 → access/refresh token | 公开 |
-| POST | /api/v1/auth/refresh | 刷新 token | refresh |
-| GET | /api/v1/auth/me | 当前用户 | JWT |
-
-`POST /auth/login` 请求 `{account, password}` → `data: { access_token, refresh_token, token_type:"Bearer", expires_in, user:{id,name,role,region_ids} }`
-
-### 3.2 预警 Alert（App 主接口）
-
-| 方法 | 端点 | 说明 | 角色 |
-|---|---|---|---|
-| GET | /api/v1/alerts | 列表（带 region_scope 过滤） | all |
-| GET | /api/v1/alerts/{id} | 详情（含 status_logs） | all |
-| POST | /api/v1/alerts/{id}/ack | 接警 → handling | guard |
-| POST | /api/v1/alerts/{id}/handle | 提交处置 → closed | guard |
-| POST | /api/v1/alerts/{id}/false-alarm | 误报 | guard/manager |
-| POST | /api/v1/alerts/{id}/escalate | 升级 → escalated | guard/manager |
-| POST | /api/v1/alerts/{id}/reassign | 指派回 → handling | manager |
-| POST | /api/v1/alerts/{id}/force-close | 强制闭环 → closed | manager |
-
-> 所有写操作请求体必带 `version`（当前 Alert.version），用于乐观锁；不匹配返回 10203/409。
-
-`GET /api/v1/alerts` 过滤：`status, severity, region_id, camera_id, behavior_type, detected_start, detected_end, page, size, sort, order`。`archived` 默认不返回。
-
-`POST /alerts/{id}/handle` 请求 `{ version, handle_type, note, photos?:[url] }`（缺 handle_type/note → 10204/422）。
-
-### 3.3 边缘上报 Ingest（机器通道）
-
-| 方法 | 端点 | 说明 | 鉴权 |
-|---|---|---|---|
-| POST | /api/v1/ingest/detection | 单条上报 | edge token |
-| POST | /api/v1/ingest/detections | 批量上报 | edge token |
-
-`POST /ingest/detection` 请求 `{ camera_code, behavior_type, confidence, snapshot_url, person_count?, detected_at, edge_node_id }`
-→ 服务端按规则去重合并 / 阈值过滤 → `data: { alert_id?, created:bool, merged:bool }`；`created=true` 触发推送。
-
-### 3.4 统计 Stats（管理者看板）
-
-| 方法 | 端点 | 说明 |
-|---|---|---|
-| GET | /api/v1/stats/overview | 总览（range=today/week/month，region_id 可选） |
-| GET | /api/v1/stats/trend | 时序（granularity=hour/day） |
-
-### 3.5 管理 Admin（admin/manager）
-
-`/api/v1/cameras`、`/api/v1/regions`、`/api/v1/alert-rules`、`/api/v1/users` —— 标准 CRUD，按角色鉴权。
-
----
-
-## 4. 关键响应结构（Codex 渲染依赖）Response Shapes
-
-### 4.1 AlertListItem（列表项）
+### 7.2 历史数组 JSON
 
 ```json
-{
-  "id": 8801, "alert_no": "20260705-094012-C12-001",
-  "camera": { "id": 12, "name": "东区围墙-12" },
-  "region": { "id": 7, "name": "东区" },
-  "behavior_type": "fence_climb", "severity": "high", "status": "pending",
-  "confidence": 0.92, "merged_count": 3,
-  "snapshot_url": "https://oss/.../snap_8801.jpg",
-  "detected_at": "2026-07-05T09:40:12Z"
-}
+[
+  { "id": "...", "techId": "zhouyi", ... },
+  { "id": "...", "techId": "xiaoliuren", ... }
+]
 ```
 
-### 4.2 AlertDetail（详情）
+存储于 SharedPreferences key `divination_history`，value 为 `jsonEncode(list)` 字符串。
 
-```json
-{
-  "id": 8801, "alert_no": "...",
-  "camera": { "id":12, "name":"东区围墙-12", "status":"online" },
-  "region": { "id":7, "name":"东区" },
-  "behavior_type": "fence_climb", "severity": "high", "status": "pending",
-  "confidence": 0.92, "merged_count": 3,
-  "snapshot_url": ".../snap_8801.jpg",
-  "video_clip_url": ".../clip_8801.mp4",
-  "person_count": 1,
-  "detected_at": "2026-07-05T09:40:12Z",
-  "acked_by": null, "acked_at": null,
-  "handle_type": null, "handling_note": null, "handled_by": null, "handled_at": null,
-  "escalated_at": null, "escalated_by": null,
-  "version": 5,
-  "status_logs": [
-    { "event":"created", "from_status":null, "to_status":"pending", "created_at":"2026-07-05T09:40:12Z" }
-  ]
-}
+### 7.3 非序列化模型
+
+以下模型**不序列化**，仅运行时存在于内存：
+- `AppConfig`（字段分别持久化，非整体 JSON）
+- `DivinationResult` / `ResultCardData` / `Verdict` 等（卜算结果不直接持久化，转为 HistoryEntry 的 summary/detail 文本后存储）
+- `TechMeta` / `DivinationTech`（编译期常量）
+- `EntropySample`（仅 UI 展示，不持久化）
+
+---
+
+## 8. 模型关系图 Model Relationship
+
 ```
+DivinationTech ──► TechMeta
+                ──► buildPage → ConsumerWidget
 
-### 4.3 StatsOverview
+DivinationResult ──► List<ResultCardData> ──► List<DetailDimension>
+                 ──► Verdict
+                 ──► List<ChangingPosition>
+                 ──► EntropySample ──► List<EntropySourceResult>
 
-```json
-{
-  "total_alerts": 128, "pending": 3, "handling": 5, "closed": 110,
-  "false_alarm_rate": 0.08,
-  "avg_ack_seconds": 18.4, "avg_handle_seconds": 312.0, "closed_rate": 0.86,
-  "by_behavior": [ {"behavior_type":"fight","count":22}, {"behavior_type":"fence_climb","count":40} ],
-  "by_severity": { "high":30, "medium":70, "low":28 }
-}
+HistoryEntry ◄── toJson/fromJson ──► SharedPreferences(JSON)
+
+AppConfig ──► Map<String, Map<String, bool>> animationSettings
+          ──► ThemeMode
+          ──► AnimationKind (enum)
 ```
 
 ---
 
-## 5. 实时通道 WebSocket
+## 9. 数据流契约 Data Flow Contract
 
-`WS /ws/v1/realtime`（JWT 鉴权，按 region_scope 订阅）
+### 9.1 起卦数据流 Divination Data Flow
 
-| 事件 event | data | 用途 |
-|---|---|---|
-| `alert.created` | AlertListItem | 新预警 → 列表插入 + 强提醒 |
-| `alert.updated` | { id, status, severity, version, ... } | 状态变更 → 列表/详情刷新 |
-| `alert.escalated` | { id } | 升级 → 二次提醒管理者 |
-| `stats.tick` | — | 看板刷新触发（可选） |
+```
+TrueRandom.generate(count, vmax)
+    │
+    ▼
+EntropySample { numbers, sources, timestamp }
+    │
+    ▼
+<Tech>Algorithm.divine(numbers) → DivinationResult {
+    techId, primaryName, cards, verdict, details,
+    changingPositions, entropy, timestamp, raw
+}
+    │
+    ├─► UI: RevealAnimation + ResultCard 渲染
+    └─► HistoryEntry {
+            id: generateId(),
+            techId: result.techId,
+            techName: tech.meta.displayName,
+            time: result.timestamp,
+            summary: buildSummary(result),
+            detail: buildCopyText(result),
+        }
+            │
+            ▼
+        HistoryStore.add(entry) → SharedPreferences
+```
+
+### 9.2 配置数据流 Config Data Flow
+
+```
+用户操作 SettingsPage
+    │
+    ▼
+ConfigNotifier.setXxx(v)
+    │
+    ├─► SharedPreferences.setXxx(key, v)
+    └─► state = AsyncData(current.copyWith(...))
+            │
+            ▼
+        watch(configProvider) 的 consumers 重建：
+        - trueRandomProvider（useOnline 变化时重建引擎）
+        - routerProvider（transition 设置变化）
+        - JeenithApp（themeMode 变化）
+        - 各术 UI（动画开关变化）
+```
 
 ---
 
-## 6. 枚举汇总（给 Codex / 前端）
+## 10. 契约不变量 Contract Invariants
 
-- `role`: `guard` / `manager` / `admin`
-- `severity`: `high` / `important` / `medium` / `low`（一/二/三/四级，对齐 Web 红橙黄紫）
-- `status`: `pending` / `handling` / `closed` / `false_alarm` / `escalated` / `archived`
-- `behavior_type`: `fight` / `fence_climb` / `dangerous_climb` / `fire_smoke` / `crowd_gather` / `abnormal_loiter` / `restricted_zone` / `water_zone` / `intrusion`（+ reserved）
-- `handle_type`: `dispatched` / `verbal_warn` / `reported_110` / `fire_extinguish` / `crowd_disperse` / `other`
-- `camera.status`: `online` / `offline` / `maintenance`
+| 不变量 Invariant | 说明 |
+|---------------|-----|
+| `DivinationTech.id == DivinationTech.meta.id` | 两者必须一致 |
+| `DivinationTech.id` 全 APP 唯一 | 注册表 assert 检测 |
+| `DivinationResult.cards` 非空 | 必填字段 |
+| `DivinationResult.timestamp` 非空 | 必填字段 |
+| `HistoryEntry.id` 全局唯一 | generateId 保证 |
+| `HistoryStore.add` 后 entry 在 index 0 | 最新在前 |
+| `AppConfig.isAnimationEnabled` 缺省返回 true | 向前兼容 |
+| `TrueRandom.generate` 不抛异常 | 至少时间戳+系统熵可用 |
+| `techByIdProvider(id)` 未知 id 返回 null | 路由兜底占位页 |
 
 ---
 
-**文档结束** —— 下游：《App 页面与路由清单》。
+## 11. 字段命名规范 Naming Conventions
+
+| 类型 Type | 规范 Rule | 示例 Example |
+|---------|---------|------------|
+| 类名 Class | UpperCamelCase | `DivinationResult` |
+| 字段 Field | lowerCamelCase | `primaryName` |
+| JSON Key | lowerCamelCase（与字段同名） | `"primaryName"` |
+| 枚举 Enum | lowerCamelCase | `entrance` |
+| 常量 Const | lowerCamelCase | `defaults` |
+| 私有 Private | 前缀 `_` | `_chain` |
+| 文件 File | snake_case | `divination_result.dart` |
+
+---
+
+*本文档由 HeYS-Snowe 维护 · Copyright (c) 2026 Qore. MIT License.*

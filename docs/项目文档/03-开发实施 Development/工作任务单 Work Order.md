@@ -6,8 +6,9 @@
 |---------|-------------|
 | 任务单编号 Work Order ID | WO-YYYYMMDD-XXX |
 | 创建日期 Created Date | YYYY-MM-DD |
-| 项目名称 Project Name | |
-| 迭代 Iteration | |
+| 项目名称 Project Name | 志极 Jeenith |
+| 当前版本 Current Version | 2.3.3+23 |
+| 开发者 Developer | HeYS-Snowe |
 
 ---
 
@@ -17,10 +18,10 @@
 |----------|-----------|
 | **任务名称 Task Name** | |
 | **任务编号 Task ID** | |
-| **负责人 Owner** | |
-| **协作者 Collaborators** | |
+| **负责人 Owner** | HeYS-Snowe |
 | **优先级 Priority** | □ P0-紧急 □ P1-高 □ P2-中 □ P3-低 |
-| **任务类型 Type** | □ 新功能 □ 优化 □ Bug修复 □ 文档 □ 其他 |
+| **任务类型 Type** | □ 新术数 □ 新功能 □ 优化 □ Bug修复 □ 文档 □ 其他 |
+| **关联版本 Target Version** | vX.Y.Z |
 | **预估工时 Estimate** | 小时/天 |
 | **实际工时 Actual** | 小时/天 |
 
@@ -28,158 +29,93 @@
 
 ## 任务描述 Task Description
 
-### 背景说明 Background
+### 背景与目标 Background & Goal
 
-<!-- 描述为什么需要做这个任务 -->
-
-### 任务目标 Objectives
-
-<!-- 描述这个任务要达成的目标 -->
-
-1.
-2.
-3.
+> 描述任务背景、要解决的问题或要实现的功能。
 
 ### 验收标准 Acceptance Criteria
 
-- [ ] 验收标准1
-- [ ] 验收标准2
-- [ ] 验收标准3
-
----
-
-## 任务分解 Task Breakdown
-
-| 序号 ID | 子任务 Sub-Task | 负责人 Owner | 预估工时 Estimate | 状态 Status |
-|--------|---------------|------------|----------------|-----------|
-| 1 | | | | □ 待办 □ 进行中 □ 完成 |
-| 2 | | | | □ 待办 □ 进行中 □ 完成 |
-| 3 | | | | □ 待办 □ 进行中 □ 完成 |
-| 4 | | | | □ 待办 □ 进行中 □ 完成 |
+- [ ] 功能实现完整，符合需求描述
+- [ ] `flutter analyze` 为 0 issue
+- [ ] CustomPainter 中 TextPainter 显式 dispose（若涉及）
+- [ ] AnimationController 显式 dispose（若涉及）
+- [ ] HistoryStore 操作使用原子读-改-写（若涉及）
+- [ ] 身份信息不硬编码（通过 Branding 类引用）
+- [ ] 构建归档完成（若需发布）
 
 ---
 
 ## 技术方案 Technical Approach
 
-### 技术要点 Technical Points
+### 涉及文件 Affected Files
 
-| 要点 Point | 说明 Description |
-|----------|---------------|
-| | |
-| | |
+| 文件路径 File Path | 修改类型 Change Type | 说明 Description |
+|----------------|-------------------|----------------|
+| | □ 新增 □ 修改 □ 删除 | |
+| | □ 新增 □ 修改 □ 删除 | |
+| | □ 新增 □ 修改 □ 删除 | |
 
-### 依赖关系 Dependencies
+### 实现思路 Implementation Notes
 
-| 依赖项 Dependency | 类型 Type | 状态 Status |
-|----------------|---------|----------|
-| | 功能/技术/人员 | |
+> 描述技术实现方案、算法逻辑、UI 交互等。
 
-### 风险与问题 Risks & Issues
+### 框架约定 Framework Conventions
 
-| 风险/问题 Risk/Issue | 影响 Impact | 应对措施 Mitigation |
-|-------------------|---------|-------------------|
+> 若为新术数，确认以下框架约定：
+> - [ ] 新建 `features/<tech_id>/` 目录
+> - [ ] 实现 `DivinationTech` 接口（id / meta / buildPage）
+> - [ ] 在 `divination_registry.dart` 注册一行
+> - [ ] TechMeta 含 sortOrder / accentColor / displayName 等
+
+---
+
+## 任务分解 Task Breakdown
+
+| 子任务 Sub-task | 描述 Description | 预估 Estimate | 状态 Status |
+|---------------|---------------|--------------|-----------|
+| 1 | | | □ 待开始 |
+| 2 | | | □ 待开始 |
+| 3 | | | □ 待开始 |
+
+---
+
+## 测试与验证 Testing & Verification
+
+### 自测清单 Self-test Checklist
+
+- [ ] Android 端功能验证
+- [ ] Windows 桌面端功能验证（若适用）
+- [ ] 深色/浅色主题切换验证
+- [ ] 动效开关关闭后功能正常
+- [ ] 历史记录写入/读取正常（若涉及）
+
+### 已知问题 Known Issues
+
+| 问题 Issue | 影响 Impact | 后续计划 Plan |
+|----------|-----------|------------|
 | | | |
 
 ---
 
-## 开发记录 Development Log
+## 完成确认 Completion Confirmation
 
-| 日期 Date | 工作内容 Work Content | 工时 Hours | 进度 Progress | 备注 Notes |
-|----------|-------------------|----------|-------------|----------|
-| | | | | |
-
----
-
-## 代码提交 Code Commits
-
-| 提交ID Commit ID | 提交信息 Message | 提交时间 Date | 分支 Branch |
-|----------------|----------------|-------------|-----------|
-| | | | |
-| | | | |
+| 字段 Field | 内容 Content |
+|----------|-----------|
+| **完成日期 Completion Date** | YYYY-MM-DD |
+| **实际工时 Actual Effort** | 小时/天 |
+| **构建版本 Build Version** | vX.Y.Z+NN |
+| **commit hash** | |
+| **flutter analyze** | □ 0 issue |
+| **产物归档 Archived** | □ APK □ Windows ZIP |
 
 ---
 
-## 测试记录 Testing Record
+## 备注 Notes
 
-| 测试类型 Test Type | 测试结果 Result | 测试人 Tester | 测试日期 Date |
-|----------------|----------------|-------------|-------------|
-| 单元测试 Unit Test | □ 通过 □ 失败 | | |
-| 集成测试 Integration Test | □ 通过 □ 失败 | | |
-| 代码审查 Code Review | □ 通过 □ 待修改 | | |
+> 其他需要说明的事项。
 
 ---
 
-## 审核记录 Review Record
+**任务单结束 End of Work Order**
 
-### 自我检查 Self-Check
-
-- [ ] 代码符合规范
-- [ ] 注释完整清晰
-- [ ] 功能测试通过
-- [ ] 无明显性能问题
-- [ ] 安全问题检查
-
-### 代码审查 Code Review
-
-| 审查人 Reviewer | 审查意见 Comments | 审查结果 Result |
-|--------------|-----------------|---------------|
-| | □ 通过 □ 需修改 | |
-
-### 产品验收 Product Acceptance
-
-| 验收人 Accepter | 验收意见 Comments | 验收结果 Result |
-|--------------|-----------------|---------------|
-| | □ 通过 □ 需修改 | |
-
----
-
-## 总结与复盘 Summary & Retrospective
-
-### 完成情况 Completion Status
-
-| 项目 Item | 说明 Description |
-|----------|---------------|
-| 实际完成时间 Actual Completion | |
-| 延期原因(如有) Delay Reason | |
-| 遗留问题 Outstanding Issues | |
-
-### 经验总结 Lessons Learned
-
-| 做得好的 What Went Well | 需要改进 What Could Be Improved |
-|---------------------|------------------------------|
-| | |
-
----
-
-## 附录 Appendix
-
-### 相关文档 Related Documents
-
-| 文档名称 Document | 链接 Link |
-|----------------|---------|
-| | |
-| | |
-
-### 相关工单 Related Work Orders
-
-| 工单编号 Work Order ID | 关系 Relationship |
-|---------------------|-----------------|
-| | |
-
----
-
-## 签字确认 Signatures
-
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 负责人 Owner | | | |
-| 审查人 Reviewer | | | |
-| 验收人 Accepter | | | |
-
----
-
-**任务单状态:** □ 待开始 □ 进行中 □ 已完成 □ 已取消
-
----
-
-**文档结束 End of Document**
+志极 Jeenith · 志于本心，知于极处

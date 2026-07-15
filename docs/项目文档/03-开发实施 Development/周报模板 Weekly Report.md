@@ -4,11 +4,11 @@
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
+| 项目名称 Project Name | 志极 Jeenith |
 | 报告周期 Report Period | YYYY-MM-DD ~ YYYY-MM-DD |
-| 姓名 Name | |
-| 所在项目 Project | |
-| 迭代 Sprint | |
-| 报告人 Reporter | |
+| 开发者 Developer | HeYS-Snowe |
+| 当前版本 Current Version | vX.Y.Z+NN |
+| 目标版本 Target Version | vX.Y.Z+NN |
 
 ---
 
@@ -20,6 +20,7 @@
 | 本周完成任务数 Tasks Completed | 个 |
 | 本周代码提交 Commits | 次 |
 | 整体完成度 Overall Progress | % |
+| flutter analyze 状态 | □ 0 issue |
 
 ---
 
@@ -28,106 +29,70 @@
 ### 功能开发 Feature Development
 
 | 功能/模块 Feature/Module | 完成内容 Description | 完成度 Progress | 状态 Status |
-|----------------------|-------------------|---------------|----------|
-| | | 100% | ✅ 已完成 |
-| | | % | 🔄 进行中 |
-| | | % | 🔄 进行中 |
+|------------------------|-------------------|---------------|-----------|
+| | | 100% | □ 已完成 |
+| | | % | □ 进行中 |
 
-### Bug修复 Bug Fixes
+### Bug 修复 Bug Fixes
 
-| Bug ID/描述 Description | 严重程度 Severity | 状态 Status |
-|---------------------|----------------|----------|
-| | □ 严重 □ 一般 □ 轻微 | ✅ 已修复 |
-| | □ 严重 □ 一般 □ 轻微 | ✅ 已修复 |
+| Bug 描述 Bug Description | 严重等级 Severity | 修复方式 Fix Approach | 状态 Status |
+|------------------------|----------------|---------------------|-----------|
+| | □ P0 □ P1 □ P2 □ P3 | | □ 已修复 |
+| | □ P0 □ P1 □ P2 □ P3 | | □ 已修复 |
 
-### 其他工作 Other Work
+### 构建与发布 Build & Release
 
-| 工作类型 Work Type | 描述 Description |
-|-----------------|---------------|
-| 代码审查 Code Review | |
-| 文档编写 Documentation | |
-| 会议 Meetings | |
-| | |
+| 版本 Version | 状态 Status | 平台 Platform | 产物 Artifact | 日期 Date |
+|-------------|------------|-------------|-------------|---------|
+| | □ release □ feature □ fix | □ Android □ Windows | | YYYY-MM-DD |
 
 ---
 
-## 本周产出 Deliverables This Week
+## 关键产出 Key Deliverables
 
-| 类别 Category | 产出内容 Deliverable | 链接/位置 Link/Location |
-|-------------|-------------------|-------------------|
-| 代码 Code | | |
-| 文档 Document | | |
-| 设计 Design | | |
+> 本周最重要的 1-3 项产出（算法/UI/数据/构建等）。
 
----
-
-## 遇到的问题 Issues & Challenges
-
-| 问题 Issue | 影响程度 Impact | 解决状态 Status | 解决方案/后续计划 Solution/Plan |
-|----------|--------------|---------------|------------------------------|
-| | □ 高 □ 中 □ 低 | □ 已解决 □ 进行中 □ 待处理 | |
+1.
+2.
+3.
 
 ---
 
-## 下周工作计划 Plan for Next Week
+## 质量指标 Quality Metrics
 
-### 计划完成功能 Planned Features
-
-| 功能/模块 Feature/Module | 计划内容 Description | 预计完成时间 Expected |
-|----------------------|-------------------|-------------------|
-| | | |
-| | | |
-
-### 计划修复 Bug Planned Bug Fixes
-
-| Bug ID/描述 Description | 优先级 Priority |
-|---------------------|---------------|
-| | P0/P1/P2 |
-
-### 其他计划 Other Plans
-
-| 计划事项 Plan Item | 说明 Description |
-|----------------|---------------|
-| | |
+| 指标 Metric | 本周 This Week | 上周 Last Week | 趋势 Trend |
+|------------|--------------|--------------|-----------|
+| flutter analyze issue 数 | | | |
+| TextPainter dispose 审计 | □ 全部通过 | | |
+| AnimationController dispose 审计 | □ 全部通过 | | |
+| 已注册术数数量 Registered Techs | 12 | | |
 
 ---
 
-## 个人周总结 Personal Weekly Summary
+## 遇到的问题与风险 Issues & Risks
 
-### 本周亮点 Highlights This Week
-
-<!-- 本周做得好的地方 -->
-
-### 需要改进 Areas for Improvement
-
-<!-- 需要改进的地方 -->
-
-### 学习与成长 Learning & Growth
-
-<!-- 本周学到的新知识、新技能 -->
+| 问题/风险 Issue/Risk | 影响等级 Impact | 应对措施 Mitigation | 状态 Status |
+|--------------------|--------------|-------------------|-----------|
+| | □ 高 □ 中 □ 低 | | □ 已解决 □ 跟踪中 |
 
 ---
 
-## 风险提示 Risk Alerts
+## 下周计划 Next Week Plan
 
-| 风险 Risk | 可能影响 Potential Impact | 应对措施 Mitigation |
-|----------|------------------------|-------------------|
-| | | |
+| 任务 Task | 优先级 Priority | 预估工时 Estimate | 关联版本 Target Version |
+|----------|---------------|-----------------|---------------------|
+| | □ P0 □ P1 □ P2 □ P3 | | vX.Y.Z |
+| | □ P0 □ P1 □ P2 □ P3 | | vX.Y.Z |
+| | □ P0 □ P1 □ P2 □ P3 | | vX.Y.Z |
 
 ---
 
 ## 备注 Notes
 
-<!-- 其他需要说明的事项 -->
+> 其他需要记录的事项（技术决策、待调研项、灵感等）。
 
 ---
 
-## 审阅记录 Review Record
+**周报结束 End of Weekly Report**
 
-| 项目经理 PM | 审阅意见 Comments | 日期 Date |
-|-----------|-----------------|---------|
-| □ 已阅 □ 有反馈 | | |
-
----
-
-**文档结束 End of Document**
+志极 Jeenith · 志于本心，知于极处

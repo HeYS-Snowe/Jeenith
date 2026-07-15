@@ -1,922 +1,570 @@
-# 详细设计说明书 LLD (Low-Level Design)
+# 详细设计说明书 Low Level Design Document
+
+> 志极 Jeenith · 卜算合集详细设计与关键算法
 
 ## 文档信息 Document Information
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
-| 文档版本 Document Version | v1.0.0 |
-| 创建日期 Created Date | YYYY-MM-DD |
-| 最后修改 Last Modified | YYYY-MM-DD |
-| 设计师 Designer | |
-| 对应HLD版本 HLD Version | |
+| 项目名称 Project | 志极 / Jeenith |
+| 组织 Organization | Qore Origins（叩心） |
+| 包名 Package | `com.qore.jeenith` |
+| 文档版本 Version | v2.3.3 |
+| 当前版本 App Version | 2.3.3+23（release，2026-07-15） |
+| 开发者 Developer | HeYS-Snowe |
+| 许可证 License | MIT · Copyright (c) 2026 Qore |
 
 ---
 
 ## 修改记录 Change History
 
-| 版本 Version | 日期 Date | 修改人 Modifier | 审核人 Reviewer | 修改内容 Description |
-|-------------|---------|---------------|---------------|-------------------|
-| v1.0.0 | YYYY-MM-DD | [Name] | | 初始版本 Initial Version |
+| 版本 Version | 日期 Date | 修改内容 Description |
+|-------------|---------|-------------------|
+| v1.0.0 | 2026-01 | 初版：类图、注册表、RNG、HistoryStore 详细设计 |
+| v2.3.0 | 2026-06 | 补充 AnimationKind 拆分、紫微/八字算法流程 |
+| v2.3.3 | 2026-07-15 | 同步当前实现，完善序列图 |
 
 ---
 
-## 目录 Table of Contents
+## 1. 详细设计概述 LLD Overview
 
-1. [概述 Overview](#1-概述-overview)
-2. [模块详细设计 Module Detail Design](#2-模块详细设计-module-detail-design)
-3. [类设计 Class Design](#3-类设计-class-design)
-4. [接口详细设计 API Detail Design](#4-接口详细设计-api-detail-design)
-5. [数据结构详细设计 Data Structure Design](#5-数据结构详细设计-data-structure-design)
-6. [算法设计 Algorithm Design](#6-算法设计-algorithm-design)
-7. [异常处理设计 Exception Handling](#7-异常处理设计-exception-handling)
+本文档在《概要设计说明书》基础上，深入到类、方法、算法与序列层面，描述志极 Jeenith 的关键实现细节。重点覆盖：核心注册表、真随机引擎、配置状态机、历史存储、仪式动画体系、典型术算法流程。
 
 ---
 
-## 1. 概述 Overview
+## 2. 核心类设计 Core Class Design
 
-### 1.1 文档目的 Document Purpose
+### 2.1 卜算框架类图 Divination Framework Class Diagram
 
-本文档提供系统的详细设计，包括类图、时序图、数据结构、算法逻辑等，作为开发实现的直接依据。
+```
+                    ┌─────────────────────────┐
+                    │   «interface»           │
+                    │   DivinationTech        │
+                    ├─────────────────────────┤
+                    │ + id: String            │
+                    │ + meta: TechMeta        │
+                    │ + buildPage(ctx, ref)   │
+                    └────────────┬────────────┘
+                                 ▲
+            ┌────────┬───────────┼───────────┬─────────┐
+            │        │           │           │         │
+   XiaoliurenTech ZhouyiTech  ZiweiTech  ...  BaziTech
+            │        │           │
+            ▼        ▼           ▼
+       XiaoliurenPage ZhouyiPage ZiweiPage  (ConsumerWidget)
+```
 
-### 1.2 参考文档 References
+### 2.2 DivinationTech 接口实现 Detail
 
-| 文档名称 Document | 版本 Version |
-|----------------|-------------|
-| 概要设计说明书 HLD | |
-| 产品需求文档 PRD | |
+```dart
+abstract class DivinationTech {
+  const DivinationTech();
+  String get id;                                    // 唯一标识
+  TechMeta get meta;                                // 元数据
+  Widget buildPage(BuildContext context, WidgetRef ref);  // 页面构造
+}
+
+@immutable
+class TechMeta {
+  final String id;
+  final String displayName;   // '小六壬'
+  final String subtitle;      // '掐指神课'
+  final String description;
+  final Color accentColor;    // 卡片主题色
+  final int sortOrder;        // 首页排序
+  final bool enabled;         // 功能开关
+}
+```
+
+**设计要点**：
+- `const` 构造使所有 Tech 实例可为编译期常量，注册表无运行时开销
+- `buildPage` 注入 `WidgetRef`，术页面可直接 `ref.read/watch` 全局 Provider
+- 框架只统一「注册发现 + RNG + 配置 + 主题 + 共享组件」，输入采集/起卦/动画/展示由术页面自管
+
+### 2.3 注册表实现 Registry Implementation
+
+```dart
+final divinationTechsProvider = Provider<List<DivinationTech>>((ref) {
+  final techs = <DivinationTech>[
+    XiaoliurenTech(), ZhouyiTech(), MeihuaTech(), JiaobeiTech(),
+    ZiweiTech(), QimenTech(), ChouqianTech(), CeziTech(),
+    DaliurenTech(), LuopanTech(), NameTestTech(), BaziTech(),
+  ];
+  assert(techs.map((t) => t.id).toSet().length == techs.length,
+      'Duplicate DivinationTech id detected');
+  return techs;
+});
+
+final techByIdProvider = Provider.family<DivinationTech?, String>((ref, id) =>
+    ref.watch(divinationTechsProvider).where((t) => t.id == id).firstOrNull);
+
+final visibleTechsProvider = Provider<List<DivinationTech>>((ref) =>
+    ref.watch(divinationTechsProvider)
+        .where((t) => t.meta.enabled).toList()
+      ..sort((a, b) => a.meta.sortOrder.compareTo(b.meta.sortOrder)));
+```
+
+**关键设计**：
+- `assert` 在 debug 模式拦截 id 重复，避免 `firstOrNull` 静默命中错误项
+- `Provider.family` 实现路由参数 → 术实例的按需解析
+- `visibleTechsProvider` 二次过滤 + 排序，首页 grid 直接消费
 
 ---
 
-## 2. 模块详细设计 Module Detail Design
+## 3. 真随机引擎详细设计 RNG Detail Design
 
-### 2.1 模块1：用户模块 User Module
-
-#### 2.1.1 模块概述 Module Overview
-
-| 属性 Attribute | 值 Value |
-|-------------|---------|
-| 模块ID Module ID | M-001 |
-| 模块名称 Module Name | UserModule |
-| 负责人 Owner | |
-| 包 Package | com.example.project.module.user |
-
-#### 2.1.2 类图 Class Diagram
+### 3.1 类结构 RNG Class Structure
 
 ```
-┌───────────────────────────────────────────────────────────────┐
-│                         UserController                        │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ + login(request: LoginRequest): Response               │  │
-│  │ + register(request: RegisterRequest): Response         │  │
-│  │ + getProfile(id: String): Response                     │  │
-│  │ + updateProfile(request: UpdateRequest): Response      │  │
-│  └────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌───────────────────────────────────────────────────────────────┐
-│                         UserService                           │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ - userRepository: UserRepository                        │  │
-│  │ - passwordEncoder: PasswordEncoder                      │  │
-│  │ - tokenService: TokenService                            │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │ + login(username, password): User                       │  │
-│  │ + register(userDTO): User                               │  │
-│  │ + getProfile(id): UserDTO                               │  │
-│  │ + updateProfile(id, userDTO): User                      │  │
-│  │ - validatePassword(raw, encoded): boolean               │  │
-│  └────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌───────────────────────────────────────────────────────────────┐
-│                      UserRepository                           │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ + findById(id: Long): Optional<User>                   │  │
-│  │ + findByUsername(username: String): Optional<User>     │  │
-│  │ + findByEmail(email: String): Optional<User>           │  │
-│  │ + save(user: User): User                               │  │
-│  │ + existsByUsername(username: String): boolean          │  │
-│  └────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────┘
+TrueRandom
+   ├── sources: List<EntropyCollector>
+   └── generate({count, vmax}) → Future<EntropySample>
+
+EntropyCollector «interface»
+   ├── SystemEntropySource   (Random.secure)
+   ├── TouchEntropySource    (TouchTracker 轨迹)
+   └── OnlineEntropySource   (random.org HTTP)
+
+TouchTracker
+   ├── onPointerMove(event)
+   ├── onPointerHover(event)
+   └── sample() → bytes
+
+EntropySample
+   ├── numbers: List<int>
+   ├── sources: List<EntropySourceResult>
+   └── timestamp: DateTime
 ```
 
-#### 2.1.3 时序图 Sequence Diagram
+### 3.2 generate() 算法流程 generate Algorithm
 
-**登录流程 Login Flow:**
+```dart
+Future<EntropySample> generate({int count = 3, int vmax = 9}) async {
+  final results = <EntropySourceResult>[];
+  final parts = <Uint8List>[];
 
-```
-用户           Controller          Service        Repository       Database
- │                 │                 │                 │              │
- │─ login()  ─────▶│                 │                 │              │
- │                 │─ login()  ─────▶│                 │              │
- │                 │                 │─ findByUsername()──▶         │
- │                 │                 │                 │─ SELECT ──▶ │
- │                 │                 │                 │◀─ Result ───│
- │                 │                 │◀── User ────────│              │
- │                 │                 │─ validatePassword()            │
- │                 │                 │─ generateToken()              │
- │                 │◀── Response ───│                 │              │
- │◀── Response ───│                 │                 │              │
-```
+  // 1. 逐源采样（任一失败不影响其他）
+  for (final src in sources) {
+    if (!src.isAvailable) { results.add(...failed); continue; }
+    try {
+      final r = await src.sample();
+      results.add(...succeeded(r.display));
+      if (r.bytes.isNotEmpty) parts.add(r.bytes);
+    } catch (_) { results.add(...failed); }
+  }
 
-#### 2.1.4 核心流程 Core Flows
+  // 2. 多源 SHA256 链式混合
+  var digest = sha256.convert(<int>[]).bytes;
+  for (final b in parts) {
+    digest = sha256.convert([...digest, ...b]).bytes;
+  }
 
-**登录流程 Login Flow:**
+  // 3. 收尾加盐（时间戳 + 16 字节系统熵），防重放
+  digest = sha256.convert([
+    ...digest,
+    ...utf8.encode(DateTime.now().microsecondsSinceEpoch.toString()),
+    ..._secureBytes(16),
+  ]).bytes;
 
-```
-BEGIN
-  INPUT: username, password
-  │
-  ├─ 1. 参数验证 Validate Parameters
-  │   IF username or password is empty
-  │     RETURN Error("用户名或密码不能为空")
-  │   END IF
-  │
-  ├─ 2. 查找用户 Find User
-  │   user = userRepository.findByUsername(username)
-  │   IF user is null
-  │     RETURN Error("用户不存在")
-  │   END IF
-  │
-  ├─ 3. 验证密码 Validate Password
-  │   IF NOT passwordEncoder.matches(password, user.password)
-  │     RETURN Error("密码错误")
-  │   END IF
-  │
-  ├─ 4. 检查状态 Check Status
-  │   IF user.status != ACTIVE
-  │     RETURN Error("账号已被禁用")
-  │   END IF
-  │
-  ├─ 5. 生成令牌 Generate Token
-  │   token = tokenService.generate(user)
-  │
-  ├─ 6. 更新登录时间 Update Last Login
-  │   user.lastLoginTime = now()
-  │   userRepository.save(user)
-  │
-  └─ 7. 返回结果 Return Result
-      RETURN Success(token, userInfo)
-END
+  // 4. 链式 SHA256 扩展为 count 个数（避免简单切片相关性）
+  final nums = <int>[];
+  var cur = digest;
+  for (var i = 0; i < count; i++) {
+    cur = sha256.convert([...cur, i]).bytes;
+    final big = BigInt.parse(cur.map((b) => b.toRadixString(16).padLeft(2,'0')).join(), radix: 16);
+    nums.add((big % BigInt.from(vmax)).toInt() + 1);
+  }
+  return EntropySample(numbers: nums, sources: results, timestamp: DateTime.now());
+}
 ```
 
-**注册流程 Register Flow:**
+**算法要点**：
+- **链式混合**而非拼接：`digest = SHA256(digest ++ bytes_i)`，前源结果影响后源哈希
+- **链式扩展**而非切片：每个数 `cur = SHA256(cur ++ i)` 独立哈希，杜绝切片相关性
+- **BigInt 取模**：避免 64 位溢出，支持大 vmax（如周易 vmax=64、vmax=384）
+- **降级容错**：在线源失败时 `parts` 不含其 bytes，混合仍可用其余源
 
-```
-BEGIN
-  INPUT: username, password, email
-  │
-  ├─ 1. 参数验证
-  │   IF any field is empty
-  │     RETURN Error("参数不完整")
-  │   END IF
-  │
-  ├─ 2. 检查用户名是否存在
-  │   IF userRepository.existsByUsername(username)
-  │     RETURN Error("用户名已存在")
-  │   END IF
-  │
-  ├─ 3. 检查邮箱是否存在
-  │   IF userRepository.existsByEmail(email)
-  │     RETURN Error("邮箱已被注册")
-  │   END IF
-  │
-  ├─ 4. 创建用户
-  │   user = new User()
-  │   user.username = username
-  │   user.email = email
-  │   user.password = passwordEncoder.encode(password)
-  │   user.status = ACTIVE
-  │   user.createTime = now()
-  │
-  ├─ 5. 保存用户
-  │   user = userRepository.save(user)
-  │
-  └─ 6. 返回结果
-      RETURN Success(userId)
-END
-```
+### 3.3 触摸轨迹熵源 Touch Entropy
 
-### 2.2 模块2：订单模块 Order Module
-
-#### 2.2.1 模块概述 Module Overview
-
-| 属性 Attribute | 值 Value |
-|-------------|---------|
-| 模块ID Module ID | M-002 |
-| 模块名称 Module Name | OrderModule |
-| 负责人 Owner | |
-| 包 Package | com.example.project.module.order |
-
-#### 2.2.2 类图 Class Diagram
-
-```
-┌───────────────────────────────────────────────────────────────┐
-│                       OrderController                         │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ + createOrder(request: CreateOrderRequest): Response   │  │
-│  │ + getOrder(id: String): Response                       │  │
-│  │ + listOrders(query: OrderQuery): Response              │  │
-│  │ + cancelOrder(id: String): Response                    │  │
-│  └────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌───────────────────────────────────────────────────────────────┐
-│                        OrderService                           │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ - orderRepository: OrderRepository                      │  │
-│  │ - productRepository: ProductRepository                  │  │
-│  │ - inventoryService: InventoryService                    │  │
-│  ├────────────────────────────────────────────────────────┤  │
-│  │ + createOrder(userId, items): Order                     │  │
-│  │ + getOrder(id): OrderDTO                                │  │
-│  │ + cancelOrder(id): boolean                              │  │
-│  │ - validateInventory(items): boolean                     │  │
-│  │ - calculatePrice(items): BigDecimal                     │  │
-│  └────────────────────────────────────────────────────────┘  │
-└───────────────────────────────────────────────────────────────┘
-```
-
-#### 2.2.3 时序图 Sequence Diagram
-
-**创建订单流程 Create Order Flow:**
-
-```
-用户           Controller          Service       InventoryService    Repository
- │                 │                 │                  │                │
- │─ createOrder() ─▶│                 │                  │                │
- │                 │─ createOrder() ─▶│                  │                │
- │                 │                 │─ checkStock() ──▶│                │
- │                 │                 │                  │── Query ──────▶│
- │                 │                 │                  │◀─ Result ─────│
- │                 │                 │◀── boolean ───────│                │
- │                 │                 │─ deductStock() ──▶│                │
- │                 │                 │                  │── Update ─────▶│
- │                 │                 │                  │◀─ Success ────│
- │                 │                 │◀── void ─────────│                │
- │                 │                 │─ save() ────────────────────────▶│
- │                 │                 │                  │           ───▶│
- │                 │                 │◀─────────────────────────────────│
- │                 │◀── Response ───│                  │                │
- │◀── Response ───│                 │                  │                │
-```
+`TouchTracker` 由 `JeenithApp` 的 `Listener` 全局监听 `onPointerMove` / `onPointerHover`，累积指针坐标/时间戳。`TouchEntropySource.sample()` 将轨迹序列化为 bytes 并清空缓冲。桌面平台通过 `onPointerHover` 采集鼠标移动轨迹，保证跨平台均有轨迹熵。
 
 ---
 
-## 3. 类设计 Class Design
+## 4. 配置状态机详细设计 Config State Machine
 
-### 3.1 实体类设计 Entity Classes
+### 4.1 AppConfig 模型 Config Model
 
-#### User.java
+```dart
+enum AnimationKind { entrance, transition, painter, reveal }
 
-```java
-package com.example.project.entity;
+class AppConfig {
+  final bool showDetails;
+  final bool useOnline;
+  final bool animationsEnabled;                    // 总开关
+  final Map<String, Map<String, bool>> animationSettings;  // 外层 techId，内层 kind
+  final ThemeMode themeMode;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+  bool isAnimationEnabled(String techId, AnimationKind kind) =>
+      animationSettings[techId]?[kind.name] ?? true;  // 缺省 true（向前兼容）
 
-/**
- * 用户实体类
- * User Entity
- */
-@Entity
-@Table(name = "t_user")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 50)
-    private String username;
-
-    @Column(nullable = false, unique = true, length = 100)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @Column(length = 20)
-    private String phone;
-
-    @Column(length = 100)
-    private String avatar;
-
-    @Column(length = 50)
-    private String status = "ACTIVE"; // ACTIVE, INACTIVE, BANNED
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @Column(name = "last_login_at")
-    private LocalDateTime lastLoginAt;
-
-    // Constructors
-    public User() {}
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.createdAt = LocalDateTime.now();
-    }
-
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    // ... 其他getter/setter
+  static const defaults = AppConfig(
+    showDetails: true, useOnline: true, animationsEnabled: true,
+    animationSettings: {}, themeMode: ThemeMode.dark,
+  );
 }
 ```
 
-#### Order.java
+### 4.2 ConfigNotifier 状态流转 State Transition
 
-```java
-package com.example.project.entity;
+```
+build() ──► AsyncLoading<AppConfig>
+   │ 读取 SharedPreferences
+   ▼
+AsyncData<AppConfig>
+   │ setXxx(v)
+   ▼
+写 prefs → current.copyWith(...) → state = AsyncData(new)
+```
 
-import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+**持久化 Key 设计**：
+- 配置项：`showDetails` / `useOnline` / `animationsEnabled` / `themeMode`
+- 分术动画：`anim_<techId>_<kind>`（如 `anim_xiaoliuren_entrance`）
+- 解析时以**最后一个下划线**分段（techId 可能含下划线，如 `name_test`），尾部为 kind
 
-/**
- * 订单实体类
- * Order Entity
- */
-@Entity
-@Table(name = "t_order")
-public class Order {
+**向前兼容**：v2.3.2 前的旧 key `anim_<techId>`（无 kind 后缀）不再读取，未记录的术/kind 默认 true。
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+### 4.3 动画开关判定逻辑 Animation Toggle Logic
 
-    @Column(name = "order_no", nullable = false, unique = true, length = 32)
-    private String orderNo;
+```
+UI 渲染动画前：
+  if (!config.animationsEnabled) → 全部跳过（总开关）
+  else if (!config.isAnimationEnabled(techId, kind)) → 跳过该类
+  else → 播放
+```
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+`/tech/:id` 路由的 `pageBuilder` 读取 `isAnimationEnabled(id, AnimationKind.transition)` 决定 `TechTransition` 是否启用签名转场，关闭时降级为 fade。
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+---
 
-    @Column(length = 20)
-    private String status = "PENDING"; // PENDING, PAID, SHIPPED, COMPLETED, CANCELLED
+## 5. 历史存储详细设计 History Store Detail
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+### 5.1 原子写串行化 Atomic Serialization
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+```dart
+class HistoryStore {
+  static const _key = 'divination_history';
+  static Future<void> _chain = Future.value();   // 串行链
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItem> items = new ArrayList<>();
+  static Future<T> _serialize<T>(Future<T> Function() task) {
+    final prev = _chain;
+    final completer = Completer<T>();
+    _chain = prev.then((_) => task())
+        .then(completer.complete, onError: completer.completeError);
+    return completer.future;
+  }
 
-    // Constructors, Getters, Setters...
+  static Future<void> add(HistoryEntry e) => _serialize(() async {
+    final list = await load();
+    list.insert(0, e);          // 最新在前
+    await _save(list);
+  });
 }
 ```
 
-### 3.2 DTO类设计 DTO Classes
+**为何串行化**：快速连续卜算时，多个 `add` 并发执行 `load() → modify → save` 会导致后写覆盖先写（lost update）。`_serialize` 将所有写操作排队到 `_chain`，前一个完成才执行下一个，保证读-改-写原子性。
 
-#### UserDTO.java
+### 5.2 ID 生成策略 ID Generation
 
-```java
-package com.example.project.dto;
-
-/**
- * 用户数据传输对象
- * User Data Transfer Object
- */
-public class UserDTO {
-    private Long id;
-    private String username;
-    private String email;
-    private String avatar;
-    private String status;
-    private LocalDateTime createdAt;
-
-    // Constructors
-    // Getters and Setters
+```dart
+static int _counter = 0;
+static String generateId() {
+  final now = DateTime.now();
+  _counter = (_counter + 1) & 0xFFFF;
+  return '${now.microsecondsSinceEpoch}-${_counter.toRadixString(16).padLeft(4, '0')}';
 }
 ```
 
-#### LoginRequest.java
+- `microsecondsSinceEpoch` 提供时间维度唯一性
+- `_counter`（& 0xFFFF 回绕）解决同一帧多次调用的碰撞
+- 16 进制补零，固定长度便于排序与展示
 
-```java
-package com.example.project.dto;
+### 5.3 HistoryEntry 序列化 Serialization
 
-import javax.validation.constraints.NotBlank;
+```dart
+Map<String, dynamic> toJson() => {
+  'id': id, 'techId': techId, 'techName': techName,
+  'time': time.toIso8601String(),
+  'summary': summary, 'detail': detail, 'note': note,
+};
+```
 
-/**
- * 登录请求DTO
- * Login Request DTO
- */
-public class LoginRequest {
+存储为 SharedPreferences 下的 JSON 数组字符串，`load()` 解析失败返回空列表（容错）。
 
-    @NotBlank(message = "用户名不能为空")
-    private String username;
+---
 
-    @NotBlank(message = "密码不能为空")
-    private String password;
+## 6. 路由详细设计 Router Detail
 
-    // Getters and Setters
+### 6.1 GoRouter 路由表 Route Table
+
+```dart
+final routerProvider = Provider<GoRouter>((ref) => GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(path: '/', builder: (_, __) => const HomePage()),
+    GoRoute(path: '/history', builder: (_, __) => const HistoryPage()),
+    GoRoute(path: '/settings', builder: (_, __) => const SettingsPage()),
+    GoRoute(path: '/manual', builder: (_, __) => const ManualPage()),
+    // 仪式前置路由（每术一条）
+    GoRoute(path: '/ritual/xiaoliuren', builder: (...) => XiaoliurenRitual(onCompleted: () => context.go('/tech/xiaoliuren'))),
+    // ... 其他 11 术 /ritual/<id>
+    // 术主页面（动态解析）
+    GoRoute(
+      path: '/tech/:id',
+      pageBuilder: (context, state) {
+        final id = state.pathParameters['id']!;
+        final tech = ref.read(techByIdProvider(id));
+        final page = (tech == null) ? _UnknownTechPage() : _TechPage(tech: tech);
+        final transitionsEnabled = ref.read(configProvider).valueOrNull
+            ?.isAnimationEnabled(id, AnimationKind.transition) ?? true;
+        return TechTransition.build(key: state.pageKey, child: page,
+            techId: id, transitionsEnabled: transitionsEnabled);
+      },
+    ),
+  ],
+));
+```
+
+### 6.2 仪式路由设计 Ritual Route Design
+
+- 每术一条 `/ritual/<id>` 路由，构建对应 `<Tech>Ritual` 组件
+- `onCompleted` 回调 `context.go('/tech/<id>')` 进入术主页面
+- 仪式动画时长 3-6s，跳过按钮延迟 3s 显示（`skipButtonDelay`）
+- 无仪式动画的术（如测名字/八字）可直接 `context.go('/tech/<id>')`
+
+### 6.3 转场降级 Transition Fallback
+
+`TechTransition.build` 根据 `transitionsEnabled` 决定：启用时返回该术签名转场（CustomPage + 自定义 transitionBuilder），关闭时降级为默认 fade。
+
+---
+
+## 7. 仪式动画体系 Ritual Animation System
+
+### 7.1 动画分类与时长 Animation Categories
+
+| 术 Tech | 仪式 Ritual | 时长 Duration | 核心 Core |
+|--------|-----------|-------------|---------|
+| 小六壬 | 太极生六宫 | — | 六宫辐射展开 |
+| 周易 | 铜钱抛落 | 5000ms | 6 轮金钱卦抛掷 |
+| 紫微 | 命盘展开 | 6000ms | 12 宫辐射 + 14 主星降落 |
+| 奇门 | 九宫飞布 | 5000ms | 值符值使 + 八门九星八神 |
+| 大六壬 | 双盘旋转 | 5000ms | 天盘顺/地盘逆 + 四课三传 |
+| 风水罗盘 | 罗盘扫描 | 4000ms | 指针扫描 + 24 山点亮 |
+| 梅花 | 数字撞击 | 4000ms | 两数飘落 + 撞击爆发 |
+| 掷筊 | 杯筊翻转 | 3000ms | 抛物线 + 翻滚 + 定型 |
+| 抽签 | 卷轴展开 | 5000ms | 签筒摇 + 签条跳 + 卷轴展 |
+| 测字 | 字形浮现 | 5000ms | 道字浮现 + 木色扩散 |
+
+时长常量集中在 `AppAnimations`（`ritualZhouyi = 5000` 等），跳过按钮 `skipButtonDelay = 3000`。
+
+### 7.2 动效常量集中化 Animation Constants
+
+`core/theme/animations.dart` 集中管理：
+- **时长**：pressDown(110) / pressRelease(260) / iconRotate(240) / cardStagger(90) / cardRise(420) / panelExpand(260) 等
+- **曲线**：pressDownCurve(easeIn) / pressReleaseCurve(Cubic(0.34,1.56,0.64,1) easeOutBack 变体) / iconRotateCurve(easeOutCubic) 等
+- **错峰工具**：`staggeredIntervals(count, {stepRatio, durationRatio})` 生成 N 个 Interval
+
+### 7.3 RevealAnimation 揭示封装
+
+`core/animation/reveal/` 下：
+- `reveal_animation.dart`：结果揭示动画封装（受 AnimationKind.reveal 开关控制）
+- `ink_spread.dart`：墨晕扩散效果
+- `typewriter_text.dart`：打字机文本逐字显现
+
+---
+
+## 8. 典型术算法流程 Typical Algorithm Flow
+
+### 8.1 小六壬起卦流程 Xiaoliuren Algorithm
+
+```
+输入：3 个随机数 n1, n2, n3 (1..6 或 1..9)
+   │
+   ▼
+1. 从「大安」起，按 n1 数 → 第一宫（月宫）
+2. 从月宫起，按 n2 数 → 第二宫（日宫）
+3. 从日宫起，按 n3 数 → 第三宫（时宫 / 末宫）
+   │
+   ▼
+六宫：大安(木)·留连(水)·速喜(火)·赤口(金)·小吉(水)·空亡(土)
+   │
+   ▼
+末宫定吉凶分级 + 七维断辞（求谋/失物/出行/婚姻/财运/疾病/官非）
+   │
+   ▼
+DivinationResult {
+  primaryName: 末宫名,
+  cards: [三宫卡],
+  verdict: Verdict(分级, 断语),
+  details: [七维断辞],
 }
 ```
 
-### 3.3 服务类设计 Service Classes
+### 8.2 周易金钱卦流程 Zhouyi Algorithm
 
-#### UserService.java (接口)
-
-```java
-package com.example.project.service;
-
-import com.example.project.dto.*;
-import com.example.project.entity.User;
-
-/**
- * 用户服务接口
- * User Service Interface
- */
-public interface UserService {
-
-    /**
-     * 用户登录
-     * @param request 登录请求
-     * @return 登录响应
-     */
-    LoginResponse login(LoginRequest request);
-
-    /**
-     * 用户注册
-     * @param request 注册请求
-     * @return 用户信息
-     */
-    UserDTO register(RegisterRequest request);
-
-    /**
-     * 获取用户信息
-     * @param userId 用户ID
-     * @return 用户信息
-     */
-    UserDTO getProfile(Long userId);
-
-    /**
-     * 更新用户信息
-     * @param userId 用户ID
-     * @param request 更新请求
-     * @return 更新后的用户信息
-     */
-    UserDTO updateProfile(Long userId, UpdateUserRequest request);
+```
+输入：6 个随机数（每爻一次，三钱抛掷）
+   │
+   ▼
+每爻：三钱正反面 → 6/7/8/9
+  - 6 = 老阴（变阳）  - 7 = 少阳
+  - 8 = 少阴          - 9 = 老阳（变阴）
+   │
+   ▼
+本卦（6 爻组合 → 64 卦查表）+ 变爻位
+   │
+   ▼
+有变爻 → 变卦（变爻阴阳互换 → 查表）
+   │
+   ▼
+DivinationResult {
+  primaryName: 本卦名,
+  secondaryName: 变卦名,
+  changingPositions: [变爻位],
+  cards: [本卦卡, 变卦卡],
 }
 ```
 
-#### UserServiceImpl.java (实现)
+64 卦与八卦数据由 `data/yijing/` 提供，周易与梅花共用。
 
-```java
-package com.example.project.service.impl;
+### 8.3 紫微斗数排盘流程 Ziwei Algorithm
 
-import com.example.project.dto.*;
-import com.example.project.entity.User;
-import com.example.project.repository.UserRepository;
-import com.example.project.service.UserService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+```
+输入：生辰（公历年月日时）+ 性别
+   │
+   ▼
+1. LunarService / lunar 包 → 农历 + 干支 + 八字
+2. 定命宫/身宫（月支 + 时支逆推）
+3. 命盘 12 宫布局（命/兄/夫/子/财/疾/迁/奴/官/田/福/父）
+4. 安 14 主星（紫微/天府系）+ 辅星/煞星
+5. 大限/流年推算
+   │
+   ▼
+DivinationResult {
+  cards: [12 宫卡 + 主星],
+  raw: 完整命盘结构,
+}
+```
 
-/**
- * 用户服务实现类
- * User Service Implementation
- */
-@Service
-public class UserServiceImpl implements UserService {
+### 8.4 八字推演流程 Bazi Algorithm
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final TokenService tokenService;
-
-    public UserServiceImpl(UserRepository userRepository,
-                          PasswordEncoder passwordEncoder,
-                          TokenService tokenService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.tokenService = tokenService;
-    }
-
-    @Override
-    public LoginResponse login(LoginRequest request) {
-        // 1. 查找用户
-        User user = userRepository.findByUsername(request.getUsername())
-            .orElseThrow(() -> new BusinessException("用户不存在"));
-
-        // 2. 验证密码
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BusinessException("密码错误");
-        }
-
-        // 3. 检查状态
-        if (!"ACTIVE".equals(user.getStatus())) {
-            throw new BusinessException("账号已被禁用");
-        }
-
-        // 4. 生成令牌
-        String token = tokenService.generate(user);
-
-        // 5. 更新登录时间
-        user.setLastLoginAt(LocalDateTime.now());
-        userRepository.save(user);
-
-        // 6. 返回结果
-        return new LoginResponse(token, convertToDTO(user));
-    }
-
-    // ... 其他方法实现
-
-    private UserDTO convertToDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
-        dto.setAvatar(user.getAvatar());
-        dto.setStatus(user.getStatus());
-        dto.setCreatedAt(user.getCreatedAt());
-        return dto;
-    }
+```
+输入：生辰（公历年月日时）+ 性别
+   │
+   ▼
+1. lunar 包 → 四柱（年柱/月柱/日柱/时柱）天干地支
+2. 五行强度分析 + 日主旺衰
+3. 十神排列 + 大运排布（按性别阴阳顺逆）
+4. 用神选取
+   │
+   ▼
+DivinationResult {
+  cards: [四柱卡 + 大运],
+  raw: 八字结构,
 }
 ```
 
 ---
 
-## 4. 接口详细设计 API Detail Design
+## 9. 共享组件详细设计 Shared Widgets Detail
 
-### 4.1 用户登录 API
+### 9.1 GoldButton 物理反馈
 
-#### POST /api/v1/user/login
+按下塌缩（pressDown 110ms easeIn）→ 抬起弹回（pressRelease 260ms Cubic(0.34,1.56,0.64,1) 略带回弹），模拟物理弹性质感。受 `animationsEnabled` 总开关约束。
 
-**请求 Request:**
+### 9.2 InteractableCard 错峰上浮
 
-| 字段 Field | 类型 Type | 必填 Required | 说明 Description |
-|----------|---------|------------|---------------|
-| username | String | 是 | 用户名 |
-| password | String | 是 | 密码 |
+`AppAnimations.staggeredIntervals(n)` 生成 N 个 Interval，相邻卡片错开 `stepRatio=0.08`，每张占 `durationRatio=0.42`，曲线 `cardRiseCurve`（easeOutCubic）。
 
-**请求示例:**
+### 9.3 Starfield 星空粒子
 
-```json
-{
-  "username": "user@example.com",
-  "password": "password123"
+`Positioned.fill` 铺满全 APP 背景，随机生成星点粒子，定时清理离屏粒子，受主题色影响（深色/浅色模式不同星色）。`JeenithApp` 的 `builder` 将其作为 Stack 底层。
+
+### 9.4 CopyResultButton / ShareResultButton
+
+- Copy：构造结果文本 → `Clipboard.setData`
+- Share：构造结果文本 → `SharePlus.shareXFiles` / `Share.share`（依赖 share_plus）
+
+---
+
+## 10. 内存与资源管理 Memory & Resource
+
+### 10.1 CustomPainter dispose 规范
+
+```dart
+class _MyPainter extends CustomPainter {
+  final TextPainter _tp = TextPainter(...);
+  @override
+  void paint(Canvas canvas, Size size) { _tp.layout(); _tp.paint(canvas, offset); }
+  @override
+  void dispose() { _tp.dispose(); super.dispose(); }  // 必须显式 dispose
 }
 ```
 
-**响应 Response:**
+TextPainter 持有 native 文本布局 handle，不 dispose 会泄漏。项目规则强制所有 CustomPainter 实现 dispose。
 
-| 字段 Field | 类型 Type | 说明 Description |
-|----------|---------|---------------|
-| code | Integer | 响应码，200表示成功 |
-| message | String | 响应消息 |
-| data | Object | 响应数据 |
-| data.token | String | 认证令牌 |
-| data.user | Object | 用户信息 |
-| data.user.id | Long | 用户ID |
-| data.user.username | String | 用户名 |
-| data.user.email | String | 邮箱 |
+### 10.2 AnimationController 释放
 
-**响应示例:**
+所有 StatefulWidget 中的 AnimationController 在 `dispose()` 中调用 `_controller.dispose()`。
 
-```json
-{
-  "code": 200,
-  "message": "登录成功",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "user": {
-      "id": 1001,
-      "username": "user@example.com",
-      "email": "user@example.com",
-      "avatar": "https://cdn.example.com/avatar/1001.jpg"
-    }
-  },
-  "timestamp": 1234567890
-}
+### 10.3 粒子回收
+
+Starfield 维护粒子池，离屏粒子标记可复用，避免无限增长。
+
+---
+
+## 11. 关键序列图 Key Sequence Diagrams
+
+### 11.1 起卦全序列 Divination Sequence
+
+```
+User    HomePage   Router   Ritual   TechPage   TrueRandom  Algorithm  HistoryStore
+ │         │          │        │         │           │          │           │
+ │─click──►│          │        │         │           │          │           │
+ │         │─go(/ritual/zhouyi)►│       │           │          │           │
+ │         │          │─build─►│        │           │          │           │
+ │         │          │        │─anim done           │          │           │
+ │         │          │        │─go(/tech/zhouyi)────►│          │           │
+ │         │          │        │         │─generate(count:6,vmax:64)►│      │
+ │         │          │        │         │           │◄─EntropySample──────│
+ │         │          │        │         │─divine(nums)──────────►│        │
+ │         │          │        │         │◄─DivinationResult──────│        │
+ │         │          │        │         │─add(entry)──────────────────────►│
+ │         │          │        │         │─render(RevealAnimation)│        │
 ```
 
-**错误响应:**
+### 11.2 配置变更序列 Config Change Sequence
 
-```json
-{
-  "code": 401,
-  "message": "用户名或密码错误",
-  "data": null,
-  "timestamp": 1234567890
-}
 ```
-
-### 4.2 用户注册 API
-
-#### POST /api/v1/user/register
-
-**请求 Request:**
-
-| 字段 Field | 类型 Type | 必填 Required | 验证规则 Validation |
-|----------|---------|------------|-------------------|
-| username | String | 是 | 3-50字符，字母数字下划线 |
-| email | String | 是 | 有效邮箱格式 |
-| password | String | 是 | 6-20字符 |
-| phone | String | 否 | 有效手机号 |
-
-**请求示例:**
-
-```json
-{
-  "username": "newuser",
-  "email": "newuser@example.com",
-  "password": "password123",
-  "phone": "13800138000"
-}
-```
-
-**响应 Response:**
-
-```json
-{
-  "code": 200,
-  "message": "注册成功",
-  "data": {
-    "userId": 1002
-  },
-  "timestamp": 1234567890
-}
+SettingsPage → ConfigNotifier.setAnimationSetting(techId, kind, v)
+   → SharedPreferences.setBool('anim_<techId>_<kind>', v)
+   → state = AsyncData(config.copyWith(animationSettings: next))
+   → watch(configProvider) 的 UI（含 routerProvider 转场判定）自动重建
 ```
 
 ---
 
-## 5. 数据结构详细设计 Data Structure Design
+## 12. 设计模式应用 Design Patterns
 
-### 5.1 数据库表详细设计 Database Table Design
-
-#### t_user (用户表)
-
-| 字段名 Field | 类型 Type | 长度 Length | 允许空 Null | 默认值 Default | 索引 Index | 说明 Description |
-|------------|---------|----------|-----------|-------------|----------|---------------|
-| id | BIGINT | - | NO | AUTO_INCREMENT | PK | 主键 |
-| username | VARCHAR | 50 | NO | - | UK | 用户名 |
-| email | VARCHAR | 100 | NO | - | UK | 邮箱 |
-| password | VARCHAR | 255 | NO | - | - | 加密密码 |
-| phone | VARCHAR | 20 | YES | NULL | - | 手机号 |
-| avatar | VARCHAR | 255 | YES | NULL | - | 头像URL |
-| status | VARCHAR | 20 | NO | 'ACTIVE' | IDX | 状态 |
-| created_at | DATETIME | - | NO | CURRENT_TIMESTAMP | - | 创建时间 |
-| updated_at | DATETIME | - | YES | NULL | - | 更新时间 |
-| last_login_at | DATETIME | - | YES | NULL | - | 最后登录时间 |
-
-**索引说明:**
-
-| 索引名 Index Name | 类型 Type | 字段 Fields |
-|-----------------|---------|-----------|
-| PRIMARY | PRIMARY KEY | id |
-| uk_username | UNIQUE | username |
-| uk_email | UNIQUE | email |
-| idx_status | INDEX | status |
-| idx_created_at | INDEX | created_at |
-
-#### t_order (订单表)
-
-| 字段名 Field | 类型 Type | 长度 Length | 允许空 Null | 默认值 Default | 索引 Index | 说明 Description |
-|------------|---------|----------|-----------|-------------|----------|---------------|
-| id | BIGINT | - | NO | AUTO_INCREMENT | PK | 主键 |
-| order_no | VARCHAR | 32 | NO | - | UK | 订单号 |
-| user_id | BIGINT | - | NO | - | IDX | 用户ID |
-| total_amount | DECIMAL | 10,2 | NO | 0.00 | - | 订单金额 |
-| status | VARCHAR | 20 | NO | 'PENDING' | IDX | 订单状态 |
-| created_at | DATETIME | - | NO | CURRENT_TIMESTAMP | IDX | 创建时间 |
-| updated_at | DATETIME | - | YES | NULL | - | 更新时间 |
-
-### 5.2 缓存数据结构 Cache Data Structure
-
-#### Redis数据结构
-
-**用户会话 User Session:**
-
-```
-Key: session:{token}
-Type: Hash
-TTL: 7200秒 (2小时)
-Fields:
-  - userId: 用户ID
-  - username: 用户名
-  - roles: 角色列表 (JSON)
-  - expireAt: 过期时间戳
-```
-
-**用户信息缓存 User Cache:**
-
-```
-Key: user:{userId}
-Type: Hash
-TTL: 3600秒 (1小时)
-Fields:
-  - id: 用户ID
-  - username: 用户名
-  - email: 邮箱
-  - avatar: 头像
-  - status: 状态
-```
+| 模式 Pattern | 应用 Application |
+|------------|----------------|
+| **策略模式 Strategy** | EntropyCollector 接口 + 3 实现，TrueRandom 持有 List |
+| **注册表模式 Registry** | divinationTechsProvider 集中注册，按 id/family 查找 |
+| **模板方法** | DivinationTech 接口定义骨架，各术实现 buildPage |
+| **观察者 Observer** | Riverpod Provider watch 机制，配置变更自动传播 |
+| **单例 Singleton** | HistoryStore 全静态方法，PlatformInfo 静态 final |
+| **barrel 模块** | providers.dart 聚合 export |
+| **工厂模式 Factory** | Provider.family 按参数构造 |
 
 ---
 
-## 6. 算法设计 Algorithm Design
-
-### 6.1 密码加密算法 Password Encryption
-
-**算法 Algorithm:** bcrypt
-
-**参数 Parameters:**
-
-| 参数 Parameter | 值 Value |
-|------------|---------|
-| 工作因子 Work Factor | 10 |
-| 盐值 Salt | 自动生成 |
-
-**实现:**
-
-```java
-public String encryptPassword(String rawPassword) {
-    return BCrypt.hashpw(rawPassword, BCrypt.gensalt(10));
-}
-
-public boolean verifyPassword(String rawPassword, String encodedPassword) {
-    return BCrypt.checkpw(rawPassword, encodedPassword);
-}
-```
-
-### 6.2 令牌生成算法 Token Generation
-
-**算法 Algorithm:** JWT (JSON Web Token)
-
-**Header:**
-
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
-```
-
-**Payload:**
-
-```json
-{
-  "userId": "1001",
-  "username": "user@example.com",
-  "roles": ["USER"],
-  "iat": 1234567890,
-  "exp": 1234573890
-}
-```
-
-**实现:**
-
-```java
-public String generateToken(User user) {
-    Date now = new Date();
-    Date expiry = new Date(now.getTime() + TOKEN_VALIDITY * 1000);
-
-    return Jwts.builder()
-        .setSubject(String.valueOf(user.getId()))
-        .claim("username", user.getUsername())
-        .claim("roles", user.getRoles())
-        .setIssuedAt(now)
-        .setExpiration(expiry)
-        .signWith(SignatureAlgorithm.HS256, secretKey)
-        .compact();
-}
-```
-
-### 6.3 订单号生成算法 Order Number Generation
-
-**算法:** 雪花算法 (Snowflake) 改进版
-
-**格式 Format:** `{timestamp}{userId}{random}`
-
-**实现:**
-
-```java
-public String generateOrderNo(Long userId) {
-    // 时间戳: 13位 (毫秒)
-    String timestamp = String.valueOf(System.currentTimeMillis());
-
-    // 用户ID: 补齐到6位
-    String userPart = String.format("%06d", userId % 1000000);
-
-    // 随机数: 4位
-    String random = String.format("%04d", random.nextInt(10000));
-
-    return timestamp + userPart + random;
-}
-```
-
----
-
-## 7. 异常处理设计 Exception Handling
-
-### 7.1 异常层次结构 Exception Hierarchy
-
-```
-Exception
-  │
-  ├── RuntimeException
-  │     │
-  │     ├── BusinessException (业务异常)
-  │     │     ├── ValidationException (验证异常)
-  │     │     ├── AuthenticationException (认证异常)
-  │     │     ├── AuthorizationException (授权异常)
-  │     │     └── ResourceNotFoundException (资源未找到)
-  │     │
-  │     └── SystemException (系统异常)
-  │           ├── DatabaseException (数据库异常)
-  │           ├── NetworkException (网络异常)
-  │           └── ExternalServiceException (外部服务异常)
-  │
-  └── Exception
-        └── ...
-```
-
-### 7.2 异常处理流程 Exception Handling Flow
-
-```
-异常抛出
-  │
-  ▼
-全局异常拦截器 @ControllerAdvice
-  │
-  ├─ 记录日志 Log Exception
-  │
-  ├─ 判断异常类型 Determine Type
-  │  ├─ BusinessException → 业务错误码
-  │  ├─ AuthenticationException → 401
-  │  ├─ AuthorizationException → 403
-  │  └─ SystemException → 500
-  │
-  └─ 返回统一错误响应 Return Error Response
-```
-
-### 7.3 错误码定义 Error Code Definition
-
-| 错误码 Error Code | HTTP状态 Status | 错误类型 Type | 消息 Message |
-|----------------|---------------|-------------|------------|
-| 200 | 200 | SUCCESS | 操作成功 |
-| 400 | 400 | BAD_REQUEST | 请求参数错误 |
-| 401 | 401 | UNAUTHORIZED | 未认证 |
-| 403 | 403 | FORBIDDEN | 无权限 |
-| 404 | 404 | NOT_FOUND | 资源不存在 |
-| 10001 | 400 | VALIDATION_ERROR | 数据验证失败 |
-| 10002 | 400 | USER_EXISTS | 用户已存在 |
-| 10003 | 400 | USER_NOT_FOUND | 用户不存在 |
-| 10004 | 401 | INVALID_CREDENTIALS | 用户名或密码错误 |
-| 20001 | 400 | ORDER_NOT_FOUND | 订单不存在 |
-| 20002 | 400 | INSUFFICIENT_STOCK | 库存不足 |
-| 50001 | 500 | SYSTEM_ERROR | 系统错误 |
-
----
-
-## 附录 Appendix
-
-### 附录A：代码规范 Code Standards
-
-| 规范项 Standard | 规范内容 Specification |
-|--------------|---------------------|
-| 命名规范 Naming | 驼峰命名法，类名首字母大写 |
-| 注释规范 Comment | 公共API必须添加Javadoc注释 |
-| 异常处理 Exception | 业务异常使用BusinessException |
-| 日志规范 Logging | 使用SLF4J，正确使用日志级别 |
-
-### 附录B：单元测试规范 Unit Test Standards
-
-| 测试类型 Test Type | 覆盖要求 Coverage |
-|-----------------|-----------------|
-| Service层 | ≥ 80% |
-| Controller层 | ≥ 60% |
-| 关键业务逻辑 | 100% |
-
----
-
-## 审批与签署 Approvals
-
-| 角色 Role | 姓名 Name | 签名 Signature | 日期 Date |
-|----------|---------|--------------|---------|
-| 设计师 Designer | | | |
-| 开发负责人 Dev Lead | | | |
-| 代码审查人 Reviewer | | | |
-
----
-
-**文档结束 End of Document**
+*本文档由 HeYS-Snowe 维护 · Copyright (c) 2026 Qore. MIT License.*
