@@ -105,6 +105,7 @@ cd mobile && flutter analyze
 
 - 所属组织：**Qore Origins（叩心）** —— *Question the core. Return to origins.*
 - 开发者：HeYS-Snowe
-- 版权：Copyright (c) 2026 Qore. All rights reserved.
+- 版权：Copyright (c) 2026 Qore.
+- 许可证：**MIT**（详见根目录 [LICENSE](LICENSE) 文件）
 
 > 组织、包名、署名等身份信息以 `D:\Code\.Rules\OrganizationAndUser.md` 为唯一事实来源，不在项目内硬编码。
