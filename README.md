@@ -4,15 +4,16 @@
 >
 > 所属组织：**Qore（叩心）**　·　应用包名：`com.qore.jeenith`
 
-志极是一款以"叩问本心"为核心理念的卜算应用，收录多种传统术数：**小六壬、周易（金钱卦）、梅花易数、掷筊、紫微斗数、奇门遁甲**。首页选术即占，可扩展的卜算框架——加一种新术只需新建 feature 目录 + registry 注册一行。
+志极是一款以"叩问本心"为核心理念的卜算应用，收录十二种传统术数：**小六壬、周易（金钱卦）、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘、八字推演、测名字**。首页选术即占，可扩展的卜算框架——加一种新术只需新建 feature 目录 + registry 注册一行。
 
 ## 特性
 
-- **六术合一**：小六壬、周易、梅花、掷筊、紫微、奇门，统一首页入口
+- **十二术合一**：小六壬、周易、梅花、掷筊、紫微、奇门、抽签、测字、大六壬、风水罗盘、八字推演、测名字，统一首页入口
 - **真随机引擎**：多源 SHA256 混合（系统熵 + 指针轨迹 + 在线大气噪声 random.org），移动端采集触摸微动、桌面端采集鼠标轨迹
 - **可扩展框架**：每种术实现 `DivinationTech` 接口 + registry 注册，互不干扰
 - **跨平台自适应**：Android + Windows 桌面，按设备切换交互范式（触摸拖拽 / 鼠标滚轮、sheet / 分栏布局）
 - **沉浸仪式感**：太极生六宫入场动画、卦象渐显、星空背景
+- **动效体系**：入场仪式 / 路由转场 / 绘制过程 / 结果揭示四类动画，可在设置页按术独立开关
 
 ## 卜算术清单
 
@@ -22,20 +23,29 @@
 | 周易 | ✅ | 金钱卦，三铜钱摇六爻 |
 | 梅花易数 | ✅ | 数字起卦，分体用、观生克 |
 | 掷筊 | ✅ | 圣杯问事 |
-| 紫微斗数 | 🚧 | v1 基础版 |
-| 奇门遁甲 | 🚧 | v1 基础版 |
+| 紫微斗数 | ✅ | v2 全套星曜安星（14 主星 + 辅星）|
+| 奇门遁甲 | ✅ | v2 四盘九宫 |
+| 抽签 | ✅ | 抽签求签 |
+| 测字 | ✅ | 字义拆解断吉凶 |
+| 大六壬 | ✅ | 四课三传全套 |
+| 风水罗盘 | ✅ | 陀螺仪/磁场实时方位 |
+| 八字推演 | ✅ | 四柱 + 大运 + 流年 + 神煞 |
+| 测名字 | ✅ | 五格剖象 |
 
 ## 技术栈
 
 | 层级 | 技术 |
 |------|------|
-| 框架 | Flutter 3.x（Dart） |
+| 框架 | Flutter 3.x（Dart 3.11+） |
 | 状态管理 | Riverpod（flutter_riverpod） |
 | 路由 | go_router |
 | 农历 / 干支 / 节气 | lunar（寿星天文历） |
 | 图标 | flutter_svg |
 | 真随机 | `Random.secure` + 指针轨迹 + random.org |
 | 配置持久化 | shared_preferences |
+| 设备传感器 | sensors_plus（陀螺仪/磁场，风水罗盘） |
+| 结果分享 | share_plus |
+| 文件路径 | path_provider（历史导出） |
 
 ## 目录结构
 
@@ -47,7 +57,8 @@ Jeenith/
       main.dart       # 入口（async + ProviderScope）
       core/           # branding / calendar / config / divination / history / rng / theme
       data/           # yijing（64卦 + 八卦数据，周易/梅花共用）
-      features/       # home / xiaoliuren / zhouyi / meihua / jiaobei / ziwei / qimen / settings / history
+      features/       # home / xiaoliuren / zhouyi / meihua / jiaobei / ziwei / qimen /
+                      #   chouqian / cezi / daliuren / luopan / bazi / name_test / manual / settings / history
       providers/      # providers.dart（barrel 聚合 config + rng providers）
       router/         # app_router.dart（GoRouter）
       shared/         # widgets/（共用组件）
@@ -74,7 +85,7 @@ Jeenith/
 ```bash
 cd mobile
 flutter pub get
-pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "1.1.2"
+pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "2.3.3"
 ```
 
 脚本自动完成：更新版本号 → 构建 → 重命名归档到 `builds/` → 写入双份 `build_history.json`。完整规范见 [`docs/FLUTTER_APK_BUILD_PIPELINE.md`](docs/FLUTTER_APK_BUILD_PIPELINE.md)。
