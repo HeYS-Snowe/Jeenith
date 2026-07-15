@@ -55,7 +55,15 @@ Windows 桌面产物一直使用 Flutter 默认图标（Flutter logo），未应
 
 ### 修复
 
-用 Python PIL 将 `mobile/ico/icon.png` 转换为多尺寸 `.ico`（256/128/64/48/32/16），直接替换 `mobile/windows/runner/resources/app_icon.ico`。`Runner.rc` 第 55 行 `IDI_APP_ICON ICON "resources\\app_icon.ico"` 引用路径不变，下次 `flutter build windows` 即生效。
+1. **生成多尺寸 .ico**：用 Python PIL 将 `mobile/ico/icon.png` 转换为多尺寸 `.ico`（256/128/64/48/32/16），直接替换 `mobile/windows/runner/resources/app_icon.ico`。`Runner.rc` 第 55 行 `IDI_APP_ICON ICON "resources\\app_icon.ico"` 引用路径不变。
+2. **flutter clean + 重新构建**：仅替换 `.ico` 文件不够——CMake 增量构建对 `.ico` 资源变化不敏感（依赖图只跟踪 `.rc` 修改时间，不跟踪其引用的 `.ico`），导致 `Runner.res` 不重编译、exe 内部仍嵌入旧图标。必须 `flutter clean` 后重新 `flutter build windows --release` 才能让 CMake 重新编译 `Runner.rc` 嵌入新 `.ico`。
+3. **验证**：用 `[System.Drawing.Icon]::ExtractAssociatedIcon` 从新 exe 提取 32x32 图标，统计主色调——Top 5 全是志极深色背景（RGB ≈ 27,23,27 / #1B171B 类），完全没有 Flutter 蓝色（#54C5F8 类），证明 exe 已嵌入志极品牌图标。
+
+### 注意事项
+
+Windows 资源管理器对 exe 图标有缓存机制。若替换 exe 后仍显示旧图标：
+- 按 `Ctrl+Shift+Esc` 打开任务管理器 → 重启「Windows 资源管理器」进程
+- 或清空图标缓存：`ie4uinit.exe -show`（命令行执行）
 
 ## 四、版本号更新
 
@@ -67,4 +75,4 @@ Windows 桌面产物一直使用 Flutter 默认图标（Flutter logo），未应
 | 平台 | 文件名 | 大小 | SHA-256 |
 |------|--------|------|---------|
 | Android | Jeenith_release_2.3.2_20260715_01.apk | 55.00 MB / 57667575 B | 3ECCD3191D225526A232EA104BBA581EA121F47EBDEFBE44797D798667257BE7 |
-| Windows x64 | Jeenith_release_2.3.2_20260715_01_windows_x64.zip | 13.38 MB / 14025569 B | E055EEF259423A8424122AEF8D98BC84F03FB05074A7EF86ED1308595A24E404 |
+| Windows x64 | Jeenith_release_2.3.2_20260715_01_windows_x64.zip | 13.27 MB / 13911822 B | BB327AC9C028E25DFE55DEA6219446FDED2B5009191E8A36A225D52D3A679923 |

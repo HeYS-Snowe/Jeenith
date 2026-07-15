@@ -470,12 +470,12 @@
       "filename": "Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
       "originalName": "jeenith.exe",
       "filePath": "D:\\\\Code\\\\Project\\\\Qore\\\\Jeenith\\\\builds\\\\windows\\\\Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
-      "fileSize": 14025569,
-      "fileSizeHuman": "13.38 MB",
-      "sha256": "E055EEF259423A8424122AEF8D98BC84F03FB05074A7EF86ED1308595A24E404",
+      "fileSize": 13911822,
+      "fileSizeHuman": "13.27 MB",
+      "sha256": "BB327AC9C028E25DFE55DEA6219446FDED2B5009191E8A36A225D52D3A679923",
       "buildType": "zip",
       "platform": "windows-x64",
-      "timestamp": "2026-07-15T13:08:00",
+      "timestamp": "2026-07-15T13:57:00",
       "configSource": "pubspec.yaml"
     }
   ]
