@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 
 /// 墨晕开揭示动画组件。

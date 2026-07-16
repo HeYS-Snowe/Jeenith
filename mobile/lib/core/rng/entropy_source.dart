@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'dart:typed_data';
 
 /// 单个熵源接口。各源实现采样，返回展示值 + 用于混合的字节。

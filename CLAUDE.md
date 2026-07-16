@@ -10,7 +10,7 @@
 | 项目类型 | 移动 App（Flutter，Android + Windows 桌面）|
 | 所属组织 | Qore（叩心）|
 | 应用包名 | `com.qore.jeenith` |
-| 当前版本 | 2.3.3+23（release，2026-07-15）|
+| 当前版本 | 2.4.0+24（release，2026-07-16）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 
 **项目定位**：叩问本心的卜算合集——小六壬、周易、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘 + 使用手册。一个 APP 首页选术，可扩展卜算框架（加新术 = 新建 feature 目录 + 注册一行）。
@@ -87,6 +87,7 @@ flutter build windows --release
 - v2.3.1 起卦按钮 BUG 修复 + 动效曲线优化
 - v2.3.2 设置页动画细分开关（4 个 AnimationKind 独立控制）+ Windows 应用图标修复
 - v2.3.3 首页按钮间距修复 + 添加 MIT LICENSE + Windows 图标产物归档
+- v2.4.0 八字/测名字入场仪式 + 一键获取当前时间 + 测字词库扩展 + All rights reserved 全面移除
 - 后续可考虑：思源宋体字体、首次使用引导遮罩、主题浅色对齐细节
 
 ## 六、规则

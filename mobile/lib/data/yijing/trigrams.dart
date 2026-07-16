@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 
 /// 八经卦：3 爻二进制（初爻为最低位，阳爻记 1）→ 卦名。
 ///

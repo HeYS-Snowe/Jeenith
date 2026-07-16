@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 
 // Providers 聚合（barrel export）。
 // 各处统一 import 'providers/providers.dart' 即可得所有 providers。

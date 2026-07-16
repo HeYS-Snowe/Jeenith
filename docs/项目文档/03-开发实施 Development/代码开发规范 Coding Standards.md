@@ -122,7 +122,7 @@ features/<tech_id>/
 所有 Dart 文件以版权声明开头：
 
 ```dart
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 ```
 
 ---

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 
 import '../../core/config/platform_info.dart';

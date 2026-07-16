@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 
 /// 入场子项：按 [interval] 从 [animation] 取进度，做淡入 + 上浮。

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'dart:collection';
 
 import 'package:flutter/gestures.dart';

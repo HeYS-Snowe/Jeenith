@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 
 /// 六十四卦：(上卦名, 下卦名) → 卦名。
 ///

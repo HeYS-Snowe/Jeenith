@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 package com.qore.jeenith
 
 import io.flutter.embedding.android.FlutterActivity

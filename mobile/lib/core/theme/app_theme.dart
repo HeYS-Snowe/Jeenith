@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 
 /// 全局色彩常量（从 Python QSS / PALACES 提取，保持视觉一致）。

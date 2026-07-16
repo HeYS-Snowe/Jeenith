@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:lunar/lunar.dart';
 
 /// 阳遁节气 → 上元局数（每节气上/中/下三元，v1 取上元简化）

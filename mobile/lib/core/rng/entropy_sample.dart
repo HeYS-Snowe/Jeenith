@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/foundation.dart';
 
 /// 单个熵源的采样结果（用于界面展示「本次真随机采样」详情）。

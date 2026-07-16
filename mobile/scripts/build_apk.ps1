@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Qore. All rights reserved.
+# Copyright (c) 2026 Qore
 # Jeenith APK 构建脚本（基于 docs/FLUTTER_APK_BUILD_PIPELINE.md 规范）
 # 用法：pwsh -File scripts/build_apk.ps1 -Status release [-TargetVersion "1.0.1"]
 param(

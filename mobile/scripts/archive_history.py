@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Qore. All rights reserved.
+# Copyright (c) 2026 Qore
 """追加本次构建到双份 build_history.json（builds/ 主副本 + 项目内副本）。
 用法: python scripts/archive_history.py <filename>
 filename 形如 Jeenith_release_1.0.1_20260711_01.apk

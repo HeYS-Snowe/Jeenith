@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'dart:math' as math;
 
 import 'package:lunar/lunar.dart';

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 
 /// 动画细分类型（v2.3.2：从单一开关拆分为 4 个独立开关）。

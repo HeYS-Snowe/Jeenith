@@ -8,7 +8,7 @@
 - 组织：Qore（叩心）· 包名 `com.qore.jeenith`
 - 类型：Flutter 移动 App（Android + Windows 桌面）
 - 定位：卜算合集（小六壬/周易/梅花/掷筊/紫微/奇门/抽签/测字/大六壬/风水罗盘）+ 使用手册，可扩展框架
-- 当前版本：2.3.3+23（release，2026-07-15）
+- 当前版本：2.4.0+24（release，2026-07-16）
 - 位置：`D:\Code\Project\Qore\Jeenith`
 
 ## 结构

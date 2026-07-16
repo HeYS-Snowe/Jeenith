@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -60,6 +60,18 @@ class _QimenPageState extends ConsumerState<QimenPage> {
     )));
   }
 
+  /// v2.4.0: 一键填充当前公历时辰。
+  void _fillNow() {
+    final now = DateTime.now();
+    setState(() {
+      _year.text = now.year.toString();
+      _month.text = now.month.toString();
+      _day.text = now.day.toString();
+      _hour.text = now.hour.toString();
+    });
+    FocusScope.of(context).unfocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +110,24 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                     const SizedBox(width: 6),
                     Expanded(child: _f(_hour, '时')),
                   ],
+                ),
+                const SizedBox(height: 6),
+                // v2.4.0: 一键获取当前时间
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: _fillNow,
+                    icon: const Icon(Icons.access_time, size: 16),
+                    label: const Text('获取当前时间',
+                        style: TextStyle(fontSize: 12)),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.goldBright,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      minimumSize: const Size(0, 28),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 GoldButton(text: '排盘', onPressed: _onDivine),

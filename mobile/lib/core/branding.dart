@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 
 /// 志极 Jeenith 品牌身份常量。
 /// 身份信息以 D:\Code\.Rules\OrganizationAndUser.md 为单一事实来源，勿在项目内硬编码不一致值。

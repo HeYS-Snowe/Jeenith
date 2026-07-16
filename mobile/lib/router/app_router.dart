@@ -1,14 +1,16 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/animation/ritual/bazi_ritual.dart';
 import '../core/animation/ritual/cezi_ritual.dart';
 import '../core/animation/ritual/chouqian_ritual.dart';
 import '../core/animation/ritual/daliuren_ritual.dart';
 import '../core/animation/ritual/jiaobei_ritual.dart';
 import '../core/animation/ritual/luopan_ritual.dart';
 import '../core/animation/ritual/meihua_ritual.dart';
+import '../core/animation/ritual/name_test_ritual.dart';
 import '../core/animation/ritual/qimen_ritual.dart';
 import '../core/animation/ritual/ziwei_ritual.dart';
 import '../core/animation/ritual/zhouyi_ritual.dart';
@@ -96,6 +98,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/ritual/cezi',
         builder: (context, state) =>
             CeziRitual(onCompleted: () => context.go('/tech/cezi')),
+      ),
+      // v2.4.0 仪式入场动画：八字四柱降落 + 五行色染（4.5s）
+      GoRoute(
+        path: '/ritual/bazi',
+        builder: (context, state) =>
+            BaziRitual(onCompleted: () => context.go('/tech/bazi')),
+      ),
+      // v2.4.0 仪式入场动画：测名字五格展开 + 连接线（4.5s）
+      GoRoute(
+        path: '/ritual/name_test',
+        builder: (context, state) =>
+            NameTestRitual(onCompleted: () => context.go('/tech/name_test')),
       ),
       GoRoute(
         path: '/tech/:id',

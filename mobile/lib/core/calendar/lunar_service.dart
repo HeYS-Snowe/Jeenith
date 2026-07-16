@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:lunar/lunar.dart';
 
 /// 农历服务：公历 → 农历转换，供传统卜算（小六壬 / 紫微 / 奇门）共用取数。

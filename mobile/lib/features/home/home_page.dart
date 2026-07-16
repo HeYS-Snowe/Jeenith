@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -77,8 +77,8 @@ class _HomePageState extends ConsumerState<HomePage>
   /// - 否则直接进 `/tech/<id>`
   ///
   /// 仪式动画结束后会自动 `context.go('/tech/<id>')` 进入操作页。
-  /// v2.3.0: 统一用 `AppConfig.isAnimationEnabled(id)` 控制。八字/测名字等
-  /// 新增术暂无仪式动画，直接进 tech 页。
+  /// v2.3.0: 统一用 `AppConfig.isAnimationEnabled(id)` 控制。
+  /// v2.4.0: 新增 bazi / name_test 仪式动画。
   static const _ritualTechs = {
     'xiaoliuren',
     'zhouyi',
@@ -90,6 +90,8 @@ class _HomePageState extends ConsumerState<HomePage>
     'jiaobei',
     'chouqian',
     'cezi',
+    'bazi',
+    'name_test',
   };
 
   void _onTapTech(String id) {

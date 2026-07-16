@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Qore. All rights reserved.
+// Copyright (c) 2026 Qore
 import 'package:flutter/animation.dart';
 
 /// 全局动效常量与工具。
@@ -27,6 +27,8 @@ class AppAnimations {
   static const int ritualJiaobei = 3000; // 掷筊抛落
   static const int ritualCezi = 5000;    // 测字字形浮现+五行染色
   static const int ritualChouqian = 5000; // 抽签卷轴展开
+  static const int ritualBazi = 4500;    // 八字四柱降落+五行色染
+  static const int ritualNameTest = 4500; // 测名字五格展开+五行色染
   static const int skipButtonDelay = 3000; // 跳过按钮延迟显示
 
   // —— 曲线 ——
