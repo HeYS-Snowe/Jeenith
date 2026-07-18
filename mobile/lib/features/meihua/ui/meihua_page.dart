@@ -2,12 +2,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../data/yijing/trigrams.dart';
 import '../../../data/yijing/hexagram_texts.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/entrance_item.dart';
@@ -17,14 +19,14 @@ import '../../../shared/widgets/gold_button.dart';
 import '../../../shared/widgets/svg_icon.dart';
 import '../algorithm/divine.dart';
 
-class MeihuaPage extends StatefulWidget {
+class MeihuaPage extends ConsumerStatefulWidget {
   const MeihuaPage({super.key});
 
   @override
-  State<MeihuaPage> createState() => _MeihuaPageState();
+  ConsumerState<MeihuaPage> createState() => _MeihuaPageState();
 }
 
-class _MeihuaPageState extends State<MeihuaPage>
+class _MeihuaPageState extends ConsumerState<MeihuaPage>
     with SingleTickerProviderStateMixin {
   final _c1 = TextEditingController();
   final _c2 = TextEditingController();
@@ -40,6 +42,22 @@ class _MeihuaPageState extends State<MeihuaPage>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra.n1/n2 重建。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'meihua') return;
+    final n1 = restore.extra?['n1'] as int?;
+    final n2 = restore.extra?['n2'] as int?;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (n1 == null || n2 == null || n1 < 1 || n2 < 1) return;
+    setState(() {
+      _result = divine(n1, n2);
+      _inputs = [n1, n2];
+    });
+    _anim.forward(from: 0);
   }
 
   @override
@@ -64,6 +82,7 @@ class _MeihuaPageState extends State<MeihuaPage>
       time: DateTime.now(),
       summary: _result?.benName ?? '',
       detail: _buildCopyText(),
+      extra: {'n1': n1, 'n2': n2},
     )));
   }
 
@@ -88,6 +107,7 @@ class _MeihuaPageState extends State<MeihuaPage>
       time: DateTime.now(),
       summary: _result?.benName ?? '',
       detail: _buildCopyText(),
+      extra: {'n1': n1, 'n2': n2},
     )));
   }
 

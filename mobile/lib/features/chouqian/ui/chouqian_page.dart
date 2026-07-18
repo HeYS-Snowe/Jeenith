@@ -11,6 +11,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../core/rng/rng_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
@@ -45,6 +46,19 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra.stick 重建（不走摇签动画）。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'chouqian') return;
+    final stick = restore.extra?['stick'] as int?;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (stick == null) return;
+    setState(() {
+      _last = divine(stick);
+    });
   }
 
   @override
@@ -75,6 +89,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
       time: DateTime.now(),
       summary: '第${result.stick.number}签 · ${result.stick.title} · ${result.stick.grade.label}',
       detail: _buildCopyText(result),
+      extra: {'stick': result.stick.number},
     )));
   }
 

@@ -10,6 +10,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
@@ -30,6 +31,26 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   String? _error;
   final GlobalKey _boundaryKey = GlobalKey();
   static final _hanRegex = RegExp(r'^[\u4e00-\u9fa5]{2,4}$');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra.name 重建。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'name_test') return;
+    final name = restore.extra?['name'] as String?;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (name == null || name.isEmpty || !_hanRegex.hasMatch(name)) return;
+    setState(() {
+      _ctrl.text = name;
+      _last = divineName(name);
+      _error = null;
+    });
+  }
 
   @override
   void dispose() {
@@ -60,6 +81,7 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
       time: DateTime.now(),
       summary: '「$raw」人格${result.ren.strokes}画·${result.ren.wuxing.label}·${result.ren.fortune.grade}',
       detail: _buildCopyText(result),
+      extra: {'name': raw},
     )));
   }
 

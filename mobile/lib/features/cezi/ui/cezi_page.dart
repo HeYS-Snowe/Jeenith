@@ -10,6 +10,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
@@ -30,6 +31,26 @@ class _CeziPageState extends ConsumerState<CeziPage> {
   String? _error;
   final GlobalKey _boundaryKey = GlobalKey();
   static final _hanRegex = RegExp(r'^[\u4e00-\u9fa5]$');
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复（pendingRestoreProvider），按 extra.char 重建。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'cezi') return;
+    final ch = restore.extra?['char'] as String?;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (ch == null || ch.isEmpty || !_hanRegex.hasMatch(ch)) return;
+    setState(() {
+      _ctrl.text = ch;
+      _last = divine(ch);
+      _error = null;
+    });
+  }
 
   @override
   void dispose() {
@@ -61,6 +82,7 @@ class _CeziPageState extends ConsumerState<CeziPage> {
       time: DateTime.now(),
       summary: '「$ch」${result.strokes}画 · ${result.wuxing.label}',
       detail: _buildCopyText(result),
+      extra: {'char': ch},
     )));
   }
 
