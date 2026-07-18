@@ -10,6 +10,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
@@ -63,6 +64,35 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   String? _error;
   final GlobalKey _boundaryKey = GlobalKey();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra 重建生辰 + 推演。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'bazi') return;
+    final extra = restore.extra;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (extra == null) return;
+    final y = extra['year'] as int?;
+    final m = extra['month'] as int?;
+    final d = extra['day'] as int?;
+    final h = extra['hourIndex'] as int?;
+    final g = extra['gender'] as int?;
+    if (y == null || m == null || d == null) return;
+    setState(() {
+      _birthDate = DateTime(y, m, d);
+      _hourIndex = h;
+      _gender = g ?? 1;
+    });
+    final result = divine(
+        year: y, month: m, day: d, hourIndex: h, gender: g ?? 1);
+    setState(() => _r = result);
+  }
+
   void _onDivine() {
     FocusScope.of(context).unfocus();
     final y = _birthDate.year;
@@ -94,6 +124,13 @@ class _BaziPageState extends ConsumerState<BaziPage> {
       time: DateTime.now(),
       summary: _buildSummary(result),
       detail: _buildCopyText(result),
+      extra: {
+        'year': y,
+        'month': m,
+        'day': d,
+        'hourIndex': _hourIndex,
+        'gender': _gender,
+      },
     )));
   }
 

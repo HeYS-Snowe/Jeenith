@@ -11,6 +11,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
@@ -39,6 +40,30 @@ class _DaliurenPageState extends ConsumerState<DaliurenPage> {
     _month.text = now.month.toString();
     _day.text = now.day.toString();
     _hour.text = now.hour.toString();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra 重建时辰 + 四课三传。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'daliuren') return;
+    final extra = restore.extra;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (extra == null) return;
+    final y = extra['year'] as int?;
+    final m = extra['month'] as int?;
+    final d = extra['day'] as int?;
+    final h = extra['hour'] as int?;
+    if (y == null || m == null || d == null || h == null || h < 0 || h > 23) {
+      return;
+    }
+    setState(() {
+      _year.text = y.toString();
+      _month.text = m.toString();
+      _day.text = d.toString();
+      _hour.text = h.toString();
+      _r = divine(y, m, d, h);
+    });
   }
 
   /// v2.4.0: 一键刷新为当前公历时辰。
@@ -78,6 +103,7 @@ class _DaliurenPageState extends ConsumerState<DaliurenPage> {
       time: DateTime.now(),
       summary: _r == null ? '' : '${_r!.zongMen} ${_r!.sanChuan.first.shen}传',
       detail: _buildCopyText(),
+      extra: {'year': y, 'month': m, 'day': d, 'hour': h},
     )));
   }
 

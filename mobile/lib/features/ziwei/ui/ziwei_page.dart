@@ -12,6 +12,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
@@ -56,6 +57,31 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra 重建生辰 + 命盘绘制动画。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'ziwei') return;
+    final extra = restore.extra;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (extra == null) return;
+    final y = extra['year'] as int?;
+    final m = extra['month'] as int?;
+    final d = extra['day'] as int?;
+    final h = extra['hour'] as int?;
+    if (y == null || m == null || d == null || h == null || h < 0 || h > 23) {
+      return;
+    }
+    setState(() {
+      _year.text = y.toString();
+      _month.text = m.toString();
+      _day.text = d.toString();
+      _hour.text = h.toString();
+      _r = divine(y, m, d, h);
+    });
+    _chartAnim.forward(from: 0);
   }
 
   @override
@@ -94,6 +120,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       time: DateTime.now(),
       summary: _r?.wuxingJu ?? '',
       detail: _buildCopyText(),
+      extra: {'year': y, 'month': m, 'day': d, 'hour': h},
     )));
   }
 
