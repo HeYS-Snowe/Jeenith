@@ -73,19 +73,20 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('测　名　字', style: TextStyle(fontSize: 18)),
+            const Text('测　名　字', style: TextStyle(fontSize: 18)),
             Text('五 格 剖 象',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -98,13 +99,13 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.badge, color: AppColors.goldBright, size: 16),
-                    SizedBox(width: 6),
+                    Icon(Icons.badge, color: c.goldBright, size: 16),
+                    const SizedBox(width: 6),
                     Text('请输入中文姓名（2-4 字）',
                         style: TextStyle(
-                            color: AppColors.goldBright,
+                            color: c.goldBright,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2)),
@@ -115,8 +116,8 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
                   controller: _ctrl,
                   maxLength: 4,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: c.textPrimary,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 6,
@@ -132,7 +133,7 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
                       _error!,
-                      style: const TextStyle(color: AppColors.gradeBad, fontSize: 12),
+                      style: TextStyle(color: c.gradeBad, fontSize: 12),
                     ),
                   ),
               ],
@@ -168,27 +169,27 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
               child: _buildResult(_last!),
             ),
           const SizedBox(height: 12),
-          const DecorativePanel(
-            padding: EdgeInsets.all(12),
+          DecorativePanel(
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('◆ 测名要诀',
                     style: TextStyle(
-                        color: AppColors.goldBright,
+                        color: c.goldBright,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2)),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text('1. 凝神静气，默念姓名主人之事。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
                 Text('2. 输入完整姓名（2 字为单姓单名，3 字为单姓双名，4 字按复姓双名计）。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
                 Text('3. 依康熙字典笔画计算五格，定五行吉凶。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
-                SizedBox(height: 6),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
+                const SizedBox(height: 6),
                 Text('注：笔画按康熙字典体计；未收录字按 unicode 估算，结果仅供参断。',
-                    style: TextStyle(color: AppColors.textHint, fontSize: 10, height: 1.5)),
+                    style: TextStyle(color: c.textHint, fontSize: 10, height: 1.5)),
               ],
             ),
           ),
@@ -198,6 +199,7 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   }
 
   Widget _buildResult(WugeResult r) {
+    final c = AppClr.of(context);
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
@@ -212,14 +214,14 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
             padding:
                 const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             decoration: BoxDecoration(
-              color: AppColors.bgMid.withValues(alpha: 0.6),
+              color: c.bgMid.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.goldBorder, width: 1.5),
+              border: Border.all(color: c.goldBorder, width: 1.5),
             ),
             child: Text(
               r.fullName.split('').join(' '),
-              style: const TextStyle(
-                color: AppColors.textHighlight,
+              style: TextStyle(
+                color: c.textHighlight,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 4,
@@ -233,21 +235,21 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.gradeBad.withValues(alpha: 0.12),
+                color: c.gradeBad.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                    color: AppColors.gradeBad.withValues(alpha: 0.4)),
+                    color: c.gradeBad.withValues(alpha: 0.4)),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.warning_amber_rounded,
-                      color: AppColors.gradeBad, size: 16),
+                  Icon(Icons.warning_amber_rounded,
+                      color: c.gradeBad, size: 16),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       '部分汉字笔画数据缺失（${_missingChars(r)}），已按估算推算，结果可能不准。',
-                      style: const TextStyle(
-                          color: AppColors.gradeBad,
+                      style: TextStyle(
+                          color: c.gradeBad,
                           fontSize: 11,
                           height: 1.4),
                     ),
@@ -277,14 +279,14 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
             padding: const EdgeInsets.symmetric(
                 vertical: 12, horizontal: 12),
             decoration: BoxDecoration(
-              color: AppColors.bgMid.withValues(alpha: 0.5),
+              color: c.bgMid.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.goldBorder),
+              border: Border.all(color: c.goldBorder),
             ),
             child: Text(
               r.summary,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: c.textPrimary,
                 fontSize: 13,
                 height: 1.8,
                 letterSpacing: 0.5,
@@ -295,7 +297,7 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
             child: Text(
               '${r.time.toString().substring(0, 19)} 测得',
               style:
-                  const TextStyle(color: AppColors.textHint, fontSize: 11),
+                  TextStyle(color: c.textHint, fontSize: 11),
             ),
           ),
         ],
@@ -312,7 +314,8 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   }
 
   Widget _strokeChip(String ch, int strokes, bool missing) {
-    final color = missing ? AppColors.gradeBad : AppColors.goldBright;
+    final c = AppClr.of(context);
+    final color = missing ? c.gradeBad : c.goldBright;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -324,8 +327,8 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(ch,
-              style: const TextStyle(
-                  color: AppColors.textHighlight,
+              style: TextStyle(
+                  color: c.textHighlight,
                   fontSize: 16,
                   fontWeight: FontWeight.bold)),
           const SizedBox(width: 6),
@@ -340,11 +343,12 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   }
 
   Widget _buildGridTable(WugeResult r) {
+    final c = AppClr.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.bgMid.withValues(alpha: 0.4),
+        color: c.bgMid.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.goldBorder),
+        border: Border.all(color: c.goldBorder),
       ),
       child: Column(
         children: [
@@ -360,43 +364,45 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   }
 
   Widget _gridHeader() {
+    final c = AppClr.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      decoration: const BoxDecoration(
-        color: AppColors.bgInner,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: c.bgInner,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(7),
           topRight: Radius.circular(7),
         ),
       ),
       child: Row(
-        children: const [
+        children: [
           Expanded(flex: 2, child: Text('格',
-              style: TextStyle(color: AppColors.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
+              style: TextStyle(color: c.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
           Expanded(flex: 2, child: Text('笔画',
-              style: TextStyle(color: AppColors.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
+              style: TextStyle(color: c.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
           Expanded(flex: 1, child: Text('五行',
-              style: TextStyle(color: AppColors.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
+              style: TextStyle(color: c.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
           Expanded(flex: 3, child: Text('吉凶',
-              style: TextStyle(color: AppColors.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
+              style: TextStyle(color: c.goldBright, fontSize: 11, fontWeight: FontWeight.bold))),
         ],
       ),
     );
   }
 
   Widget _gridRow(GeResult g, {bool highlight = false, bool isLast = false}) {
-    final gradeColor = _colorForGrade(g.fortune.grade);
-    final wxColor = _colorForWuxing(g.wuxing);
+    final c = AppClr.of(context);
+    final gradeColor = _colorForGrade(g.fortune.grade, c);
+    final wxColor = _colorForWuxing(g.wuxing, c);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 8),
       decoration: BoxDecoration(
         color: highlight
-            ? AppColors.gold.withValues(alpha: 0.08)
+            ? c.gold.withValues(alpha: 0.08)
             : Colors.transparent,
         border: Border(
           bottom: isLast
               ? BorderSide.none
-              : BorderSide(color: AppColors.goldBorder.withValues(alpha: 0.25)),
+              : BorderSide(color: c.goldBorder.withValues(alpha: 0.25)),
         ),
       ),
       child: Row(
@@ -405,15 +411,15 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
             flex: 2,
             child: Text(g.name,
                 style: TextStyle(
-                    color: highlight ? AppColors.goldBright : AppColors.textPrimary,
+                    color: highlight ? c.goldBright : c.textPrimary,
                     fontSize: 13,
                     fontWeight: FontWeight.bold)),
           ),
           Expanded(
             flex: 2,
             child: Text('${g.strokes}',
-                style: const TextStyle(
-                    color: AppColors.textHighlight,
+                style: TextStyle(
+                    color: c.textHighlight,
                     fontSize: 14,
                     fontWeight: FontWeight.bold)),
           ),
@@ -444,7 +450,8 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
   }
 
   Widget _wuxingChip(Wuxing w, int count) {
-    final color = _colorForWuxing(w);
+    final c = AppClr.of(context);
+    final color = _colorForWuxing(w, c);
     return Column(
       children: [
         Text(w.label,
@@ -470,29 +477,32 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
         ),
         const SizedBox(height: 2),
         Text(w.nature,
-            style: const TextStyle(color: AppColors.textMeta, fontSize: 9)),
+            style: TextStyle(color: c.textMeta, fontSize: 9)),
       ],
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 6),
-        child: Row(
-          children: [
-            Container(width: 3, height: 14, color: AppColors.gold),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.goldBright,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
+  Widget _sectionLabel(String text) {
+    final c = AppClr.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          Container(width: 3, height: 14, color: c.gold),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: c.goldBright,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   /// Generate the detailed text for copy / share.
   String _buildCopyText(WugeResult? r) {
@@ -520,20 +530,20 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
     return sb.toString();
   }
 
-  Color _colorForWuxing(Wuxing w) => switch (w) {
-        Wuxing.metal => AppColors.metal,
-        Wuxing.wood => AppColors.wood,
-        Wuxing.water => AppColors.waterDeep,
-        Wuxing.fire => AppColors.fire,
-        Wuxing.earth => AppColors.earth,
+  Color _colorForWuxing(Wuxing w, AppClr c) => switch (w) {
+        Wuxing.metal => c.metal,
+        Wuxing.wood => c.wood,
+        Wuxing.water => c.waterDeep,
+        Wuxing.fire => c.fire,
+        Wuxing.earth => c.earth,
       };
 
-  Color _colorForGrade(String grade) => switch (grade) {
-        '大吉' => AppColors.gradeGreat,
-        '吉' => AppColors.gradeGood,
-        '平' => AppColors.gradeSteady,
-        '凶' => AppColors.gradeRough,
-        '大凶' => AppColors.gradeBad,
-        _ => AppColors.textBody,
+  Color _colorForGrade(String grade, AppClr c) => switch (grade) {
+        '大吉' => c.gradeGreat,
+        '吉' => c.gradeGood,
+        '平' => c.gradeSteady,
+        '凶' => c.gradeRough,
+        '大凶' => c.gradeBad,
+        _ => c.textBody,
       };
 }
