@@ -140,6 +140,7 @@ ThemeData _darkTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
+    fontFamily: AppFonts.serif,
     scaffoldBackgroundColor: Colors.transparent,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.gold,
@@ -180,6 +181,7 @@ ThemeData _lightTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    fontFamily: AppFonts.serif,
     scaffoldBackgroundColor: Colors.transparent,
     colorScheme: const ColorScheme.light(
       primary: AppColorsLight.gold,

@@ -43,6 +43,9 @@ class _InteractableCardState extends State<InteractableCard> {
   Widget build(BuildContext context) {
     // 桌面端 hover 计算的视觉参数
     final isDesktop = PlatformInfo.isDesktop;
+    // 浅色模式适配：卡片底色跟随主题，避免浅色背景下出现深色块
+    final isLight = Theme.of(context).brightness == Brightness.light;
+    final cardColor = isLight ? AppColorsLight.card : AppColors.card;
     final hoverShift = isDesktop && _hover ? -4.0 : 0.0;
     final hoverBorderAlpha = _hover ? 0.8 : (_pressed ? 0.85 : 0.5);
     final hoverBlur = _hover ? 18.0 : (_pressed ? 26.0 : 10.0);
@@ -74,7 +77,7 @@ class _InteractableCardState extends State<InteractableCard> {
               end: Alignment.bottomRight,
               colors: [
                 widget.color.withValues(alpha: 0.22),
-                AppColors.card,
+                cardColor,
               ],
             ),
             borderRadius: BorderRadius.circular(widget.radius),

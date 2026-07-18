@@ -52,6 +52,13 @@ app.*.map.json
 !/builds/release_history.json
 !/builds/release_notes/
 
+# 思源宋体：仅 Regular + Bold 入库（pubspec 声明打包），其余字重本地保留备用不入 git
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-ExtraLight-3.otf
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Heavy-4.otf
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Light-5.otf
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Medium-6.otf
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-SemiBold-7.otf
+
 
 .对话.txt
 /.trae/documents/*

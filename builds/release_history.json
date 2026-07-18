@@ -742,8 +742,8 @@
       "tag": "v2.4.0",
       "target": "main",
       "title": "v2.4.0 — 八字/测名字入场仪式 + 一键获取当前时间 + 词库扩展 + All rights reserved 全面移除",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.4.0.md",
       "notesFormat": "markdown",
@@ -774,6 +774,45 @@
       "publishedAt": "",
       "url": "",
       "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.4.1",
+      "target": "main",
+      "title": "v2.4.1 — 思源宋体 + 分享图主题背景 + 首页折叠 + 首页卡片浅色修复",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.4.1.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_2.4.1_20260718_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 77482422,
+          "sizeFormatted": "73.89 MB",
+          "sha256": "A427A2401D4A22E9AE57F6543BFBD9677F2B7AB581D8B7B652A239237777A774",
+          "localPath": "builds/android/Jeenith_fix_2.4.1_20260718_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 41952823,
+          "sizeFormatted": "40.01 MB",
+          "sha256": "3622DA62B9429FA86B877258DC0ECF6C383F9C57E6EA12AFEABA625CFF622C14",
+          "localPath": "builds/windows/Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.4.1+25",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-18T13:31:27",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "draft"
     }
   ]
 }

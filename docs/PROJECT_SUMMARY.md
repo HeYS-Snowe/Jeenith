@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.3.3+23**（2026-07-15，release — 首页按钮间距修复 + MIT LICENSE）|
+| 当前版本 | **2.4.1+25**（2026-07-18，fix — 思源宋体 + 分享图主题背景 + 首页折叠 + 首页卡片浅色修复）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -86,7 +86,7 @@ Jeenith/                           # 仓库根（solution root）
 │   │   ├── build_apk.ps1          # APK 构建脚本（版本递增+归档+历史）
 │   │   └── archive_history.py     # 历史记录追加（双份 build_history.json）
 │   ├── android/ ios/ web/ windows/ linux/ macos/
-│   ├── pubspec.yaml               # version: 2.3.3+23
+│   ├── pubspec.yaml               # version: 2.4.1+25
 │   ├── build_history.json         # 项目内历史副本
 │   ├── ico/                       # APP 图标素材
 │   └── assets/icons/              # SVG 图标
@@ -214,6 +214,10 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | Jeenith_release_2.3.2_20260715_01_windows_x64.zip | Windows | 2.3.2+22 | 13.27 MB | release |
 | **Jeenith_release_2.3.3_20260715_01.apk** | **Android** | **2.3.3+23** | **55.00 MB** | **release** |
 | **Jeenith_release_2.3.3_20260715_01_windows_x64.zip** | **Windows** | **2.3.3+23** | **13.27 MB** | **release** |
+| Jeenith_release_2.4.0_20260715_01.apk | Android | 2.4.0+24 | 55.14 MB | release |
+| Jeenith_release_2.4.0_20260715_01_windows_x64.zip | Windows | 2.4.0+24 | 13.01 MB | release |
+| **Jeenith_fix_2.4.1_20260718_01.apk** | **Android** | **2.4.1+25** | **73.89 MB** | **fix** |
+| **Jeenith_fix_2.4.1_20260718_01_windows_x64.zip** | **Windows** | **2.4.1+25** | **40.01 MB** | **fix** |
 
 ### GitHub Release 发布记录
 
@@ -245,6 +249,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | 2.3.1+21 | 2026-07-15 | release | 起卦按钮 BUG 修复 + 动效曲线优化 |
 | 2.3.2+22 | 2026-07-15 | release | 设置页动画细分开关（4 个 AnimationKind）+ Windows 应用图标修复 |
 | **2.3.3+23** | **2026-07-15** | **release** | **首页按钮间距修复 + MIT LICENSE + Windows 图标产物归档** |
+| 2.4.0+24 | 2026-07-15 | release | 八字/测名字入场仪式 + 一键获取当前时间 + 词库扩展 + All rights reserved 全面移除 |
+| **2.4.1+25** | **2026-07-18** | **fix** | **思源宋体接入 + 分享图主题背景 + 首页使用方法默认折叠 + 首页卡片浅色修复** |
 
 ---
 

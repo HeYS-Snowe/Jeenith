@@ -10,11 +10,14 @@ import 'package:share_plus/share_plus.dart';
 import '../../core/theme/app_theme.dart';
 import 'dark_button.dart';
 
-/// 「分享结果」按钮：通过 [RepaintBoundary] 截图结果区域为 PNG，写临时文件后调系统分享。
+/// 「分享结果」按钮：通过 [RepaintBoundary] 截图结果区，**合成主题背景后**分享 PNG。
 ///
-/// 用法：
-///   1. 在结果区外层包 `RepaintBoundary(key: boundaryKey, child: ...)`
-///   2. 与 [CopyResultButton] 并列放置本按钮，传入同一 `boundaryKey`。
+/// 截图区通常不含不透明背景（半透明面板），直接分享会让文字「浮空」、违和。
+/// 本组件在截图上叠加一层主题背景（玄黑 / 浅米渐变 + 鎏金细边），保证分享图
+/// 美观且贴合 app 主题。
+///
+/// 用法：结果区外层包 `RepaintBoundary(key: boundaryKey, child: ...)`，
+/// 与 [CopyResultButton] 并列放置本按钮，传入同一 `boundaryKey`。
 class ShareResultButton extends StatelessWidget {
   final GlobalKey boundaryKey;
   final bool enabled;
@@ -43,8 +46,14 @@ class ShareResultButton extends StatelessWidget {
         _fallbackShare();
         return;
       }
-      final image = await boundaryObj.toImage(pixelRatio: 2.0);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final raw = await boundaryObj.toImage(pixelRatio: 2.0);
+      if (!context.mounted) {
+        _fallbackShare();
+        return;
+      }
+      final isLight = Theme.of(context).brightness == Brightness.light;
+      final composed = await _composeWithBackground(raw, isLight: isLight);
+      final byteData = await composed.toByteData(format: ui.ImageByteFormat.png);
       if (byteData == null) {
         _fallbackShare();
         return;
@@ -58,6 +67,40 @@ class ShareResultButton extends StatelessWidget {
     } catch (_) {
       _fallbackShare();
     }
+  }
+
+  /// 在截图上合成主题背景渐变 + 鎏金细边。
+  Future<ui.Image> _composeWithBackground(ui.Image raw,
+      {required bool isLight}) async {
+    final w = raw.width;
+    final h = raw.height;
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    final rect = Rect.fromLTWH(0, 0, w.toDouble(), h.toDouble());
+
+    // 主题背景渐变（玄黑 / 浅米，与 app 一致）
+    final bgTop = isLight ? AppColorsLight.bgOuter : AppColors.bgInner;
+    final bgBottom = isLight ? AppColorsLight.bg : AppColors.bg;
+    final bgPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [bgTop, bgBottom],
+      ).createShader(rect);
+    canvas.drawRect(rect, bgPaint);
+
+    // 画截图内容
+    canvas.drawImage(raw, Offset.zero, Paint());
+
+    // 鎏金细边（点睛，呼应主题）
+    final borderPaint = Paint()
+      ..color = (isLight ? AppColorsLight.gold : AppColors.gold)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+    canvas.drawRect(rect.deflate(1), borderPaint);
+
+    final picture = recorder.endRecording();
+    return picture.toImage(w, h);
   }
 
   Future<void> _fallbackShare() async {

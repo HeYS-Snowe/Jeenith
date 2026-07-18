@@ -34,7 +34,7 @@ class _HomePageState extends ConsumerState<HomePage>
   late final AnimationController _entrance;
   late final AnimationController _exit;
   bool _exiting = false;
-  bool _guideExpanded = true;
+  bool _guideExpanded = false; // 首页「使用方法」默认折叠（v2.5.0：用户偏好改为默认收起，点击展开）
   final _guideController = ExpansibleController();
 
   @override
@@ -112,7 +112,7 @@ class _HomePageState extends ConsumerState<HomePage>
     });
   }
 
-  /// 首页置顶的「使用方法」卡片（可收起，默认展开）。
+  /// 首页置顶的「使用方法」卡片（可展开，默认折叠）。
   ///
   /// v2.0.0 升级：trailing 用 [AnimatedExpandIcon] 替换默认 chevron，带呼吸反馈。
   Widget _guideCard() {
