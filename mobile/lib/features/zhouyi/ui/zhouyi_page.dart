@@ -2,11 +2,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/config/platform_info.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../data/yijing/hexagram_texts.dart';
 import '../../../data/yijing/trigrams.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -19,14 +21,14 @@ import '../../../shared/widgets/svg_icon.dart';
 import '../algorithm/divine.dart';
 import 'hexagram_view.dart';
 
-class ZhouyiPage extends StatefulWidget {
+class ZhouyiPage extends ConsumerStatefulWidget {
   const ZhouyiPage({super.key});
 
   @override
-  State<ZhouyiPage> createState() => _ZhouyiPageState();
+  ConsumerState<ZhouyiPage> createState() => _ZhouyiPageState();
 }
 
-class _ZhouyiPageState extends State<ZhouyiPage>
+class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
     with SingleTickerProviderStateMixin {
   ZhouyiResult? _result;
   bool _busy = false;
@@ -47,6 +49,34 @@ class _ZhouyiPageState extends State<ZhouyiPage>
       _ownCtrl = ScrollController();
       _sheetCtrl = _ownCtrl; // 桌面端把自建 controller 暴露给 reset 复用
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra 快照重建卦象（周易为随机起卦，存结果快照）。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'zhouyi') return;
+    final extra = restore.extra;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (extra == null) return;
+    final linesData = extra['lines'] as List?;
+    final benName = extra['benName'] as String?;
+    if (linesData == null || benName == null) return;
+    final lines = linesData.map((l) {
+      final m = l as Map<String, dynamic>;
+      return (yang: m['yang'] as bool, changing: m['changing'] as bool);
+    }).toList();
+    setState(() {
+      _result = ZhouyiResult(
+        benName: benName,
+        bianName: extra['bianName'] as String?,
+        upperName: extra['upperName'] as String,
+        lowerName: extra['lowerName'] as String,
+        changing: (extra['changing'] as List).cast<int>(),
+        lines: lines,
+      );
+    });
+    _anim.value = 1; // 跳过逐爻揭示，直接显示完整卦象
   }
 
   @override
@@ -84,6 +114,16 @@ class _ZhouyiPageState extends State<ZhouyiPage>
       time: DateTime.now(),
       summary: _result?.benName ?? '',
       detail: _buildCopyText(),
+      extra: {
+        'lines': _result?.lines
+            .map((l) => {'yang': l.yang, 'changing': l.changing})
+            .toList(),
+        'benName': _result?.benName,
+        'bianName': _result?.bianName,
+        'upperName': _result?.upperName,
+        'lowerName': _result?.lowerName,
+        'changing': _result?.changing,
+      },
     )));
   }
 

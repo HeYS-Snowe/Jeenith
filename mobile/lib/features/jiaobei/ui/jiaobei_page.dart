@@ -10,6 +10,7 @@ import '../../../core/config/app_config.dart';
 import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/entrance_item.dart';
@@ -41,6 +42,31 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：从历史记录恢复，按 extra 快照重建（掷筊为随机，存 last/round/shengCount）。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'jiaobei') return;
+    final extra = restore.extra;
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (extra == null) return;
+    final lastData = extra['last'] as Map<String, dynamic>?;
+    final roundData = extra['round'] as List?;
+    if (lastData == null || roundData == null) return;
+    JiaoResult fromMap(Map<String, dynamic> m) => JiaoResult(
+          m['p1Yang'] as bool,
+          m['p2Yang'] as bool,
+          JiaoType.values[m['type'] as int],
+        );
+    setState(() {
+      _last = fromMap(lastData);
+      _round.clear();
+      _round.addAll(
+          roundData.map((j) => fromMap(j as Map<String, dynamic>)));
+      _shengCount = extra['shengCount'] as int? ?? 0;
+    });
   }
 
   @override
@@ -68,6 +94,13 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
       time: DateTime.now(),
       summary: r.type.name,
       detail: _buildCopyText(),
+      extra: {
+        'last': {'p1Yang': r.p1Yang, 'p2Yang': r.p2Yang, 'type': r.type.index},
+        'round': _round
+            .map((j) => {'p1Yang': j.p1Yang, 'p2Yang': j.p2Yang, 'type': j.type.index})
+            .toList(),
+        'shengCount': _shengCount,
+      },
     )));
   }
 
