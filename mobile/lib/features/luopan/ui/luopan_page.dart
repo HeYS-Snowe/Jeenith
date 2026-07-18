@@ -56,18 +56,19 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
   Widget build(BuildContext context) {
     final reading = ref.watch(compassProvider);
     final azimuth = reading?.azimuth ?? 0.0;
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('风水罗盘', style: TextStyle(fontSize: 18)),
+            const Text('风水罗盘', style: TextStyle(fontSize: 18)),
             Text('二 十 四 山',
                 style: TextStyle(
-                    fontSize: 10, color: AppColors.textSubtitle, letterSpacing: 4)),
+                    fontSize: 10, color: c.textSubtitle, letterSpacing: 4)),
           ],
         ),
       ),
@@ -78,6 +79,7 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
   }
 
   Widget _buildAndroidBody(double azimuth) {
+    final c = AppClr.of(context);
     final shanIdx = ((azimuth + 7.5) ~/ 15) % 24;
     final shan = shan24[shanIdx];
     final dir = _directionLabels[shanIdx];
@@ -92,9 +94,9 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildReading('方位角', '${azimuth.toStringAsFixed(1)}°', AppColors.goldBright),
-                  _buildReading('坐山', shan, AppColors.fireGlow),
-                  _buildReading('方位', dir, AppColors.woodGlow),
+                  _buildReading('方位角', '${azimuth.toStringAsFixed(1)}°', c.goldBright),
+                  _buildReading('坐山', shan, c.fireGlow),
+                  _buildReading('方位', dir, c.woodGlow),
                 ],
               ),
               const SizedBox(height: 10),
@@ -111,15 +113,15 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
           child: AspectRatio(
             aspectRatio: 1,
             child: CustomPaint(
-              painter: _LuopanPainter(azimuth: azimuth, active: _active),
+              painter: _LuopanPainter(azimuth: azimuth, active: _active, clr: c),
               size: Size.infinite,
             ),
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           '提示：将设备水平放置并远离金属物体以提高精度。',
-          style: TextStyle(color: AppColors.textMeta, fontSize: 11),
+          style: TextStyle(color: c.textMeta, fontSize: 11),
           textAlign: TextAlign.center,
         ),
       ],
@@ -127,22 +129,23 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
   }
 
   Widget _buildDesktopPlaceholder() {
+    final c = AppClr.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.explore, color: AppColors.gold, size: 64),
+            Icon(Icons.explore, color: c.gold, size: 64),
             const SizedBox(height: 16),
-            const Text('罗盘功能仅支持 Android 设备',
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 16),
+            Text('罗盘功能仅支持 Android 设备',
+                style: TextStyle(color: c.textPrimary, fontSize: 16),
                 textAlign: TextAlign.center),
             const SizedBox(height: 8),
             Text(
               '当前平台：${PlatformInfo.label}\n'
               '磁力计硬件在桌面端不可用，请在 Android 设备上体验。',
-              style: const TextStyle(color: AppColors.textMeta, fontSize: 12),
+              style: TextStyle(color: c.textMeta, fontSize: 12),
               textAlign: TextAlign.center,
             ),
           ],
@@ -152,9 +155,10 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
   }
 
   Widget _buildReading(String label, String value, Color valueColor) {
+    final c = AppClr.of(context);
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: AppColors.textMeta, fontSize: 11)),
+        Text(label, style: TextStyle(color: c.textMeta, fontSize: 11)),
         const SizedBox(height: 4),
         Text(value,
             style: TextStyle(
@@ -168,8 +172,9 @@ class _LuopanPageState extends ConsumerState<LuopanPage> {
 class _LuopanPainter extends CustomPainter {
   final double azimuth;
   final bool active;
+  final AppClr clr;
 
-  _LuopanPainter({required this.azimuth, required this.active});
+  _LuopanPainter({required this.azimuth, required this.active, required this.clr});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -178,7 +183,7 @@ class _LuopanPainter extends CustomPainter {
 
     // 同心圆：外圈、24山圈、八卦圈、内圈
     final ringPaint = Paint()
-      ..color = AppColors.goldBorder
+      ..color = clr.goldBorder
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.4;
     canvas.drawCircle(center, r, ringPaint);
@@ -223,10 +228,10 @@ class _LuopanPainter extends CustomPainter {
         text: shan24[i],
         style: TextStyle(
           color: isGua
-              ? AppColors.fireGlow
+              ? clr.fireGlow
               : (shan24[i] == '子' || shan24[i] == '午' || shan24[i] == '卯' || shan24[i] == '酉'
-                  ? AppColors.goldBright
-                  : AppColors.textBody),
+                  ? clr.goldBright
+                  : clr.textBody),
           fontSize: isGua ? 13 : 12,
           fontWeight: FontWeight.bold,
         ),
@@ -247,7 +252,7 @@ class _LuopanPainter extends CustomPainter {
       final y = (r * 0.85 + r * 0.55) / 2 * math.sin(angle);
       guaTp.text = TextSpan(
         text: guaList[i],
-        style: const TextStyle(color: AppColors.waterDeepGlow, fontSize: 13),
+        style: TextStyle(color: clr.waterDeepGlow, fontSize: 13),
       );
       guaTp.layout();
       guaTp.paint(canvas, Offset(x - guaTp.width / 2, y - guaTp.height / 2));
@@ -258,7 +263,7 @@ class _LuopanPainter extends CustomPainter {
 
     // 顶部指针（固定）
     final pointerPaint = Paint()
-      ..color = AppColors.fire
+      ..color = clr.fire
       ..style = PaintingStyle.fill;
     final path = Path()
       ..moveTo(center.dx, center.dy - r - 10)
@@ -268,13 +273,13 @@ class _LuopanPainter extends CustomPainter {
     canvas.drawPath(path, pointerPaint);
 
     // 中心太极
-    final centerPaint = Paint()..color = AppColors.gold;
+    final centerPaint = Paint()..color = clr.gold;
     canvas.drawCircle(center, 5, centerPaint);
-    final innerPaint = Paint()..color = AppColors.bg;
+    final innerPaint = Paint()..color = clr.bg;
     canvas.drawCircle(center, 3, innerPaint);
   }
 
   @override
   bool shouldRepaint(_LuopanPainter old) =>
-      azimuth != old.azimuth || active != old.active;
+      azimuth != old.azimuth || active != old.active || clr.t != old.clr.t;
 }

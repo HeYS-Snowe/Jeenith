@@ -40,6 +40,9 @@ class StarChartPainter extends CustomPainter {
   /// 绘制进度 0.0→1.0。1.0 表示完全绘制（默认）。
   final double progress;
 
+  /// 主题感知色板（深↔浅插值）。
+  final AppClr clr;
+
   const StarChartPainter({
     required this.mingGong,
     required this.shenGong,
@@ -48,6 +51,7 @@ class StarChartPainter extends CustomPainter {
     required this.wuxingJu,
     required this.chart,
     this.progress = 1.0,
+    required this.clr,
   });
 
   /// 局部进度（0..1）：从 [start] 到 [end] 区间。
@@ -74,20 +78,20 @@ class StarChartPainter extends CustomPainter {
     final outerRingPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
-      ..color = AppColors.gold;
+      ..color = clr.gold;
     canvas.drawCircle(Offset(cx, cy), outerR, outerRingPaint);
 
     final innerRingPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2
-      ..color = AppColors.goldBorder;
+      ..color = clr.goldBorder;
     canvas.drawCircle(Offset(cx, cy), innerR, innerRingPaint);
 
     // 中央圆背景（progress < 0.05 时不绘制，避免遮盖中心爆光）
     if (progress > 0.05) {
       final centerBgPaint = Paint()
         ..style = PaintingStyle.fill
-        ..color = AppColors.bgInner;
+        ..color = clr.bgInner;
       canvas.drawCircle(Offset(cx, cy), innerR - 1, centerBgPaint);
     }
 
@@ -133,10 +137,10 @@ class StarChartPainter extends CustomPainter {
       final bgPaint = Paint()
         ..style = PaintingStyle.fill
         ..color = (isMing
-                ? AppColors.gold.withValues(alpha: 0.20)
+                ? clr.gold.withValues(alpha: 0.20)
                 : (isShen
-                    ? AppColors.waterDeep.withValues(alpha: 0.20)
-                    : AppColors.card))
+                    ? clr.waterDeep.withValues(alpha: 0.20)
+                    : clr.card))
             .withValues(alpha: localT);
       canvas.drawPath(path, bgPaint);
 
@@ -145,8 +149,8 @@ class StarChartPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = isMing || isShen ? 1.6 : 0.6
         ..color = isMing
-            ? AppColors.gold
-            : (isShen ? AppColors.waterDeepGlow : AppColors.goldBorder);
+            ? clr.gold
+            : (isShen ? clr.waterDeepGlow : clr.goldBorder);
       canvas.drawPath(path, borderPaint);
 
       canvas.restore();
@@ -168,7 +172,7 @@ class StarChartPainter extends CustomPainter {
         canvas,
         dz[zhi],
         const Offset(0, -24),
-        color: (isMing ? AppColors.goldBright : AppColors.textMeta)
+        color: (isMing ? clr.goldBright : clr.textMeta)
             .withValues(alpha: textAlpha),
         fontSize: 13,
         fontWeight: FontWeight.bold,
@@ -181,7 +185,7 @@ class StarChartPainter extends CustomPainter {
           canvas,
           palaceNames[gongIdx],
           const Offset(0, -9),
-          color: (isMing ? AppColors.gold : AppColors.textPrimary)
+          color: (isMing ? clr.gold : clr.textPrimary)
               .withValues(alpha: textAlpha),
           fontSize: 10,
           fontWeight: FontWeight.bold,
@@ -254,10 +258,10 @@ class StarChartPainter extends CustomPainter {
       // 太极圆点
       final taijiR = innerR * 0.18;
       final taijiPaint = Paint()
-        ..color = AppColors.goldBright.withValues(alpha: centerAlpha);
+        ..color = clr.goldBright.withValues(alpha: centerAlpha);
       canvas.drawCircle(Offset(cx, cy - innerR * 0.45), taijiR, taijiPaint);
       final taijiBgPaint = Paint()
-        ..color = AppColors.bgOuter.withValues(alpha: centerAlpha);
+        ..color = clr.bgOuter.withValues(alpha: centerAlpha);
       canvas.drawCircle(
           Offset(cx, cy - innerR * 0.45), taijiR * 0.55, taijiBgPaint);
 
@@ -266,7 +270,7 @@ class StarChartPainter extends CustomPainter {
         canvas,
         mingGanZhi,
         Offset(cx, cy),
-        color: AppColors.goldBright.withValues(alpha: centerAlpha),
+        color: clr.goldBright.withValues(alpha: centerAlpha),
         fontSize: 15,
         fontWeight: FontWeight.bold,
       );
@@ -276,7 +280,7 @@ class StarChartPainter extends CustomPainter {
         canvas,
         wuxingJu,
         Offset(cx, cy + innerR * 0.4),
-        color: AppColors.fireGlow.withValues(alpha: centerAlpha),
+        color: clr.fireGlow.withValues(alpha: centerAlpha),
         fontSize: 11,
       );
     }
@@ -285,15 +289,15 @@ class StarChartPainter extends CustomPainter {
   Color _categoryColor(StarCategory cat) {
     switch (cat) {
       case StarCategory.main:
-        return AppColors.goldBright;
+        return clr.goldBright;
       case StarCategory.auspicious:
-        return AppColors.woodGlow;
+        return clr.woodGlow;
       case StarCategory.malefic:
-        return AppColors.fireGlow;
+        return clr.fireGlow;
       case StarCategory.boshishen:
-        return AppColors.textSubtitle;
+        return clr.textSubtitle;
       case StarCategory.shensha:
-        return AppColors.earthGlow;
+        return clr.earthGlow;
     }
   }
 
@@ -328,7 +332,8 @@ class StarChartPainter extends CustomPainter {
       old.shenGong != shenGong ||
       old.chart != chart ||
       old.mingGanZhi != mingGanZhi ||
-      old.progress != progress;
+      old.progress != progress ||
+      old.clr.t != clr.t;
 }
 
 /// 内部辅助：星曜绘制项（位置 + 分类）。
