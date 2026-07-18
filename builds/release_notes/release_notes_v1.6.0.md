@@ -46,10 +46,10 @@
 
 ## 下载
 
-| 平台 | 文件 | 大小 |
+| 平台 | 文件 | 大小 | SHA-256 |
 |------|------|------|
-| Android | Jeenith_feature_1.6.0_20260713_01.apk | 52.54 MB |
-| Windows x64 | Jeenith_feature_1.6.0_20260713_01_windows_x64.zip | 13.00 MB |
+| Android | Jeenith_feature_1.6.0_20260713_01.apk | 52.54 MB / 55093452 B | B9E446462F981A1F9D81E341EC195590CED926642581FADA818635E96F36544D |
+| Windows x64 | Jeenith_feature_1.6.0_20260713_01_windows_x64.zip | 13.00 MB / 13633367 B | D62B6EF22662B46908E72184E36F39F3805C0821E9A1CA101311526D6708876D |
 
 ## 后续阶段预告
 

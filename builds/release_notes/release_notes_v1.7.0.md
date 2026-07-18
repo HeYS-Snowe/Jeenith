@@ -57,10 +57,10 @@
 
 ## 下载
 
-| 平台 | 文件 | 大小 |
+| 平台 | 文件 | 大小 | SHA-256 |
 |------|------|------|
-| Android | Jeenith_feature_1.7.0_20260713_01.apk | 52.92 MB |
-| Windows x64 | Jeenith_feature_1.7.0_20260713_01_windows_x64.zip | 13.03 MB |
+| Android | Jeenith_feature_1.7.0_20260713_01.apk | 52.92 MB / 55486808 B | DBE1D2B7763DF8906E9DC1CB48FEDE288CDEC6D1737D52FB521BB61C6036C0B1 |
+| Windows x64 | Jeenith_feature_1.7.0_20260713_01_windows_x64.zip | 13.03 MB / 13661115 B | 1D9A320525506DF0930DBD0F1968EB97F871C6C88D0BA161E8E45A65A3E2A544 |
 
 ## 多阶段计划总结
 
