@@ -781,8 +781,8 @@
       "tag": "v2.4.1",
       "target": "main",
       "title": "v2.4.1 — 思源宋体 + 分享图主题背景 + 首页折叠 + 首页卡片浅色修复",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.4.1.md",
       "notesFormat": "markdown",
@@ -813,6 +813,45 @@
       "publishedAt": "",
       "url": "",
       "status": "draft"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.4.2",
+      "target": "main",
+      "title": "v2.4.2 — 浅色模式全面适配（深浅渐变切换 + 12 术主题感知）",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.4.2.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.4.2_20260718_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 77662646,
+          "sizeFormatted": "74.06 MB",
+          "sha256": "3E573869E85B1E918CE11AC190290CBE18320D9987CAB520610DD053B1B9001D",
+          "localPath": "builds/android/Jeenith_feature_2.4.2_20260718_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 33650599,
+          "sizeFormatted": "32.09 MB",
+          "sha256": "AE80E9461E426C4D4C00466D52BB76861DDD0D6A2AAA6F5A124EF304BC8A624C",
+          "localPath": "builds/windows/Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.4.2+26",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-18T23:58:12",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
     }
   ]
 }

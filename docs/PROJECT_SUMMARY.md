@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.4.1+25**（2026-07-18，fix — 思源宋体 + 分享图主题背景 + 首页折叠 + 首页卡片浅色修复）|
+| 当前版本 | **2.4.2+26**（2026-07-18，feature — 浅色模式全面适配：深浅渐变切换 + 12 术主题感知）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -218,6 +218,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | Jeenith_release_2.4.0_20260715_01_windows_x64.zip | Windows | 2.4.0+24 | 13.01 MB | release |
 | **Jeenith_fix_2.4.1_20260718_01.apk** | **Android** | **2.4.1+25** | **73.89 MB** | **fix** |
 | **Jeenith_fix_2.4.1_20260718_01_windows_x64.zip** | **Windows** | **2.4.1+25** | **40.01 MB** | **fix** |
+| **Jeenith_feature_2.4.2_20260718_01.apk** | **Android** | **2.4.2+26** | **74.06 MB** | **feature** |
+| **Jeenith_feature_2.4.2_20260718_01_windows_x64.zip** | **Windows** | **2.4.2+26** | **32.09 MB** | **feature** |
 
 ### GitHub Release 发布记录
 
@@ -251,7 +253,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.3.3+23** | **2026-07-15** | **release** | **首页按钮间距修复 + MIT LICENSE + Windows 图标产物归档** |
 | 2.4.0+24 | 2026-07-15 | release | 八字/测名字入场仪式 + 一键获取当前时间 + 词库扩展 + All rights reserved 全面移除 |
 | **2.4.1+25** | **2026-07-18** | **fix** | **思源宋体接入 + 分享图主题背景 + 首页使用方法默认折叠 + 首页卡片浅色修复** |
-| 2.4.2 | 进行中 | WIP | 浅色模式全面适配（深浅渐变切换 + 12 术 page 主题感知 + 命盘/天盘/罗盘 painter 注入 AppClr；掐指盘/仪式保留深色器物本体）|
+| **2.4.2+26** | **2026-07-18** | **feature** | **浅色模式全面适配：深浅渐变切换（Color.lerp + ThemeAnimScope）+ 12 术 page 主题感知 + 命盘/天盘/罗盘 painter 注入 AppClr** |
 
 ---
 
@@ -260,7 +262,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 参考 `docs/NEXT_PLAN/` 与项目 memory：
 
 1. ~~思源宋体字体~~ ✅ v2.4.1 已接入（Regular + Bold）；剩余**字体子集化**（pyftsubset 提取常用 3500 字 → 每 weight ~3 MB）以缩减 APK 体积
-2. **浅色模式全面适配**（v2.4.2 进行中）：深 / 浅主题切换加 450 ms 渐变（`Color.lerp` 插值 + `ThemeAnimScope` InheritedWidget），12 术 page 全面主题感知（`AppClr` 取代硬编码 `AppColors`）；命盘 / 天盘 / 罗盘等透明背景 CustomPainter 注入 `AppClr` 跟随主题，掐指盘 / 入场仪式保留深色器物本体
+2. ~~浅色模式全面适配~~ ✅ v2.4.2 已完成（深浅渐变切换 + 12 术 page 主题感知 + painter 注入 AppClr）；剩余少数共享 widget（gold_button / dark_button / guide_dialog 等）逐个审计 + 思源宋体子集化缩减体积
 3. **历史记录预览**（v2.4.3）：新历史存结构化 `extra` 字段支持恢复卦象；旧历史（仅文本）预览按钮置灰
 4. **测字词库扩展**（v2.4.3）：接入开源康熙笔画数据集，替代当前 ~400 字 `Map`
 5. **首次使用引导遮罩**：对高度复杂的术数（大六壬、奇门、紫微）新增首次使用遮罩层或指引
