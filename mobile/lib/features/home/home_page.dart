@@ -18,10 +18,7 @@ import '../../shared/widgets/svg_icon.dart';
 
 /// 首页：选术卡片 grid。读 [visibleTechsProvider]，新术自动出现。
 ///
-/// 点选某术时整体上浮淡出（退出动画），再导航：
-/// - 小六壬：开启「仪式入场动画」时走 `/ritual/xiaoliuren`（太极生六宫过渡）
-/// - 其余 9 术：开启「仪式动画」时走 `/ritual/<tech>`（v2.1.0 + v2.2.0）
-/// - 关闭仪式动画或其余各术直接进 `/tech/:id`
+/// v2.4.2：全面主题感知（浅色模式适配 + 深浅渐变切换）。
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -34,7 +31,7 @@ class _HomePageState extends ConsumerState<HomePage>
   late final AnimationController _entrance;
   late final AnimationController _exit;
   bool _exiting = false;
-  bool _guideExpanded = false; // 首页「使用方法」默认折叠（v2.5.0：用户偏好改为默认收起，点击展开）
+  bool _guideExpanded = false; // 首页「使用方法」默认折叠（v2.5.0 用户偏好）
   final _guideController = ExpansibleController();
 
   @override
@@ -51,7 +48,6 @@ class _HomePageState extends ConsumerState<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowGuide());
   }
 
-  /// 首次启动后弹出「使用方法」，关闭后用 SharedPreferences 记为已读，不再弹。
   Future<void> _maybeShowGuide() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('hasSeenGuide') ?? false) return;
@@ -72,13 +68,6 @@ class _HomePageState extends ConsumerState<HomePage>
     super.dispose();
   }
 
-  /// 点选某术：
-  /// - 该术在 `animationSettings` 中为 true（默认）且有仪式动画：走 `/ritual/<id>`
-  /// - 否则直接进 `/tech/<id>`
-  ///
-  /// 仪式动画结束后会自动 `context.go('/tech/<id>')` 进入操作页。
-  /// v2.3.0: 统一用 `AppConfig.isAnimationEnabled(id)` 控制。
-  /// v2.4.0: 新增 bazi / name_test 仪式动画。
   static const _ritualTechs = {
     'xiaoliuren',
     'zhouyi',
@@ -113,16 +102,18 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   /// 首页置顶的「使用方法」卡片（可展开，默认折叠）。
-  ///
-  /// v2.0.0 升级：trailing 用 [AnimatedExpandIcon] 替换默认 chevron，带呼吸反馈。
   Widget _guideCard() {
+    final c = AppClr.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColors.panel,
+        color: c.panel,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color.fromRGBO(212, 168, 87, 0.30)),
+        border: Border.all(
+            color: c.resolve(
+                const Color.fromRGBO(212, 168, 87, 0.30),
+                const Color.fromRGBO(155, 122, 42, 0.35))),
       ),
       child: ExpansionTile(
         controller: _guideController,
@@ -133,12 +124,12 @@ class _HomePageState extends ConsumerState<HomePage>
         collapsedShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        iconColor: AppColors.gold,
-        collapsedIconColor: AppColors.textSubtitle,
+        iconColor: c.gold,
+        collapsedIconColor: c.textSubtitle,
         dense: true,
         trailing: AnimatedExpandIcon(
           expanded: _guideExpanded,
-          color: _guideExpanded ? AppColors.gold : AppColors.textSubtitle,
+          color: _guideExpanded ? c.gold : c.textSubtitle,
           size: 22,
           onPressed: () {
             if (_guideExpanded) {
@@ -148,14 +139,14 @@ class _HomePageState extends ConsumerState<HomePage>
             }
           },
         ),
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.menu_book, color: AppColors.goldBright, size: 18),
-            SizedBox(width: 6),
+            Icon(Icons.menu_book, color: c.goldBright, size: 18),
+            const SizedBox(width: 6),
             Text(
               '使用方法',
               style: TextStyle(
-                color: AppColors.goldBright,
+                color: c.goldBright,
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2,
@@ -163,63 +154,39 @@ class _HomePageState extends ConsumerState<HomePage>
             ),
           ],
         ),
-        children: const [
+        children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(8, 0, 10, 12),
+            padding: const EdgeInsets.fromLTRB(8, 0, 10, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('1. 单一卜算术起卦',
+                    style: TextStyle(
+                        color: c.goldBright,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+                Text('第一次问大致的问题，第二次问细致的问题。',
+                    style:
+                        TextStyle(color: c.textBody, fontSize: 12, height: 1.5)),
+                const SizedBox(height: 8),
+                Text('2. 多卜算术组合使用',
+                    style: TextStyle(
+                        color: c.goldBright,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold)),
+                Text('先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
+                    style:
+                        TextStyle(color: c.textBody, fontSize: 12, height: 1.5)),
+                const SizedBox(height: 8),
                 Text(
-                  '1. 单一卜算术起卦',
-                  style: TextStyle(
-                    color: AppColors.goldBright,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                    '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
+                    style:
+                        TextStyle(color: c.textBody, fontSize: 12, height: 1.5)),
+                const SizedBox(height: 6),
                 Text(
-                  '第一次问大致的问题，第二次问细致的问题。',
-                  style: TextStyle(
-                    color: AppColors.textBody,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '2. 多卜算术组合使用',
-                  style: TextStyle(
-                    color: AppColors.goldBright,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  '先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
-                  style: TextStyle(
-                    color: AppColors.textBody,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
-                  style: TextStyle(
-                    color: AppColors.textBody,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
-                  style: TextStyle(
-                    color: AppColors.textBody,
-                    fontSize: 12,
-                    height: 1.5,
-                  ),
-                ),
+                    '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
+                    style:
+                        TextStyle(color: c.textBody, fontSize: 12, height: 1.5)),
               ],
             ),
           ),
@@ -231,6 +198,7 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   Widget build(BuildContext context) {
     final techs = ref.watch(visibleTechsProvider);
+    final c = AppClr.of(context);
     return Scaffold(
       body: SafeArea(
         child: AnimatedBuilder(
@@ -253,8 +221,8 @@ class _HomePageState extends ConsumerState<HomePage>
                     slide: 18,
                     child: Text(
                       Branding.appName,
-                      style: const TextStyle(
-                        color: AppColors.goldBright,
+                      style: TextStyle(
+                        color: c.goldBright,
                         fontSize: 42,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 12,
@@ -268,8 +236,8 @@ class _HomePageState extends ConsumerState<HomePage>
                     slide: 14,
                     child: Text(
                       Branding.tagline,
-                      style: const TextStyle(
-                        color: AppColors.textSubtitle,
+                      style: TextStyle(
+                        color: c.textSubtitle,
                         fontSize: 12,
                         letterSpacing: 4,
                       ),
@@ -331,8 +299,8 @@ class _HomePageState extends ConsumerState<HomePage>
                                     ),
                                     Text(
                                       meta.subtitle,
-                                      style: const TextStyle(
-                                        color: AppColors.textSubtitle,
+                                      style: TextStyle(
+                                        color: c.textSubtitle,
                                         fontSize: 11,
                                         letterSpacing: 2,
                                       ),
@@ -341,8 +309,8 @@ class _HomePageState extends ConsumerState<HomePage>
                                     Flexible(
                                       child: Text(
                                         meta.description,
-                                        style: const TextStyle(
-                                          color: AppColors.textBody,
+                                        style: TextStyle(
+                                          color: c.textBody,
                                           fontSize: 11,
                                           height: 1.35,
                                         ),
@@ -366,8 +334,8 @@ class _HomePageState extends ConsumerState<HomePage>
                       padding: const EdgeInsets.only(top: 8, bottom: 16),
                       child: Text(
                         Branding.copyright,
-                        style: const TextStyle(
-                          color: AppColors.textHint,
+                        style: TextStyle(
+                          color: c.textHint,
                           fontSize: 10,
                         ),
                       ),
@@ -375,7 +343,6 @@ class _HomePageState extends ConsumerState<HomePage>
                   ),
                 ],
               ),
-              // 左上角历史记录按钮（v2.3.1：HoverableIconButton 带 hover 反馈）
               Positioned(
                 top: 6,
                 left: 6,
@@ -385,7 +352,6 @@ class _HomePageState extends ConsumerState<HomePage>
                   onPressed: () => _startExit(() => context.go('/history')),
                 ),
               ),
-              // 右上角：使用手册 + 设置按钮
               Positioned(
                 top: 6,
                 right: 6,

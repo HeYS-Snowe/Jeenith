@@ -123,43 +123,51 @@ class AppColorsLight {
   static const Color gradeBad = Color(0xFFA02E0E);
 }
 
-/// 主题感知色板：根据 [BuildContext] 的 brightness 选深/浅色。
+/// 主题感知色板：基于动画插值 t（0=深 1=浅），实现深/浅主题**渐变切换**。
 ///
-/// 浅色适配统一入口，替代直接用 [AppColors]（仅深色）。
+/// t 由根 [ThemeAnimScope] 提供（配合 JeenithApp 的 AnimationController）。
 /// 用法：`context.appClr.card`，或罕见色用 `context.appClr.resolve(深色, 浅色)`。
 class AppClr {
-  const AppClr._(this.isLight);
-  final bool isLight;
+  final double t;
+  const AppClr._(this.t);
 
-  static AppClr of(BuildContext c) =>
-      AppClr._(Theme.of(c).brightness == Brightness.light);
+  static AppClr of(BuildContext c) => AppClr._(ThemeAnimScope.of(c));
 
-  /// 通用：直接传深/浅色二选一（覆盖 AppClr 未提供的色）。
-  Color resolve(Color dark, Color light) => isLight ? light : dark;
+  Color _lerp(Color d, Color l) => Color.lerp(d, l, t)!;
 
-  // —— 常用色快捷 ——
-  Color get bg => isLight ? AppColorsLight.bg : AppColors.bg;
-  Color get bgInner => isLight ? AppColorsLight.bgInner : AppColors.bgInner;
-  Color get bgMid => isLight ? AppColorsLight.bgMid : AppColors.bgMid;
-  Color get panel => isLight ? AppColorsLight.panel : AppColors.panel;
-  Color get card => isLight ? AppColorsLight.card : AppColors.card;
-  Color get gold => isLight ? AppColorsLight.gold : AppColors.gold;
-  Color get goldBright =>
-      isLight ? AppColorsLight.goldBright : AppColors.goldBright;
-  Color get goldLight =>
-      isLight ? AppColorsLight.goldLight : AppColors.goldLight;
-  Color get goldBorder =>
-      isLight ? AppColorsLight.goldBorder : AppColors.goldBorder;
+  /// 通用：插值任意深/浅色。
+  Color resolve(Color dark, Color light) => Color.lerp(dark, light, t)!;
+
+  // —— 常用色快捷（深↔浅插值）——
+  Color get bg => _lerp(AppColors.bg, AppColorsLight.bg);
+  Color get bgInner => _lerp(AppColors.bgInner, AppColorsLight.bgInner);
+  Color get bgMid => _lerp(AppColors.bgMid, AppColorsLight.bgMid);
+  Color get panel => _lerp(AppColors.panel, AppColorsLight.panel);
+  Color get card => _lerp(AppColors.card, AppColorsLight.card);
+  Color get gold => _lerp(AppColors.gold, AppColorsLight.gold);
+  Color get goldBright => _lerp(AppColors.goldBright, AppColorsLight.goldBright);
+  Color get goldLight => _lerp(AppColors.goldLight, AppColorsLight.goldLight);
+  Color get goldBorder => _lerp(AppColors.goldBorder, AppColorsLight.goldBorder);
   Color get textHighlight =>
-      isLight ? AppColorsLight.textHighlight : AppColors.textHighlight;
+      _lerp(AppColors.textHighlight, AppColorsLight.textHighlight);
   Color get textPrimary =>
-      isLight ? AppColorsLight.textPrimary : AppColors.textPrimary;
-  Color get textBody => isLight ? AppColorsLight.textBody : AppColors.textBody;
-  Color get textMeta => isLight ? AppColorsLight.textMeta : AppColors.textMeta;
+      _lerp(AppColors.textPrimary, AppColorsLight.textPrimary);
+  Color get textBody => _lerp(AppColors.textBody, AppColorsLight.textBody);
+  Color get textMeta => _lerp(AppColors.textMeta, AppColorsLight.textMeta);
   Color get textSubtitle =>
-      isLight ? AppColorsLight.textSubtitle : AppColors.textSubtitle;
-  Color get textHint =>
-      isLight ? AppColorsLight.textHint : AppColors.textHint;
+      _lerp(AppColors.textSubtitle, AppColorsLight.textSubtitle);
+  Color get textHint => _lerp(AppColors.textHint, AppColorsLight.textHint);
+}
+
+/// 根级主题动画插值载体（t: 0=深 1=浅）。
+/// 由 JeenithApp 的 AnimationController 驱动，配合 [AppClr] 实现深/浅渐变切换。
+class ThemeAnimScope extends InheritedWidget {
+  final double t;
+  const ThemeAnimScope({super.key, required this.t, required super.child});
+  static double of(BuildContext c) =>
+      c.dependOnInheritedWidgetOfExactType<ThemeAnimScope>()?.t ?? 0.0;
+  @override
+  bool updateShouldNotify(ThemeAnimScope old) => t != old.t;
 }
 
 /// [BuildContext] 便捷扩展：`context.appClr` 取主题感知色板。

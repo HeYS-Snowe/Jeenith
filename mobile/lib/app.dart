@@ -9,37 +9,34 @@ import 'core/rng/rng_providers.dart';
 import 'shared/widgets/starfield.dart';
 import 'router/app_router.dart';
 
-class JeenithApp extends ConsumerWidget {
+class JeenithApp extends ConsumerStatefulWidget {
   const JeenithApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
-    final tracker = ref.watch(touchTrackerProvider);
-    final config = ref.watch(configProvider).valueOrNull;
-    final isLightOuter = _effectiveLight(context, config);
-    return Listener(
-      onPointerMove: tracker.onPointerMove,
-      onPointerHover: tracker.onPointerHover,
-      child: MaterialApp.router(
-        title: '志极',
-        theme: appTheme(isLight: isLightOuter),
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
-        builder: (context, child) {
-          final isLight = _effectiveLight(context, config);
-          return ColoredBox(
-            color: isLight ? AppColorsLight.bg : AppColors.bg,
-            child: Stack(
-              children: [
-                Positioned.fill(child: Starfield(isLight: isLight)),
-                if (child != null) Positioned.fill(child: child),
-              ],
-            ),
-          );
-        },
-      ),
+  ConsumerState<JeenithApp> createState() => _JeenithAppState();
+}
+
+class _JeenithAppState extends ConsumerState<JeenithApp>
+    with TickerProviderStateMixin {
+  /// 主题渐变动画：t=0 深色，t=1 浅色。themeMode 变化时 450ms easeInOutCubic 过渡。
+  late final AnimationController _themeCtrl;
+  bool _isLight = false;
+  bool _firstBuild = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 450),
+      value: 0,
     );
+  }
+
+  @override
+  void dispose() {
+    _themeCtrl.dispose();
+    super.dispose();
   }
 
   /// 根据 themeMode + 系统亮度计算实际是否浅色主题。
@@ -53,5 +50,55 @@ class JeenithApp extends ConsumerWidget {
       case ThemeMode.system:
         return MediaQuery.platformBrightnessOf(context) == Brightness.light;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final router = ref.watch(routerProvider);
+    final tracker = ref.watch(touchTrackerProvider);
+    final config = ref.watch(configProvider).valueOrNull;
+    final isLight = _effectiveLight(context, config);
+
+    // themeMode 变化时驱动渐变动画；首次启动直接设值（避免开场动画）
+    if (isLight != _isLight || _firstBuild) {
+      _isLight = isLight;
+      if (_firstBuild) {
+        _themeCtrl.value = isLight ? 1.0 : 0.0;
+        _firstBuild = false;
+      } else {
+        _themeCtrl.animateTo(isLight ? 1.0 : 0.0,
+            curve: Curves.easeInOutCubic);
+      }
+    }
+
+    return Listener(
+      onPointerMove: tracker.onPointerMove,
+      onPointerHover: tracker.onPointerHover,
+      child: AnimatedBuilder(
+        animation: _themeCtrl,
+        builder: (context, child) => ThemeAnimScope(
+          t: _themeCtrl.value,
+          child: child!,
+        ),
+        child: MaterialApp.router(
+          title: '志极',
+          theme: appTheme(isLight: isLight),
+          routerConfig: router,
+          debugShowCheckedModeBanner: false,
+          builder: (context, child) {
+            final t = ThemeAnimScope.of(context);
+            return ColoredBox(
+              color: Color.lerp(AppColors.bg, AppColorsLight.bg, t)!,
+              child: Stack(
+                children: [
+                  Positioned.fill(child: Starfield(isLight: t >= 0.5)),
+                  if (child != null) Positioned.fill(child: child),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
