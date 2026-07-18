@@ -37,13 +37,13 @@ const _shichenLabels = [
 
 // -- Five-element → color ------------------------------------------------
 
-Color _wuxingColor(String wx) => switch (wx) {
-      '木' => AppColors.wood,
-      '火' => AppColors.fire,
-      '土' => AppColors.earth,
-      '金' => AppColors.metal,
-      '水' => AppColors.waterDeep,
-      _ => AppColors.textBody,
+Color _wuxingColor(String wx, AppClr c) => switch (wx) {
+      '木' => c.wood,
+      '火' => c.fire,
+      '土' => c.earth,
+      '金' => c.metal,
+      '水' => c.waterDeep,
+      _ => c.textBody,
     };
 
 // -- Page ----------------------------------------------------------------
@@ -108,6 +108,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Future<void> _pickDate() async {
+    final c = AppClr.of(context);
     final picked = await showDatePicker(
       context: context,
       initialDate: _birthDate,
@@ -118,10 +119,10 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: AppColors.gold,
+                  primary: c.gold,
                   onPrimary: const Color(0xFF1A1208),
-                  surface: AppColors.bgInner,
-                  onSurface: AppColors.textPrimary,
+                  surface: c.bgInner,
+                  onSurface: c.textPrimary,
                 ),
           ),
           child: child!,
@@ -135,19 +136,20 @@ class _BaziPageState extends ConsumerState<BaziPage> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('八字推演', style: TextStyle(fontSize: 18)),
+            const Text('八字推演', style: TextStyle(fontSize: 18)),
             Text('四 柱 命 理',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -161,13 +163,13 @@ class _BaziPageState extends ConsumerState<BaziPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.cake, color: AppColors.goldBright, size: 16),
-                    SizedBox(width: 6),
+                    Icon(Icons.cake, color: c.goldBright, size: 16),
+                    const SizedBox(width: 6),
                     Text('阳历生辰',
                         style: TextStyle(
-                            color: AppColors.goldBright,
+                            color: c.goldBright,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2)),
@@ -183,26 +185,26 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(20, 16, 28, 0.86),
+                      color: c.bgInner,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.goldBorder),
+                      border: Border.all(color: c.goldBorder),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.calendar_today,
-                            color: AppColors.gold, size: 18),
+                        Icon(Icons.calendar_today,
+                            color: c.gold, size: 18),
                         const SizedBox(width: 10),
                         Text(
                           '${_birthDate.year}年${_birthDate.month}月${_birthDate.day}日',
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
+                          style: TextStyle(
+                            color: c.textPrimary,
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.arrow_drop_down,
-                            color: AppColors.textHint),
+                        Icon(Icons.arrow_drop_down,
+                            color: c.textHint),
                       ],
                     ),
                   ),
@@ -210,29 +212,29 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                 const SizedBox(height: 10),
 
                 // Gender selection
-                const Text('性别',
+                Text('性别',
                     style:
-                        TextStyle(color: AppColors.textBody, fontSize: 12)),
+                        TextStyle(color: c.textBody, fontSize: 12)),
                 const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
                       child: _genderToggle('男', 1,
-                          icon: Icons.male, color: AppColors.waterDeepGlow),
+                          icon: Icons.male, color: c.waterDeepGlow),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: _genderToggle('女', 0,
-                          icon: Icons.female, color: AppColors.fireGlow),
+                          icon: Icons.female, color: c.fireGlow),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
 
                 // Shichen dropdown
-                const Text('时辰（可选）',
+                Text('时辰（可选）',
                     style:
-                        TextStyle(color: AppColors.textBody, fontSize: 12)),
+                        TextStyle(color: c.textBody, fontSize: 12)),
                 const SizedBox(height: 6),
                 _shichenDropdown(),
                 const SizedBox(height: 8),
@@ -242,22 +244,22 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withValues(alpha: 0.08),
+                    color: c.gold.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        color: AppColors.goldBorder.withValues(alpha: 0.5)),
+                        color: c.goldBorder.withValues(alpha: 0.5)),
                   ),
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Icon(Icons.info_outline,
-                          color: AppColors.gold, size: 14),
-                      SizedBox(width: 6),
+                          color: c.gold, size: 14),
+                      const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           '*若时辰未知，可不填写。系统将自动略过时柱与大运推演。*',
                           style: TextStyle(
-                              color: AppColors.textMeta,
+                              color: c.textMeta,
                               fontSize: 11,
                               height: 1.5),
                         ),
@@ -269,8 +271,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(_error!,
-                        style: const TextStyle(
-                            color: AppColors.gradeBad, fontSize: 12)),
+                        style: TextStyle(
+                            color: c.gradeBad, fontSize: 12)),
                   ),
               ],
             ),
@@ -309,42 +311,42 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           const SizedBox(height: 12),
 
           // -- Help panel --
-          const DecorativePanel(
-            padding: EdgeInsets.all(12),
+          DecorativePanel(
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('◆ 八字要诀',
                     style: TextStyle(
-                        color: AppColors.goldBright,
+                        color: c.goldBright,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2)),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text('1. 输入阳历生辰（年月日），时辰可选。',
                     style: TextStyle(
-                        color: AppColors.textBody,
+                        color: c.textBody,
                         fontSize: 12,
                         height: 1.6)),
                 Text('2. 年柱以立春为界，月柱以节气为分。',
                     style: TextStyle(
-                        color: AppColors.textBody,
+                        color: c.textBody,
                         fontSize: 12,
                         height: 1.6)),
                 Text('3. 大运阳男阴女顺排，阴男阳女逆排，每十年一柱。',
                     style: TextStyle(
-                        color: AppColors.textBody,
+                        color: c.textBody,
                         fontSize: 12,
                         height: 1.6)),
                 Text('4. 神煞查表含天乙贵人、文昌、华盖等八星。',
                     style: TextStyle(
-                        color: AppColors.textBody,
+                        color: c.textBody,
                         fontSize: 12,
                         height: 1.6)),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text('注：命格批断基于五行强弱与十神配置，仅供参考。',
                     style: TextStyle(
-                        color: AppColors.textHint,
+                        color: c.textHint,
                         fontSize: 10,
                         height: 1.5)),
               ],
@@ -360,6 +362,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   Widget _genderToggle(String label, int value,
       {required IconData icon, required Color color}) {
     final selected = _gender == value;
+    final c = AppClr.of(context);
     return GestureDetector(
       onTap: () => setState(() => _gender = value),
       child: Container(
@@ -367,20 +370,20 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         decoration: BoxDecoration(
           color: selected
               ? color.withValues(alpha: 0.18)
-              : const Color.fromRGBO(20, 16, 28, 0.86),
+              : c.bgInner,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? color.withValues(alpha: 0.6) : AppColors.goldBorder,
+            color: selected ? color.withValues(alpha: 0.6) : c.goldBorder,
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: selected ? color : AppColors.textHint, size: 18),
+            Icon(icon, color: selected ? color : c.textHint, size: 18),
             const SizedBox(width: 6),
             Text(label,
                 style: TextStyle(
-                  color: selected ? color : AppColors.textBody,
+                  color: selected ? color : c.textBody,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                 )),
@@ -391,36 +394,37 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _shichenDropdown() {
+    final c = AppClr.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(20, 16, 28, 0.86),
+        color: c.bgInner,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.goldBorder),
+        border: Border.all(color: c.goldBorder),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<int?>(
           value: _hourIndex,
           isExpanded: true,
-          hint: const Text('未知（跳过时柱）',
-              style: TextStyle(color: AppColors.textHint, fontSize: 13)),
+          hint: Text('未知（跳过时柱）',
+              style: TextStyle(color: c.textHint, fontSize: 13)),
           items: [
-            const DropdownMenuItem<int?>(
+            DropdownMenuItem<int?>(
               value: null,
               child: Text('未知（跳过时柱）',
-                  style: TextStyle(color: AppColors.textHint, fontSize: 13)),
+                  style: TextStyle(color: c.textHint, fontSize: 13)),
             ),
             for (var i = 0; i < _shichenLabels.length; i++)
               DropdownMenuItem<int?>(
                 value: i,
                 child: Text(_shichenLabels[i],
                     style:
-                        const TextStyle(color: AppColors.textPrimary, fontSize: 13)),
+                        TextStyle(color: c.textPrimary, fontSize: 13)),
               ),
           ],
           onChanged: (v) => setState(() => _hourIndex = v),
-          dropdownColor: AppColors.bgInner,
-          icon: const Icon(Icons.arrow_drop_down, color: AppColors.gold),
+          dropdownColor: c.bgInner,
+          icon: Icon(Icons.arrow_drop_down, color: c.gold),
         ),
       ),
     );
@@ -429,6 +433,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   // -- Result widgets -----------------------------------------------------
 
   Widget _buildResult(BaziResult r) {
+    final c = AppClr.of(context);
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
@@ -448,7 +453,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         Center(
           child: Text(
             '${r.divineTime.toString().substring(0, 19)} 推演',
-            style: const TextStyle(color: AppColors.textHint, fontSize: 11),
+            style: TextStyle(color: c.textHint, fontSize: 11),
           ),
         ),
       ],
@@ -456,6 +461,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildHeader(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -463,11 +469,11 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.person, color: AppColors.goldBright, size: 16),
+              Icon(Icons.person, color: c.goldBright, size: 16),
               const SizedBox(width: 6),
               Text('${r.genderLabel}命 · ${r.solarDisplay}',
-                  style: const TextStyle(
-                      color: AppColors.goldBright,
+                  style: TextStyle(
+                      color: c.goldBright,
                       fontSize: 14,
                       fontWeight: FontWeight.bold)),
             ],
@@ -475,11 +481,11 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           const SizedBox(height: 4),
           Text(r.lunarDisplay,
               style:
-                  const TextStyle(color: AppColors.textBody, fontSize: 13)),
+                  TextStyle(color: c.textBody, fontSize: 13)),
           if (r.startYunDisplay != null) ...[
             const SizedBox(height: 4),
             Text('${r.yunForward ? "顺" : "逆"}排 · ${r.startYunDisplay}',
-                style: const TextStyle(color: AppColors.textMeta, fontSize: 11)),
+                style: TextStyle(color: c.textMeta, fontSize: 11)),
           ],
         ],
       ),
@@ -487,6 +493,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildPillars(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -505,8 +512,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                     child: Text(p.label,
                         style: TextStyle(
                           color: p.label == '日柱'
-                              ? AppColors.goldBright
-                              : AppColors.textSubtitle,
+                              ? c.goldBright
+                              : c.textSubtitle,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
@@ -526,28 +533,23 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
                       color: p.label == '日柱'
-                          ? AppColors.gold.withValues(alpha: 0.1)
-                          : AppColors.bgMid.withValues(alpha: 0.5),
+                          ? c.gold.withValues(alpha: 0.1)
+                          : c.bgMid.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: p.label == '日柱'
-                            ? AppColors.goldBorder
-                            : const Color.fromRGBO(212, 168, 87, 0.15),
-                      ),
+                      border: Border.all(color: c.goldBorder),
                     ),
                     child: Column(
                       children: [
                         Text(p.gan,
                             style: TextStyle(
-                              color: _wuxingColor(
-                                  ganWuxing[p.gan]!),
+                              color: _wuxingColor(ganWuxing[p.gan]!, c),
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             )),
                         Text(p.zhi,
                             style: TextStyle(
                               color: _wuxingColor(
-                                  zhiWuxing[p.zhi] ?? '土'),
+                                  zhiWuxing[p.zhi] ?? '土', c),
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             )),
@@ -571,6 +573,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _pillarDetailRow(String label, List<String> values) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
@@ -578,15 +581,15 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           SizedBox(
             width: 40,
             child: Text(label,
-                style: const TextStyle(
-                    color: AppColors.textSubtitle, fontSize: 11)),
+                style: TextStyle(
+                    color: c.textSubtitle, fontSize: 11)),
           ),
           for (final v in values)
             Expanded(
               child: Text(v,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: AppColors.textBody, fontSize: 11)),
+                  style: TextStyle(
+                      color: c.textBody, fontSize: 11)),
             ),
         ],
       ),
@@ -594,16 +597,17 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildNoTimeWarning() {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Row(
         children: [
-          const Icon(Icons.warning_amber_rounded,
-              color: AppColors.gradeRough, size: 18),
+          Icon(Icons.warning_amber_rounded,
+              color: c.gradeRough, size: 18),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Text('未输入时辰，将略过时柱与大运推演。',
-                style: TextStyle(color: AppColors.textBody, fontSize: 12)),
+                style: TextStyle(color: c.textBody, fontSize: 12)),
           ),
         ],
       ),
@@ -611,6 +615,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildDaYun(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -625,14 +630,10 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
               decoration: BoxDecoration(
                 color: dy.isCurrent
-                    ? AppColors.gold.withValues(alpha: 0.12)
-                    : AppColors.bgMid.withValues(alpha: 0.4),
+                    ? c.gold.withValues(alpha: 0.12)
+                    : c.bgMid.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: dy.isCurrent
-                      ? AppColors.goldBorder
-                      : const Color.fromRGBO(212, 168, 87, 0.15),
-                ),
+                border: Border.all(color: c.goldBorder),
               ),
               child: Row(
                 children: [
@@ -641,8 +642,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                     child: Text(dy.ganZhi,
                         style: TextStyle(
                           color: dy.isCurrent
-                              ? AppColors.goldBright
-                              : AppColors.textPrimary,
+                              ? c.goldBright
+                              : c.textPrimary,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         )),
@@ -650,31 +651,31 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                   Expanded(
                     child: Text(
                         '${dy.startAge}-${dy.endAge}岁 · ${dy.startYear}-${dy.endYear}年',
-                        style: const TextStyle(
-                            color: AppColors.textBody, fontSize: 11)),
+                        style: TextStyle(
+                            color: c.textBody, fontSize: 11)),
                   ),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: _wuxingColor(ganWuxing[dy.ganZhi[0]]!)
+                      color: _wuxingColor(ganWuxing[dy.ganZhi[0]]!, c)
                           .withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(dy.shishenGan,
                         style: TextStyle(
                           color:
-                              _wuxingColor(ganWuxing[dy.ganZhi[0]]!),
+                              _wuxingColor(ganWuxing[dy.ganZhi[0]]!, c),
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
                   if (dy.isCurrent)
-                    const Padding(
-                      padding: EdgeInsets.only(left: 6),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
                       child: Text('当前',
                           style: TextStyle(
-                              color: AppColors.gold,
+                              color: c.gold,
                               fontSize: 10,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -688,6 +689,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
 
   Widget _buildLiuNian(BaziResult r) {
     final ln = r.currentLiuNian;
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -698,26 +700,26 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           Row(
             children: [
               Text(ln.ganZhi,
-                  style: const TextStyle(
-                      color: AppColors.goldBright,
+                  style: TextStyle(
+                      color: c.goldBright,
                       fontSize: 18,
                       fontWeight: FontWeight.bold)),
               const SizedBox(width: 12),
               Text('${ln.year}年 · 虚岁${ln.age}',
-                  style: const TextStyle(
-                      color: AppColors.textBody, fontSize: 13)),
+                  style: TextStyle(
+                      color: c.textBody, fontSize: 13)),
               const Spacer(),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: _wuxingColor(ganWuxing[ln.ganZhi[0]]!)
+                  color: _wuxingColor(ganWuxing[ln.ganZhi[0]]!, c)
                       .withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(ln.shishenGan,
                     style: TextStyle(
-                      color: _wuxingColor(ganWuxing[ln.ganZhi[0]]!),
+                      color: _wuxingColor(ganWuxing[ln.ganZhi[0]]!, c),
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     )),
@@ -730,6 +732,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildShenShas(BaziResult r) {
+    final c = AppClr.of(context);
     if (r.shenshas.isEmpty) {
       return DecorativePanel(
         padding: const EdgeInsets.all(12),
@@ -738,8 +741,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           children: [
             _sectionLabel('神煞'),
             const SizedBox(height: 6),
-            const Text('四柱未见显著神煞。',
-                style: TextStyle(color: AppColors.textMeta, fontSize: 12)),
+            Text('四柱未见显著神煞。',
+                style: TextStyle(color: c.textMeta, fontSize: 12)),
           ],
         ),
       );
@@ -756,7 +759,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
             runSpacing: 6,
             children: r.shenshas.map((s) {
               final isAuspicious = !['亡神'].contains(s.name);
-              final color = isAuspicious ? AppColors.woodGlow : AppColors.fireGlow;
+              final color = isAuspicious ? c.woodGlow : c.fireGlow;
               return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -786,8 +789,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                 padding: const EdgeInsets.only(bottom: 2),
                 child: Text(
                     '${s.name}：${shenshaDescriptions[s.name]}',
-                    style: const TextStyle(
-                        color: AppColors.textMeta, fontSize: 11, height: 1.5)),
+                    style: TextStyle(
+                        color: c.textMeta, fontSize: 11, height: 1.5)),
               ),
         ],
       ),
@@ -795,6 +798,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildMingGe(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -803,8 +807,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           _sectionLabel('命格批断'),
           const SizedBox(height: 6),
           Text(r.mingGe,
-              style: const TextStyle(
-                  color: AppColors.textPrimary,
+              style: TextStyle(
+                  color: c.textPrimary,
                   fontSize: 13,
                   height: 1.7,
                   letterSpacing: 0.5)),
@@ -814,6 +818,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildWuxingAnalysis(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -829,14 +834,14 @@ class _BaziPageState extends ConsumerState<BaziPage> {
                   children: [
                     Text(e.element,
                         style: TextStyle(
-                          color: _wuxingColor(e.element),
+                          color: _wuxingColor(e.element, c),
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                         )),
                     const SizedBox(height: 3),
                     Text(e.score.toStringAsFixed(1),
                         style: TextStyle(
-                          color: _wuxingColor(e.element),
+                          color: _wuxingColor(e.element, c),
                           fontSize: 10,
                         )),
                   ],
@@ -846,8 +851,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           ),
           const SizedBox(height: 10),
           Text(r.wuxingAnalysis,
-              style: const TextStyle(
-                  color: AppColors.textBody,
+              style: TextStyle(
+                  color: c.textBody,
                   fontSize: 12,
                   height: 1.7,
                   letterSpacing: 0.5)),
@@ -857,6 +862,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   }
 
   Widget _buildJieShu(BaziResult r) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -864,11 +870,11 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         children: [
           Row(
             children: [
-              Container(width: 3, height: 14, color: AppColors.fire),
+              Container(width: 3, height: 14, color: c.fire),
               const SizedBox(width: 6),
-              const Text('劫数预警',
+              Text('劫数预警',
                   style: TextStyle(
-                    color: AppColors.fireGlow,
+                    color: c.fireGlow,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
@@ -877,8 +883,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           ),
           const SizedBox(height: 6),
           Text(r.jieShu,
-              style: const TextStyle(
-                  color: AppColors.textBody,
+              style: TextStyle(
+                  color: c.textBody,
                   fontSize: 12,
                   height: 1.7,
                   letterSpacing: 0.5)),
@@ -889,24 +895,27 @@ class _BaziPageState extends ConsumerState<BaziPage> {
 
   // -- Helpers ------------------------------------------------------------
 
-  Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          children: [
-            Container(width: 3, height: 14, color: AppColors.gold),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.goldBright,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
+  Widget _sectionLabel(String text) {
+    final c = AppClr.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Container(width: 3, height: 14, color: c.gold),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: c.goldBright,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   String _buildSummary(BaziResult r) {
     final gz = r.pillars.map((p) => p.ganZhi).join(' ');
