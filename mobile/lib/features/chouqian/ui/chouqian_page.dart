@@ -89,19 +89,20 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('抽　签', style: TextStyle(fontSize: 18)),
+            const Text('抽　签', style: TextStyle(fontSize: 18)),
             Text('百 签 问 运',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -123,8 +124,8 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
             Center(
               child: Text(
                 '第 ${_last!.stick.number} 签',
-                style: const TextStyle(
-                  color: AppColors.goldBright,
+                style: TextStyle(
+                  color: c.goldBright,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 4,
@@ -194,7 +195,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
               border: Border.all(color: const Color(0xFFE8C87A), width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gold.withValues(alpha: 0.3),
+                  color: AppClr.of(context).gold.withValues(alpha: 0.3),
                   blurRadius: 12,
                   spreadRadius: 1,
                 ),
@@ -226,6 +227,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
   Widget _buildResult(ChouqianResult r) {
     final stick = r.stick;
     final gradeColor = _colorForGrade(stick.grade);
+    final c = AppClr.of(context);
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
@@ -260,8 +262,8 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
           Center(
             child: Text(
               stick.title,
-              style: const TextStyle(
-                color: AppColors.goldBright,
+              style: TextStyle(
+                color: c.goldBright,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 8,
@@ -272,15 +274,15 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
             padding: const EdgeInsets.symmetric(
                 vertical: 14, horizontal: 12),
             decoration: BoxDecoration(
-              color: AppColors.bgMid.withValues(alpha: 0.5),
+              color: c.bgMid.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.goldBorder),
+              border: Border.all(color: c.goldBorder),
             ),
             child: Text(
               stick.poem,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: c.textPrimary,
                 fontSize: 15,
                 height: 1.8,
                 letterSpacing: 1,
@@ -290,8 +292,8 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
           _sectionLabel('解曰'),
           Text(
             stick.interpretation,
-            style: const TextStyle(
-              color: AppColors.textBody,
+            style: TextStyle(
+              color: c.textBody,
               fontSize: 13,
               height: 1.6,
             ),
@@ -299,8 +301,8 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
           _sectionLabel('详注'),
           Text(
             stick.detail,
-            style: const TextStyle(
-              color: AppColors.textMeta,
+            style: TextStyle(
+              color: c.textMeta,
               fontSize: 12,
               height: 1.6,
               letterSpacing: 1,
@@ -310,7 +312,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
             child: Text(
               '${r.time.toString().substring(0, 19)} 抽得',
               style:
-                  const TextStyle(color: AppColors.textHint, fontSize: 11),
+                  TextStyle(color: c.textHint, fontSize: 11),
             ),
           ),
         ],
@@ -318,24 +320,27 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          children: [
-            Container(width: 3, height: 14, color: AppColors.gold),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.goldBright,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
+  Widget _sectionLabel(String text) {
+    final c = AppClr.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Container(width: 3, height: 14, color: c.gold),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: c.goldBright,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   /// 生成详细结果文本（供复制）。
   String _buildCopyText(ChouqianResult? r) {
@@ -354,13 +359,16 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
     return sb.toString();
   }
 
-  Color _colorForGrade(StickGrade g) => switch (g) {
-        StickGrade.shangShang => AppColors.gradeGreat,
-        StickGrade.shang => AppColors.gradeGood,
-        StickGrade.zhong => AppColors.gradeSteady,
-        StickGrade.xia => AppColors.gradeRough,
-        StickGrade.xiaXia => AppColors.gradeBad,
-      };
+  Color _colorForGrade(StickGrade g) {
+    final c = AppClr.of(context);
+    return switch (g) {
+      StickGrade.shangShang => c.gradeGreat,
+      StickGrade.shang => c.gradeGood,
+      StickGrade.zhong => c.gradeSteady,
+      StickGrade.xia => c.gradeRough,
+      StickGrade.xiaXia => c.gradeBad,
+    };
+  }
 }
 
 /// 签筒内竹签绘制：忙碌时摇晃，落签时一支升起。

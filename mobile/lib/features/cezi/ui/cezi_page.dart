@@ -74,19 +74,20 @@ class _CeziPageState extends ConsumerState<CeziPage> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('测　字', style: TextStyle(fontSize: 18)),
+            const Text('测　字', style: TextStyle(fontSize: 18)),
             Text('一 字 一 玄 机',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -99,13 +100,13 @@ class _CeziPageState extends ConsumerState<CeziPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Row(
+                Row(
                   children: [
-                    Icon(Icons.edit, color: AppColors.goldBright, size: 16),
-                    SizedBox(width: 6),
+                    Icon(Icons.edit, color: c.goldBright, size: 16),
+                    const SizedBox(width: 6),
                     Text('请输入一个汉字',
                         style: TextStyle(
-                            color: AppColors.goldBright,
+                            color: c.goldBright,
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2)),
@@ -116,8 +117,8 @@ class _CeziPageState extends ConsumerState<CeziPage> {
                   controller: _ctrl,
                   maxLength: 1,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: c.textPrimary,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
@@ -132,7 +133,7 @@ class _CeziPageState extends ConsumerState<CeziPage> {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
                       _error!,
-                      style: const TextStyle(color: AppColors.gradeBad, fontSize: 12),
+                      style: TextStyle(color: c.gradeBad, fontSize: 12),
                     ),
                   ),
               ],
@@ -168,27 +169,27 @@ class _CeziPageState extends ConsumerState<CeziPage> {
               child: _buildResult(_last!),
             ),
           const SizedBox(height: 12),
-          const DecorativePanel(
-            padding: EdgeInsets.all(12),
+          DecorativePanel(
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('◆ 测字要诀',
                     style: TextStyle(
-                        color: AppColors.goldBright,
+                        color: c.goldBright,
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2)),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Text('1. 凝神静气，默念所问之事。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
                 Text('2. 心中浮现一个字，输入此字。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
                 Text('3. 拆字笔画 → 五行属性 → 断语吉凶。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.6)),
-                SizedBox(height: 6),
+                    style: TextStyle(color: c.textBody, fontSize: 12, height: 1.6)),
+                const SizedBox(height: 6),
                 Text('注：笔画按传统康熙字典体计；未收录字按 unicode 哈希估算。',
-                    style: TextStyle(color: AppColors.textHint, fontSize: 10, height: 1.5)),
+                    style: TextStyle(color: c.textHint, fontSize: 10, height: 1.5)),
               ],
             ),
           ),
@@ -199,6 +200,7 @@ class _CeziPageState extends ConsumerState<CeziPage> {
 
   Widget _buildResult(CeziResult r) {
     final wxColor = _colorForWuxing(r.wuxing);
+    final c = AppClr.of(context);
     final enabled =
         ref.watch(configProvider).valueOrNull?.isAnimationEnabled('cezi', AnimationKind.reveal) ?? true;
     return DecorativePanel(
@@ -210,15 +212,15 @@ class _CeziPageState extends ConsumerState<CeziPage> {
             width: 110,
             height: 110,
             decoration: BoxDecoration(
-              color: AppColors.bgMid.withValues(alpha: 0.6),
+              color: c.bgMid.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: wxColor.withValues(alpha: 0.6), width: 2),
             ),
             alignment: Alignment.center,
             child: Text(
               r.inputChar,
-              style: const TextStyle(
-                color: AppColors.textHighlight,
+              style: TextStyle(
+                color: c.textHighlight,
                 fontSize: 64,
                 fontWeight: FontWeight.bold,
               ),
@@ -229,16 +231,16 @@ class _CeziPageState extends ConsumerState<CeziPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _attrChip('笔画', '${r.strokes} 画', AppColors.goldBright),
+              _attrChip('笔画', '${r.strokes} 画', c.goldBright),
               _attrChip('五行', r.wuxing.label, wxColor),
-              _attrChip('性情', r.wuxing.nature, AppColors.textBody),
+              _attrChip('性情', r.wuxing.nature, c.textBody),
             ],
           ),
           _sectionLabel('字形拆解'),
           Text(
             r.strokeAnalysis,
-            style: const TextStyle(
-              color: AppColors.textBody,
+            style: TextStyle(
+              color: c.textBody,
               fontSize: 13,
               height: 1.6,
             ),
@@ -247,15 +249,15 @@ class _CeziPageState extends ConsumerState<CeziPage> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
             decoration: BoxDecoration(
-              color: AppColors.bgMid.withValues(alpha: 0.5),
+              color: c.bgMid.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.goldBorder),
+              border: Border.all(color: c.goldBorder),
             ),
             child: Text(
               r.poem,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
+              style: TextStyle(
+                color: c.textPrimary,
                 fontSize: 14,
                 height: 1.8,
                 letterSpacing: 1,
@@ -265,8 +267,8 @@ class _CeziPageState extends ConsumerState<CeziPage> {
           _sectionLabel('解字'),
           Text(
             r.interpretation,
-            style: const TextStyle(
-              color: AppColors.textBody,
+            style: TextStyle(
+              color: c.textBody,
               fontSize: 13,
               height: 1.6,
             ),
@@ -274,8 +276,8 @@ class _CeziPageState extends ConsumerState<CeziPage> {
           _sectionLabel('详注'),
           Text(
             r.detail,
-            style: const TextStyle(
-              color: AppColors.textMeta,
+            style: TextStyle(
+              color: c.textMeta,
               fontSize: 12,
               height: 1.6,
               letterSpacing: 1,
@@ -284,7 +286,7 @@ class _CeziPageState extends ConsumerState<CeziPage> {
           Center(
             child: Text(
               '${r.time.toString().substring(0, 19)} 测得',
-              style: const TextStyle(color: AppColors.textHint, fontSize: 11),
+              style: TextStyle(color: c.textHint, fontSize: 11),
             ),
           ),
         ],
@@ -293,11 +295,12 @@ class _CeziPageState extends ConsumerState<CeziPage> {
   }
 
   Widget _attrChip(String label, String value, Color color) {
+    final c = AppClr.of(context);
     return Column(
       children: [
         Text(
           label,
-          style: const TextStyle(color: AppColors.textSubtitle, fontSize: 11, letterSpacing: 2),
+          style: TextStyle(color: c.textSubtitle, fontSize: 11, letterSpacing: 2),
         ),
         const SizedBox(height: 4),
         Container(
@@ -321,24 +324,27 @@ class _CeziPageState extends ConsumerState<CeziPage> {
     );
   }
 
-  Widget _sectionLabel(String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          children: [
-            Container(width: 3, height: 14, color: AppColors.gold),
-            const SizedBox(width: 6),
-            Text(
-              text,
-              style: const TextStyle(
-                color: AppColors.goldBright,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
+  Widget _sectionLabel(String text) {
+    final c = AppClr.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Container(width: 3, height: 14, color: c.gold),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: c.goldBright,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   /// 生成详细结果文本（供复制）。
   String _buildCopyText(CeziResult? r) {
@@ -357,11 +363,14 @@ class _CeziPageState extends ConsumerState<CeziPage> {
     return sb.toString();
   }
 
-  Color _colorForWuxing(WuxingAttr w) => switch (w) {
-        WuxingAttr.metal => AppColors.metal,
-        WuxingAttr.wood => AppColors.wood,
-        WuxingAttr.water => AppColors.waterDeep,
-        WuxingAttr.fire => AppColors.fire,
-        WuxingAttr.earth => AppColors.earth,
-      };
+  Color _colorForWuxing(WuxingAttr w) {
+    final c = AppClr.of(context);
+    return switch (w) {
+      WuxingAttr.metal => c.metal,
+      WuxingAttr.wood => c.wood,
+      WuxingAttr.water => c.waterDeep,
+      WuxingAttr.fire => c.fire,
+      WuxingAttr.earth => c.earth,
+    };
+  }
 }
