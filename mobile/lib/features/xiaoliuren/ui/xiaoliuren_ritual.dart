@@ -115,7 +115,7 @@ class _RitualPainter extends CustomPainter {
       canvas.restore();
     }
 
-    // 3. 同心圆：0.20-0.55，4 圈错峰，交替顺逆
+    // 3. 罗盘环：0.20-0.55，4 圈错峰，交替顺逆（金环 + 周边刻度）
     for (var i = 0; i < 4; i++) {
       final rt = _iv(0.20 + i * 0.05, 0.50 + i * 0.05);
       if (rt <= 0) continue;
@@ -127,6 +127,7 @@ class _RitualPainter extends CustomPainter {
       canvas.save();
       canvas.translate(cx, cy);
       canvas.rotate(rot);
+      // 罗盘金环
       canvas.drawCircle(
         Offset.zero,
         rr,
@@ -135,6 +136,23 @@ class _RitualPainter extends CustomPainter {
           ..color = AppColors.gold.withValues(alpha: alpha)
           ..strokeWidth = 1.2,
       );
+      // 罗盘刻度（沿环外侧，每 15° 一格，主刻度更粗）
+      const tickCount = 24;
+      for (var k = 0; k < tickCount; k++) {
+        final ang = k * 2 * math.pi / tickCount;
+        final major = k % 6 == 0;
+        final ca = math.cos(ang);
+        final sa = math.sin(ang);
+        final tickLen = rr * (major ? 0.05 : 0.03);
+        canvas.drawLine(
+          Offset(rr * ca, rr * sa),
+          Offset((rr + tickLen) * ca, (rr + tickLen) * sa),
+          Paint()
+            ..color = AppColors.gold
+                .withValues(alpha: alpha * (major ? 0.9 : 0.5))
+            ..strokeWidth = major ? 1.2 : 0.6,
+        );
+      }
       canvas.restore();
     }
 

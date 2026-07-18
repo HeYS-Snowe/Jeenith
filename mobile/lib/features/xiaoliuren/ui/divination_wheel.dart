@@ -191,9 +191,11 @@ class _WheelPainter extends CustomPainter {
       );
     }
 
-    // —— 刻度（外环 48）——
+    // —— 刻度（外环 48），卜算时旋转（idle 静止）——
+    final tickSpin = s._phase == _Phase.idle ? 0.0 : s.pulse * 0.015;
     canvas.save();
     canvas.translate(cx, cy);
+    canvas.rotate(tickSpin);
     for (var k = 0; k < 48; k++) {
       canvas.rotate(2 * math.pi / 48);
       final major = k % 4 == 0;
