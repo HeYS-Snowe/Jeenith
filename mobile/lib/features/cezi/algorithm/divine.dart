@@ -1,5 +1,5 @@
 // Copyright (c) 2026 Qore
-import 'kangxi_strokes.dart';
+import '../../../data/kangxi_strokes.dart';
 
 /// 五行属性。
 enum WuxingAttr {
