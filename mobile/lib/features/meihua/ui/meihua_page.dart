@@ -93,19 +93,20 @@ class _MeihuaPageState extends State<MeihuaPage>
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('梅花易数', style: TextStyle(fontSize: 18)),
+            const Text('梅花易数', style: TextStyle(fontSize: 18)),
             Text('数 字 起 卦',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -118,17 +119,17 @@ class _MeihuaPageState extends State<MeihuaPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('输入两个正整数（任意可见之数：时辰、字数、人数…）',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12)),
+                Text('输入两个正整数（任意可见之数：时辰、字数、人数…）',
+                    style: TextStyle(color: c.textBody, fontSize: 12)),
                 const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(child: _numField(_c1, '上卦数')),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text('·',
                           style: TextStyle(
-                              color: AppColors.gold, fontSize: 20)),
+                              color: c.gold, fontSize: 20)),
                     ),
                     Expanded(child: _numField(_c2, '下卦数')),
                   ],
@@ -176,6 +177,7 @@ class _MeihuaPageState extends State<MeihuaPage>
       );
 
   Widget _buildResult(MeihuaResult r) {
+    final c = AppClr.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -186,8 +188,8 @@ class _MeihuaPageState extends State<MeihuaPage>
             child: DecorativePanel(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Text('取数 ${_inputs![0]} · ${_inputs![1]}',
-                  style: const TextStyle(
-                      color: AppColors.goldBright,
+                  style: TextStyle(
+                      color: c.goldBright,
                       fontSize: 13,
                       fontWeight: FontWeight.bold)),
             ),
@@ -198,8 +200,8 @@ class _MeihuaPageState extends State<MeihuaPage>
           interval: const Interval(0.08, 0.34),
           child: Center(
             child: Text(r.benName,
-                style: const TextStyle(
-                    color: AppColors.goldBright,
+                style: TextStyle(
+                    color: c.goldBright,
                     fontSize: 60,
                     fontWeight: FontWeight.bold)),
           ),
@@ -210,8 +212,8 @@ class _MeihuaPageState extends State<MeihuaPage>
           interval: const Interval(0.18, 0.42),
           child: Center(
             child: Text('${xiang[r.upName]}${xiang[r.loName]}${r.benName}',
-                style: const TextStyle(
-                    color: AppColors.gold, fontSize: 16, letterSpacing: 4)),
+                style: TextStyle(
+                    color: c.gold, fontSize: 16, letterSpacing: 4)),
           ),
         ),
         const SizedBox(height: 12),
@@ -228,12 +230,12 @@ class _MeihuaPageState extends State<MeihuaPage>
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('动爻',
+                    Text('动爻',
                         style: TextStyle(
-                            color: AppColors.textSubtitle, fontSize: 11)),
+                            color: c.textSubtitle, fontSize: 11)),
                     Text('第${_posLabel(r.dong)}爻',
-                        style: const TextStyle(
-                            color: AppColors.changing,
+                        style: TextStyle(
+                            color: c.changing,
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
                   ],
@@ -252,12 +254,12 @@ class _MeihuaPageState extends State<MeihuaPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('体卦 ${r.tiName}　·　用卦 ${r.yongName}',
-                    style: const TextStyle(
-                        color: AppColors.textBody, fontSize: 13)),
+                    style: TextStyle(
+                        color: c.textBody, fontSize: 13)),
                 const SizedBox(width: 16),
                 Text('→ 之卦 ${r.bianName}',
-                    style: const TextStyle(
-                        color: AppColors.changing,
+                    style: TextStyle(
+                        color: c.changing,
                         fontSize: 14,
                         fontWeight: FontWeight.bold)),
               ],
@@ -272,7 +274,7 @@ class _MeihuaPageState extends State<MeihuaPage>
           child: _buildGuaCiCard(
             title: '本卦卦辞 · ${r.benName}',
             guaName: r.benName,
-            titleColor: AppColors.gold,
+            titleColor: c.gold,
           ),
         ),
         // —— 动爻爻辞 ——
@@ -290,7 +292,7 @@ class _MeihuaPageState extends State<MeihuaPage>
           child: _buildGuaCiCard(
             title: '之卦卦辞 · ${r.bianName}',
             guaName: r.bianName,
-            titleColor: AppColors.changing,
+            titleColor: c.changing,
           ),
         ),
       ],
@@ -305,6 +307,7 @@ class _MeihuaPageState extends State<MeihuaPage>
   }) {
     final ci = HexagramTexts.guaCi(guaName) ?? '';
     final note = HexagramTexts.guaCiNote(guaName) ?? '';
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -318,14 +321,14 @@ class _MeihuaPageState extends State<MeihuaPage>
           if (ci.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(ci,
-                style: const TextStyle(
-                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+                style: TextStyle(
+                    color: c.textBody, fontSize: 14, height: 1.6)),
           ],
           if (note.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(note,
-                style: const TextStyle(
-                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+                style: TextStyle(
+                    color: c.textSubtitle, fontSize: 12, height: 1.5)),
           ],
         ],
       ),
@@ -337,27 +340,28 @@ class _MeihuaPageState extends State<MeihuaPage>
     final posName = HexagramTexts.posName(r.dongPos, r.dongYang);
     final ci = HexagramTexts.yaoCi(r.benName, posName) ?? '';
     final note = HexagramTexts.yaoCiNote(r.benName, posName) ?? '';
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('动爻 · $posName',
-              style: const TextStyle(
-                  color: AppColors.changing,
+              style: TextStyle(
+                  color: c.changing,
                   fontSize: 13,
                   fontWeight: FontWeight.bold)),
           if (ci.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(ci,
-                style: const TextStyle(
-                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+                style: TextStyle(
+                    color: c.textBody, fontSize: 14, height: 1.6)),
           ],
           if (note.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(note,
-                style: const TextStyle(
-                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+                style: TextStyle(
+                    color: c.textSubtitle, fontSize: 12, height: 1.5)),
           ],
         ],
       ),
@@ -403,20 +407,21 @@ class _MeihuaPageState extends State<MeihuaPage>
   }
 
   Widget _trigramChip(String label, String name, String role) {
+    final c = AppClr.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(label,
-            style: const TextStyle(color: AppColors.textSubtitle, fontSize: 11)),
+            style: TextStyle(color: c.textSubtitle, fontSize: 11)),
         const SizedBox(height: 2),
         Text('$name${xiang[name]}',
-            style: const TextStyle(
-                color: AppColors.goldBright,
+            style: TextStyle(
+                color: c.goldBright,
                 fontSize: 18,
                 fontWeight: FontWeight.bold)),
         Text(role,
             style: TextStyle(
-                color: role == '用' ? AppColors.changing : AppColors.wood,
+                color: role == '用' ? c.changing : c.wood,
                 fontSize: 11)),
       ],
     );

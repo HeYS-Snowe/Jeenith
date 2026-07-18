@@ -90,19 +90,20 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   @override
   Widget build(BuildContext context) {
     final r = _result;
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('周　易', style: TextStyle(fontSize: 18)),
+            const Text('周　易', style: TextStyle(fontSize: 18)),
             Text('金 钱 卦',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -126,7 +127,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
                       _sheetCtrl = scrollController;
                       return Container(
                         decoration: BoxDecoration(
-                          color: AppColors.bg.withValues(alpha: 0.95),
+                          color: c.bg.withValues(alpha: 0.95),
                           borderRadius:
                               const BorderRadius.vertical(top: Radius.circular(16)),
                           border: const Border(
@@ -170,7 +171,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   /// 交互区（摇卦/重置/复制/分享）—— pinned header 内容，移动/桌面共用。
   Widget _buildActionBar(ZhouyiResult? r) => Container(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
-        color: AppColors.bg.withValues(alpha: 0.92),
+        color: AppClr.of(context).bg.withValues(alpha: 0.92),
         constraints: const BoxConstraints(minHeight: 80),
         alignment: Alignment.center,
         child: Row(
@@ -246,12 +247,13 @@ class _ZhouyiPageState extends State<ZhouyiPage>
       );
 
   List<Widget> _resultItems(ZhouyiResult? r) {
+    final c = AppClr.of(context);
     if (r == null) {
-      return const [
-        SizedBox(height: 40),
+      return [
+        const SizedBox(height: 40),
         Center(
           child: Text('点击「摇卦」以金钱卦起占',
-              style: TextStyle(color: AppColors.textHint)),
+              style: TextStyle(color: c.textHint)),
         ),
       ];
     }
@@ -262,8 +264,8 @@ class _ZhouyiPageState extends State<ZhouyiPage>
         interval: const Interval(0.0, 0.30),
         child: Center(
           child: Text(r.benName,
-              style: const TextStyle(
-                  color: AppColors.goldBright,
+              style: TextStyle(
+                  color: c.goldBright,
                   fontSize: 72,
                   fontWeight: FontWeight.bold)),
         ),
@@ -274,8 +276,8 @@ class _ZhouyiPageState extends State<ZhouyiPage>
         interval: const Interval(0.10, 0.36),
         child: Center(
           child: Text('$benXiang${r.benName}',
-              style: const TextStyle(
-                  color: AppColors.gold, fontSize: 18, letterSpacing: 4)),
+              style: TextStyle(
+                  color: c.gold, fontSize: 18, letterSpacing: 4)),
         ),
       ),
       const SizedBox(height: 12),
@@ -305,13 +307,13 @@ class _ZhouyiPageState extends State<ZhouyiPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('变爻 ${r.changing.map((i) => _posLabel(i)).join("、")} → 之卦 ${r.bianName}',
-                    style: const TextStyle(
-                        color: AppColors.changing,
+                    style: TextStyle(
+                        color: c.changing,
                         fontSize: 14,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                const Text('老阴(6)/老阳(9)为变爻，阴极生阳、阳极生阴，得之卦。',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 11, height: 1.5)),
+                Text('老阴(6)/老阳(9)为变爻，阴极生阳、阳极生阴，得之卦。',
+                    style: TextStyle(color: c.textBody, fontSize: 11, height: 1.5)),
               ],
             ),
           ),
@@ -321,10 +323,10 @@ class _ZhouyiPageState extends State<ZhouyiPage>
         EntranceItem(
           animation: _anim,
           interval: const Interval(0.38, 0.66),
-          child: const DecorativePanel(
-            padding: EdgeInsets.all(12),
+          child: DecorativePanel(
+            padding: const EdgeInsets.all(12),
             child: Text('无变爻，以本卦卦象为占。',
-                style: TextStyle(color: AppColors.textBody, fontSize: 12)),
+                style: TextStyle(color: c.textBody, fontSize: 12)),
           ),
         ),
       ],
@@ -336,7 +338,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
         child: _buildGuaCiCard(
           title: '本卦卦辞 · ${r.benName}',
           guaName: r.benName,
-          titleColor: AppColors.gold,
+          titleColor: c.gold,
         ),
       ),
       // —— 变爻爻辞列表 ——
@@ -356,7 +358,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
           child: _buildGuaCiCard(
             title: '之卦卦辞 · ${r.bianName}',
             guaName: r.bianName!,
-            titleColor: AppColors.changing,
+            titleColor: c.changing,
           ),
         ),
       ],
@@ -371,6 +373,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   }) {
     final ci = HexagramTexts.guaCi(guaName) ?? '';
     final note = HexagramTexts.guaCiNote(guaName) ?? '';
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -384,14 +387,14 @@ class _ZhouyiPageState extends State<ZhouyiPage>
           if (ci.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(ci,
-                style: const TextStyle(
-                    color: AppColors.textBody, fontSize: 14, height: 1.6)),
+                style: TextStyle(
+                    color: c.textBody, fontSize: 14, height: 1.6)),
           ],
           if (note.isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(note,
-                style: const TextStyle(
-                    color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+                style: TextStyle(
+                    color: c.textSubtitle, fontSize: 12, height: 1.5)),
           ],
         ],
       ),
@@ -404,6 +407,7 @@ class _ZhouyiPageState extends State<ZhouyiPage>
     final posName = HexagramTexts.posName(index, line.yang);
     final ci = HexagramTexts.yaoCi(r.benName, posName) ?? '';
     final note = HexagramTexts.yaoCiNote(r.benName, posName) ?? '';
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: DecorativePanel(
@@ -412,21 +416,21 @@ class _ZhouyiPageState extends State<ZhouyiPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('变爻 · $posName',
-                style: const TextStyle(
-                    color: AppColors.changing,
+                style: TextStyle(
+                    color: c.changing,
                     fontSize: 13,
                     fontWeight: FontWeight.bold)),
             if (ci.isNotEmpty) ...[
               const SizedBox(height: 6),
               Text(ci,
-                  style: const TextStyle(
-                      color: AppColors.textBody, fontSize: 14, height: 1.6)),
+                  style: TextStyle(
+                      color: c.textBody, fontSize: 14, height: 1.6)),
             ],
             if (note.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(note,
-                  style: const TextStyle(
-                      color: AppColors.textSubtitle, fontSize: 12, height: 1.5)),
+                  style: TextStyle(
+                      color: c.textSubtitle, fontSize: 12, height: 1.5)),
             ],
           ],
         ),
@@ -488,15 +492,16 @@ class _ZhouyiPageState extends State<ZhouyiPage>
   }
 
   Widget _trigramChip(String label, String name) {
+    final c = AppClr.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(label,
-            style: const TextStyle(color: AppColors.textSubtitle, fontSize: 11)),
+            style: TextStyle(color: c.textSubtitle, fontSize: 11)),
         const SizedBox(height: 2),
         Text('$name${xiang[name]}',
-            style: const TextStyle(
-                color: AppColors.goldBright,
+            style: TextStyle(
+                color: c.goldBright,
                 fontSize: 18,
                 fontWeight: FontWeight.bold)),
       ],

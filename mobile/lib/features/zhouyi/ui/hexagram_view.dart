@@ -51,7 +51,7 @@ class _HexagramViewState extends State<HexagramView> {
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-        painter: _HexPainter(widget.lines, _revealed),
+        painter: _HexPainter(widget.lines, _revealed, AppClr.of(context)),
         child: const SizedBox.expand(),
       );
 }
@@ -61,7 +61,8 @@ const _posNames = ['初', '二', '三', '四', '五', '上'];
 class _HexPainter extends CustomPainter {
   final List<Line>? lines;
   final int revealed;
-  _HexPainter(this.lines, this.revealed);
+  final AppClr clr;
+  _HexPainter(this.lines, this.revealed, this.clr);
 
   @override
   bool shouldRepaint(_) => true;
@@ -78,10 +79,10 @@ class _HexPainter extends CustomPainter {
     for (var i = 0; i < 6; i++) {
       final y = baseY - i * spacing;
       _drawText(canvas, _posNames[i], Offset(x0 - 18, y),
-          const TextStyle(color: AppColors.textMeta, fontSize: 11),
+          TextStyle(color: clr.textMeta, fontSize: 11),
           align: TextAlign.right);
       _drawText(canvas, _posNames[i], Offset(x1 + 18, y),
-          const TextStyle(color: AppColors.textMeta, fontSize: 11));
+          TextStyle(color: clr.textMeta, fontSize: 11));
 
       if (i >= revealed || lines == null) {
         // 占位：淡线
@@ -89,7 +90,7 @@ class _HexPainter extends CustomPainter {
           Offset(x0, y),
           Offset(x1, y),
           Paint()
-            ..color = AppColors.gold.withValues(alpha: 0.12)
+            ..color = clr.gold.withValues(alpha: 0.12)
             ..strokeWidth = 1,
         );
         continue;
@@ -97,8 +98,8 @@ class _HexPainter extends CustomPainter {
 
       final line = lines![i];
       final color = line.changing
-          ? AppColors.changing
-          : (line.yang ? AppColors.yang : AppColors.yin);
+          ? clr.changing
+          : (line.yang ? clr.yang : clr.yin);
       final p = Paint()
         ..color = color
         ..strokeWidth = 11

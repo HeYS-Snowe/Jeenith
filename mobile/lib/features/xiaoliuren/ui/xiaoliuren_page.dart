@@ -127,7 +127,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('时辰起卦 · 农历${md.display}'),
-        backgroundColor: AppColors.card,
+        backgroundColor: AppClr.of(context).card,
         behavior: SnackBarBehavior.floating,
         duration: const Duration(seconds: 2),
       ),
@@ -169,18 +169,19 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('小　六　壬', style: TextStyle(fontSize: 18)),
+            const Text('小　六　壬', style: TextStyle(fontSize: 18)),
             Text('掐 指 神 课',
                 style: TextStyle(
-                    fontSize: 10, color: AppColors.textSubtitle, letterSpacing: 4)),
+                    fontSize: 10, color: c.textSubtitle, letterSpacing: 4)),
           ],
         ),
       ),
@@ -203,7 +204,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
                       _sheetCtrl = scrollController;
                       return Container(
                         decoration: BoxDecoration(
-                          color: AppColors.bg.withValues(alpha: 0.95),
+                          color: c.bg.withValues(alpha: 0.95),
                           borderRadius:
                               const BorderRadius.vertical(top: Radius.circular(16)),
                           border: const Border(
@@ -246,7 +247,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
   /// 交互区（输入/起卦/操作）—— pinned header 内容，移动/桌面共用。
   Widget _buildActionBar() => Container(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
-        color: AppColors.bg.withValues(alpha: 0.92),
+        color: AppClr.of(context).bg.withValues(alpha: 0.92),
         constraints: const BoxConstraints(minHeight: 150),
         alignment: Alignment.topCenter,
         child: Column(
@@ -391,12 +392,13 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
 
   List<Widget> _resultItems() {
     final r = _result;
+    final c = AppClr.of(context);
     if (r == null) {
-      return const [
-        SizedBox(height: 40),
+      return [
+        const SizedBox(height: 40),
         Center(
           child: Text('输入数字、随机取数或以时辰起卦',
-              style: TextStyle(color: AppColors.textHint)),
+              style: TextStyle(color: c.textHint)),
         ),
       ];
     }
@@ -408,8 +410,8 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Text(
             '取数 ${r.inputNumbers?.join(" ")}　→　${r.cards.map((c) => c.title).join(" · ")}',
-            style: const TextStyle(
-                color: AppColors.goldBright,
+            style: TextStyle(
+                color: c.goldBright,
                 fontSize: 14,
                 fontWeight: FontWeight.bold),
           ),
@@ -452,8 +454,8 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
                         letterSpacing: 2)),
                 const SizedBox(height: 4),
                 Text(r.verdict!.description,
-                    style: const TextStyle(
-                        color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                    style: TextStyle(
+                        color: c.textBody, fontSize: 12, height: 1.5)),
               ],
             ),
           ),
@@ -462,14 +464,15 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
   }
 
   Widget _entropyCard(EntropySample e) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('◆ 本次真随机采样',
+          Text('◆ 本次真随机采样',
               style: TextStyle(
-                  color: Color(0xFF74BCE4),
+                  color: c.waterDeepGlow,
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2)),
@@ -481,13 +484,13 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
                 children: [
                   Expanded(
                       child: Text(s.name,
-                          style: const TextStyle(
-                              color: AppColors.textBody, fontSize: 11))),
+                          style:
+                              TextStyle(color: c.textBody, fontSize: 11))),
                   Text(s.display,
                       style: TextStyle(
                           color: s.succeeded
-                              ? const Color(0xFF7FE3AD)
-                              : AppColors.textSubtitle,
+                              ? c.woodGlow
+                              : c.textSubtitle,
                           fontSize: 11)),
                 ],
               ),

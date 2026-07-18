@@ -138,16 +138,26 @@ class AppClr {
   /// 通用：插值任意深/浅色。
   Color resolve(Color dark, Color light) => Color.lerp(dark, light, t)!;
 
-  // —— 常用色快捷（深↔浅插值）——
+  // —— 背景 ——
   Color get bg => _lerp(AppColors.bg, AppColorsLight.bg);
   Color get bgInner => _lerp(AppColors.bgInner, AppColorsLight.bgInner);
   Color get bgMid => _lerp(AppColors.bgMid, AppColorsLight.bgMid);
+  Color get bgOuter => _lerp(AppColors.bgOuter, AppColorsLight.bgOuter);
+
+  // —— 面板 ——
   Color get panel => _lerp(AppColors.panel, AppColorsLight.panel);
   Color get card => _lerp(AppColors.card, AppColorsLight.card);
+  Color get buttonTop => _lerp(AppColors.buttonTop, AppColorsLight.buttonTop);
+  Color get buttonBottom =>
+      _lerp(AppColors.buttonBottom, AppColorsLight.buttonBottom);
+
+  // —— 鎏金系 ——
   Color get gold => _lerp(AppColors.gold, AppColorsLight.gold);
   Color get goldBright => _lerp(AppColors.goldBright, AppColorsLight.goldBright);
   Color get goldLight => _lerp(AppColors.goldLight, AppColorsLight.goldLight);
   Color get goldBorder => _lerp(AppColors.goldBorder, AppColorsLight.goldBorder);
+
+  // —— 文字 ——
   Color get textHighlight =>
       _lerp(AppColors.textHighlight, AppColorsLight.textHighlight);
   Color get textPrimary =>
@@ -157,6 +167,34 @@ class AppClr {
   Color get textSubtitle =>
       _lerp(AppColors.textSubtitle, AppColorsLight.textSubtitle);
   Color get textHint => _lerp(AppColors.textHint, AppColorsLight.textHint);
+
+  // —— 五行色 ——
+  Color get wood => _lerp(AppColors.wood, AppColorsLight.wood);
+  Color get woodGlow => _lerp(AppColors.woodGlow, AppColorsLight.woodGlow);
+  Color get water => _lerp(AppColors.water, AppColorsLight.water);
+  Color get waterGlow => _lerp(AppColors.waterGlow, AppColorsLight.waterGlow);
+  Color get fire => _lerp(AppColors.fire, AppColorsLight.fire);
+  Color get fireGlow => _lerp(AppColors.fireGlow, AppColorsLight.fireGlow);
+  Color get metal => _lerp(AppColors.metal, AppColorsLight.metal);
+  Color get metalGlow => _lerp(AppColors.metalGlow, AppColorsLight.metalGlow);
+  Color get waterDeep => _lerp(AppColors.waterDeep, AppColorsLight.waterDeep);
+  Color get waterDeepGlow =>
+      _lerp(AppColors.waterDeepGlow, AppColorsLight.waterDeepGlow);
+  Color get earth => _lerp(AppColors.earth, AppColorsLight.earth);
+  Color get earthGlow => _lerp(AppColors.earthGlow, AppColorsLight.earthGlow);
+
+  // —— 周易爻色 ——
+  Color get yang => _lerp(AppColors.yang, AppColorsLight.yang);
+  Color get yin => _lerp(AppColors.yin, AppColorsLight.yin);
+  Color get changing => _lerp(AppColors.changing, AppColorsLight.changing);
+
+  // —— 断语分级色 ——
+  Color get gradeGreat => _lerp(AppColors.gradeGreat, AppColorsLight.gradeGreat);
+  Color get gradeGood => _lerp(AppColors.gradeGood, AppColorsLight.gradeGood);
+  Color get gradeSteady =>
+      _lerp(AppColors.gradeSteady, AppColorsLight.gradeSteady);
+  Color get gradeRough => _lerp(AppColors.gradeRough, AppColorsLight.gradeRough);
+  Color get gradeBad => _lerp(AppColors.gradeBad, AppColorsLight.gradeBad);
 }
 
 /// 根级主题动画插值载体（t: 0=深 1=浅）。

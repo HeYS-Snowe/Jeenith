@@ -81,19 +81,20 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('掷　筊', style: TextStyle(fontSize: 18)),
+            const Text('掷　筊', style: TextStyle(fontSize: 18)),
             Text('杯 筊 问 事',
                 style: TextStyle(
                     fontSize: 10,
-                    color: AppColors.textSubtitle,
+                    color: c.textSubtitle,
                     letterSpacing: 4)),
           ],
         ),
@@ -166,23 +167,23 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
                   children: [
                     Row(
                       children: [
-                        const Text('本轮',
+                        Text('本轮',
                             style: TextStyle(
-                                color: AppColors.textSubtitle, fontSize: 12)),
+                                color: c.textSubtitle, fontSize: 12)),
                         const SizedBox(width: 8),
                         Text('${_round.length} 筊',
-                            style: const TextStyle(
-                                color: AppColors.goldBright,
+                            style: TextStyle(
+                                color: c.goldBright,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold)),
                         const SizedBox(width: 16),
-                        const Text('圣筊',
+                        Text('圣筊',
                             style: TextStyle(
-                                color: AppColors.textSubtitle, fontSize: 12)),
+                                color: c.textSubtitle, fontSize: 12)),
                         const SizedBox(width: 8),
                         Text('$_shengCount',
-                            style: const TextStyle(
-                                color: AppColors.gradeGreat,
+                            style: TextStyle(
+                                color: c.gradeGreat,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -190,14 +191,14 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
                     const SizedBox(height: 8),
                     if (_last != null)
                       Text(_last!.type.meaning,
-                          style: const TextStyle(
-                              color: AppColors.textBody,
+                          style: TextStyle(
+                              color: c.textBody,
                               fontSize: 12,
                               height: 1.5)),
                     const SizedBox(height: 6),
-                    const Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
+                    Text('传统连掷三圣筊为确证。阳面为平面（凸背为阴）。',
                         style:
-                            TextStyle(color: AppColors.textHint, fontSize: 11)),
+                            TextStyle(color: c.textHint, fontSize: 11)),
                   ],
                 ),
               ),
@@ -274,9 +275,12 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
     return sb.toString();
   }
 
-  Color _colorFor(JiaoType t) => switch (t) {
-        JiaoType.sheng => AppColors.gradeGreat,
-        JiaoType.xiao => AppColors.goldBright,
-        JiaoType.yin => AppColors.gradeBad,
-      };
+  Color _colorFor(JiaoType t) {
+    final c = AppClr.of(context);
+    return switch (t) {
+      JiaoType.sheng => c.gradeGreat,
+      JiaoType.xiao => c.goldBright,
+      JiaoType.yin => c.gradeBad,
+    };
+  }
 }
