@@ -9,11 +9,17 @@ import '../../core/theme/app_theme.dart';
 /// 解决两类常见困惑：
 /// 1. 出生时间在时辰边界上时如何取舍（辰时 vs 巳时、8 还是 9）；
 /// 2. 不同术数采用的历法体系不同（农历 vs 节气干支历），避免混用导致排盘错误。
-class ManualPage extends StatelessWidget {
+class ManualPage extends StatefulWidget {
   const ManualPage({super.key});
 
   @override
+  State<ManualPage> createState() => _ManualPageState();
+}
+
+class _ManualPageState extends State<ManualPage> {
+  @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -37,8 +43,8 @@ class ManualPage extends StatelessWidget {
             _paragraph(
                 '子 23-1 · 丑 1-3 · 寅 3-5 · 卯 5-7 · 辰 7-9 · 巳 9-11 · '
                 '午 11-13 · 未 13-15 · 申 15-17 · 酉 17-19 · 戌 19-21 · 亥 21-23'),
-            const Divider(
-                color: Color.fromRGBO(212, 168, 87, 0.22), height: 18),
+            Divider(
+                color: c.goldBorder, height: 18),
             _qa(
               '我的公历出生年月日是 2006 年 12 月 3 日上午 8:40-9:00，母亲 9:15 左右出手术室，我在她前面出。到底是辰时还是巳时？',
               '8:40-9:00 之间出生，整体落在辰时（7-9 点）范围内。即便 9:00 整点出生，仍属辰时；'
@@ -126,14 +132,15 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _section(String title, List<Widget> body) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(
-                  color: AppColors.gold,
+              style: TextStyle(
+                  color: c.gold,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2)),
@@ -145,12 +152,13 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _panel(List<Widget> children) {
+    final c = AppClr.of(context);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.panel,
+        color: c.panel,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color.fromRGBO(212, 168, 87, 0.22)),
+        border: Border.all(color: c.goldBorder),
       ),
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
       child: Column(
@@ -161,22 +169,24 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _subTitle(String text) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 4),
       child: Text(text,
-          style: const TextStyle(
-              color: AppColors.goldBright,
+          style: TextStyle(
+              color: c.goldBright,
               fontSize: 13,
               fontWeight: FontWeight.bold)),
     );
   }
 
   Widget _paragraph(String text, {bool emphasis = false}) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(text,
           style: TextStyle(
-              color: emphasis ? AppColors.goldBright : AppColors.textBody,
+              color: emphasis ? c.goldBright : c.textBody,
               fontSize: 12,
               height: 1.6,
               fontWeight: emphasis ? FontWeight.bold : FontWeight.normal)),
@@ -184,17 +194,18 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _bullet(String text) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 8, bottom: 4),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('· ',
-              style: TextStyle(color: AppColors.gold, fontSize: 12)),
+          Text('· ',
+              style: TextStyle(color: c.gold, fontSize: 12)),
           Expanded(
             child: Text(text,
-                style: const TextStyle(
-                    color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                style: TextStyle(
+                    color: c.textBody, fontSize: 12, height: 1.5)),
           ),
         ],
       ),
@@ -202,26 +213,28 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _numItem(int n, String title, String body) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('$n. $title',
-              style: const TextStyle(
-                  color: AppColors.goldBright,
+              style: TextStyle(
+                  color: c.goldBright,
                   fontSize: 13,
                   fontWeight: FontWeight.bold)),
           const SizedBox(height: 2),
           Text(body,
-              style: const TextStyle(
-                  color: AppColors.textBody, fontSize: 12, height: 1.5)),
+              style: TextStyle(
+                  color: c.textBody, fontSize: 12, height: 1.5)),
         ],
       ),
     );
   }
 
   Widget _qa(String question, String answer) {
+    final c = AppClr.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Column(
@@ -230,15 +243,15 @@ class ManualPage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Q：',
+              Text('Q：',
                   style: TextStyle(
-                      color: AppColors.gold,
+                      color: c.gold,
                       fontSize: 12,
                       fontWeight: FontWeight.bold)),
               Expanded(
                 child: Text(question,
-                    style: const TextStyle(
-                        color: AppColors.goldBright,
+                    style: TextStyle(
+                        color: c.goldBright,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         height: 1.5)),
@@ -249,15 +262,15 @@ class ManualPage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('A：',
+              Text('A：',
                   style: TextStyle(
-                      color: AppColors.gold,
+                      color: c.gold,
                       fontSize: 12,
                       fontWeight: FontWeight.bold)),
               Expanded(
                 child: Text(answer,
-                    style: const TextStyle(
-                        color: AppColors.textBody,
+                    style: TextStyle(
+                        color: c.textBody,
                         fontSize: 12,
                         height: 1.6)),
               ),
@@ -269,6 +282,7 @@ class ManualPage extends StatelessWidget {
   }
 
   Widget _calendarTable() {
+    final c = AppClr.of(context);
     final rows = <List<String>>[
       ['术数', '历法体系', '换年节点'],
       ['紫微斗数', '农历', '正月初一'],
@@ -288,14 +302,13 @@ class ManualPage extends StatelessWidget {
         1: FlexColumnWidth(2),
         2: FlexColumnWidth(2),
       },
-      border: TableBorder.all(
-          color: const Color.fromRGBO(212, 168, 87, 0.30), width: 0.6),
+      border: TableBorder.all(color: c.goldBorder, width: 0.6),
       children: [
         for (var i = 0; i < rows.length; i++)
           TableRow(
             decoration: BoxDecoration(
               color: i == 0
-                  ? const Color.fromRGBO(212, 168, 87, 0.12)
+                  ? c.gold.withValues(alpha: 0.12)
                   : Colors.transparent,
             ),
             children: [
@@ -306,8 +319,8 @@ class ManualPage extends StatelessWidget {
                   child: Text(cell,
                       style: TextStyle(
                           color: i == 0
-                              ? AppColors.goldBright
-                              : AppColors.textBody,
+                              ? c.goldBright
+                              : c.textBody,
                           fontSize: 11,
                           fontWeight:
                               i == 0 ? FontWeight.bold : FontWeight.normal,
