@@ -14,15 +14,20 @@ class DecorativePanel extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: AppColors.panel,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              Border.all(color: const Color.fromRGBO(212, 168, 87, 0.24)),
-        ),
-        padding: padding,
-        child: child,
-      );
+  Widget build(BuildContext context) {
+    final c = AppClr.of(context);
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.panel,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+            color: c.resolve(
+                const Color.fromRGBO(212, 168, 87, 0.24),
+                const Color.fromRGBO(155, 122, 42, 0.30))),
+      ),
+      padding: padding,
+      child: child,
+    );
+  }
 }

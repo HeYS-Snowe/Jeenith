@@ -123,6 +123,50 @@ class AppColorsLight {
   static const Color gradeBad = Color(0xFFA02E0E);
 }
 
+/// 主题感知色板：根据 [BuildContext] 的 brightness 选深/浅色。
+///
+/// 浅色适配统一入口，替代直接用 [AppColors]（仅深色）。
+/// 用法：`context.appClr.card`，或罕见色用 `context.appClr.resolve(深色, 浅色)`。
+class AppClr {
+  const AppClr._(this.isLight);
+  final bool isLight;
+
+  static AppClr of(BuildContext c) =>
+      AppClr._(Theme.of(c).brightness == Brightness.light);
+
+  /// 通用：直接传深/浅色二选一（覆盖 AppClr 未提供的色）。
+  Color resolve(Color dark, Color light) => isLight ? light : dark;
+
+  // —— 常用色快捷 ——
+  Color get bg => isLight ? AppColorsLight.bg : AppColors.bg;
+  Color get bgInner => isLight ? AppColorsLight.bgInner : AppColors.bgInner;
+  Color get bgMid => isLight ? AppColorsLight.bgMid : AppColors.bgMid;
+  Color get panel => isLight ? AppColorsLight.panel : AppColors.panel;
+  Color get card => isLight ? AppColorsLight.card : AppColors.card;
+  Color get gold => isLight ? AppColorsLight.gold : AppColors.gold;
+  Color get goldBright =>
+      isLight ? AppColorsLight.goldBright : AppColors.goldBright;
+  Color get goldLight =>
+      isLight ? AppColorsLight.goldLight : AppColors.goldLight;
+  Color get goldBorder =>
+      isLight ? AppColorsLight.goldBorder : AppColors.goldBorder;
+  Color get textHighlight =>
+      isLight ? AppColorsLight.textHighlight : AppColors.textHighlight;
+  Color get textPrimary =>
+      isLight ? AppColorsLight.textPrimary : AppColors.textPrimary;
+  Color get textBody => isLight ? AppColorsLight.textBody : AppColors.textBody;
+  Color get textMeta => isLight ? AppColorsLight.textMeta : AppColors.textMeta;
+  Color get textSubtitle =>
+      isLight ? AppColorsLight.textSubtitle : AppColors.textSubtitle;
+  Color get textHint =>
+      isLight ? AppColorsLight.textHint : AppColors.textHint;
+}
+
+/// [BuildContext] 便捷扩展：`context.appClr` 取主题感知色板。
+extension AppClrContext on BuildContext {
+  AppClr get appClr => AppClr.of(this);
+}
+
 /// 字体常量。
 class AppFonts {
   AppFonts._();

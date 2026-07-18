@@ -5,13 +5,14 @@ import '../../core/theme/app_theme.dart';
 
 class SectionTitle extends StatelessWidget {
   final String text;
-  const SectionTitle(this.text, {super.key});
+  final Color? color;
+  const SectionTitle(this.text, {super.key, this.color});
 
   @override
   Widget build(BuildContext context) => Text(
         '◆ $text',
-        style: const TextStyle(
-          color: AppColors.gold,
+        style: TextStyle(
+          color: color ?? AppClr.of(context).gold,
           fontSize: 14,
           fontWeight: FontWeight.bold,
           letterSpacing: 2,

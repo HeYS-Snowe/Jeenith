@@ -13,6 +13,8 @@ import '../../shared/widgets/decorative_panel.dart';
 import '../../shared/widgets/divination_loading_indicator.dart';
 
 /// 历史记录页：列表 + 详情 + 备注 + 删除。
+///
+/// v2.4.2：全面主题感知（浅色模式适配）。
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
   @override
@@ -53,52 +55,55 @@ class _HistoryPageState extends State<HistoryPage> {
     await Clipboard.setData(ClipboardData(text: buf.toString().trimRight()));
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('已复制到剪贴板'),
-        backgroundColor: AppColors.card,
+      SnackBar(
+        content: const Text('已复制到剪贴板'),
+        backgroundColor: AppClr.of(context).card,
         behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
 
   void _openDetail(HistoryEntry e) {
+    final c = AppClr.of(context);
+    final gradeBad = c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad);
     final noteCtrl = TextEditingController(text: e.note ?? '');
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.card,
+        backgroundColor: c.card,
         title: Text('${e.techName} · ${e.summary}',
-            style: const TextStyle(color: AppColors.goldBright, fontSize: 15, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                color: c.goldBright,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
         content: SizedBox(
           width: double.maxFinite,
           child: ListView(
             shrinkWrap: true,
             children: [
               Text('时间：${e.time.toString().substring(0, 19)}',
-                  style: const TextStyle(color: AppColors.textMeta, fontSize: 12)),
+                  style: TextStyle(color: c.textMeta, fontSize: 12)),
               const SizedBox(height: 8),
               Text(e.detail,
-                  style: const TextStyle(color: AppColors.textBody, fontSize: 12, height: 1.5)),
+                  style: TextStyle(color: c.textBody, fontSize: 12, height: 1.5)),
               const SizedBox(height: 12),
               TextField(
                 controller: noteCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: '添加备注…',
-                  hintStyle: TextStyle(color: AppColors.textHint),
+                  hintStyle: TextStyle(color: c.textHint),
                 ),
-                style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+                style: TextStyle(color: c.textPrimary, fontSize: 13),
               ),
             ],
           ),
         ),
         actions: [
           TextButton(
-            onPressed: () async {
-              await _copyEntry(e);
-            },
-            child: const Text('复制', style: TextStyle(color: AppColors.goldBright)),
+            onPressed: () async => _copyEntry(e),
+            child: Text('复制', style: TextStyle(color: c.goldBright)),
           ),
           TextButton(
             onPressed: () async {
@@ -107,16 +112,17 @@ class _HistoryPageState extends State<HistoryPage> {
               Navigator.pop(ctx);
               _reload();
             },
-            child: const Text('删除', style: TextStyle(color: AppColors.gradeBad)),
+            child: Text('删除', style: TextStyle(color: gradeBad)),
           ),
           TextButton(
             onPressed: () async {
-              await HistoryStore.updateNote(e.id, noteCtrl.text.trim().isEmpty ? null : noteCtrl.text.trim());
+              await HistoryStore.updateNote(e.id,
+                  noteCtrl.text.trim().isEmpty ? null : noteCtrl.text.trim());
               if (!ctx.mounted) return;
               Navigator.pop(ctx);
               _reload();
             },
-            child: const Text('保存备注', style: TextStyle(color: AppColors.gold)),
+            child: Text('保存备注', style: TextStyle(color: c.gold)),
           ),
         ],
       ),
@@ -124,18 +130,23 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   void _confirmClear() {
+    final c = AppClr.of(context);
+    final gradeBad = c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.card,
-        title: const Text('清空全部历史',
-            style: TextStyle(color: AppColors.goldBright, fontSize: 15, fontWeight: FontWeight.bold)),
-        content: const Text('此操作不可撤销，确定清空所有卜算历史记录？',
-            style: TextStyle(color: AppColors.textBody, fontSize: 13, height: 1.5)),
+        backgroundColor: c.card,
+        title: Text('清空全部历史',
+            style: TextStyle(
+                color: c.goldBright,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        content: Text('此操作不可撤销，确定清空所有卜算历史记录？',
+            style: TextStyle(color: c.textBody, fontSize: 13, height: 1.5)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('取消', style: TextStyle(color: AppColors.textSubtitle)),
+            child: Text('取消', style: TextStyle(color: c.textSubtitle)),
           ),
           TextButton(
             onPressed: () async {
@@ -144,7 +155,7 @@ class _HistoryPageState extends State<HistoryPage> {
               Navigator.pop(ctx);
               _reload();
             },
-            child: const Text('清空', style: TextStyle(color: AppColors.gradeBad)),
+            child: Text('清空', style: TextStyle(color: gradeBad)),
           ),
         ],
       ),
@@ -156,11 +167,11 @@ class _HistoryPageState extends State<HistoryPage> {
     if (!mounted) return;
     if (list.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('暂无历史记录可导出'),
-          backgroundColor: AppColors.card,
+        SnackBar(
+          content: const Text('暂无历史记录可导出'),
+          backgroundColor: AppClr.of(context).card,
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
       return;
@@ -184,6 +195,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -194,7 +206,7 @@ class _HistoryPageState extends State<HistoryPage> {
         actions: [
           if (_list.isNotEmpty)
             PopupMenuButton<String>(
-              icon: const Icon(Icons.ios_share, color: AppColors.gold),
+              icon: Icon(Icons.ios_share, color: c.gold),
               tooltip: '导出历史',
               onSelected: _export,
               itemBuilder: (ctx) => const [
@@ -205,7 +217,8 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
           if (_list.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.delete_sweep, color: AppColors.gradeBad),
+              icon: Icon(Icons.delete_sweep,
+                  color: c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad)),
               tooltip: '清空全部历史',
               onPressed: _confirmClear,
             ),
@@ -214,8 +227,9 @@ class _HistoryPageState extends State<HistoryPage> {
       body: _loading
           ? const Center(child: DivinationLoadingIndicator(size: 56))
           : _list.isEmpty
-              ? const Center(
-                  child: Text('暂无历史记录', style: TextStyle(color: AppColors.textHint)),
+              ? Center(
+                  child: Text('暂无历史记录',
+                      style: TextStyle(color: c.textHint)),
                 )
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
@@ -225,14 +239,15 @@ class _HistoryPageState extends State<HistoryPage> {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: DecorativePanel(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
                         child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        title: Text('${e.techName} · ${e.summary}',
-                              style: const TextStyle(
-                                  color: AppColors.goldBright,
+                          contentPadding: EdgeInsets.zero,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          title: Text('${e.techName} · ${e.summary}',
+                              style: TextStyle(
+                                  color: c.goldBright,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold)),
                           subtitle: Column(
@@ -240,26 +255,27 @@ class _HistoryPageState extends State<HistoryPage> {
                             children: [
                               const SizedBox(height: 2),
                               Text(e.time.toString().substring(0, 19),
-                                  style: const TextStyle(color: AppColors.textMeta, fontSize: 11)),
+                                  style: TextStyle(
+                                      color: c.textMeta, fontSize: 11)),
                               if (e.note != null && e.note!.isNotEmpty)
                                 Text('备注：${e.note}',
-                                    style: const TextStyle(color: AppColors.textBody, fontSize: 12)),
+                                    style: TextStyle(
+                                        color: c.textBody, fontSize: 12)),
                             ],
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.copy_all,
-                                    color: AppColors.textSubtitle, size: 20),
+                                icon: Icon(Icons.copy_all,
+                                    color: c.textSubtitle, size: 20),
                                 tooltip: '复制',
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(
                                     minWidth: 36, minHeight: 36),
                                 onPressed: () => _copyEntry(e),
                               ),
-                              const Icon(Icons.chevron_right,
-                                  color: AppColors.textSubtitle),
+                              Icon(Icons.chevron_right, color: c.textSubtitle),
                             ],
                           ),
                           onTap: () => _openDetail(e),
