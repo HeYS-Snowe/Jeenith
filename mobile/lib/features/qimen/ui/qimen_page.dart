@@ -74,18 +74,19 @@ class _QimenPageState extends ConsumerState<QimenPage> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/'),
         ),
-        title: const Column(
+        title: Column(
           children: [
-            Text('奇门遁甲', style: TextStyle(fontSize: 18)),
+            const Text('奇门遁甲', style: TextStyle(fontSize: 18)),
             Text('时 家 奇 门',
                 style: TextStyle(
-                    fontSize: 10, color: AppColors.textSubtitle, letterSpacing: 4)),
+                    fontSize: 10, color: c.textSubtitle, letterSpacing: 4)),
           ],
         ),
       ),
@@ -97,8 +98,8 @@ class _QimenPageState extends ConsumerState<QimenPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('公历时辰（年 月 日 时 0-23）',
-                    style: TextStyle(color: AppColors.textBody, fontSize: 12)),
+                Text('公历时辰（年 月 日 时 0-23）',
+                    style: TextStyle(color: c.textBody, fontSize: 12)),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -121,7 +122,7 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                     label: const Text('获取当前时间',
                         style: TextStyle(fontSize: 12)),
                     style: TextButton.styleFrom(
-                      foregroundColor: AppColors.goldBright,
+                      foregroundColor: c.goldBright,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 2),
                       minimumSize: const Size(0, 28),
@@ -201,8 +202,9 @@ class _QimenPageState extends ConsumerState<QimenPage> {
 
   Widget _buildResult(QimenResult r) {
     final p = r.plate;
+    final c = AppClr.of(context);
     final dunColor =
-        r.dunType == '阳遁' ? AppColors.gold : AppColors.waterDeepGlow;
+        r.dunType == '阳遁' ? c.gold : c.waterDeepGlow;
     final enabled = ref
             .watch(configProvider)
             .valueOrNull
@@ -216,14 +218,14 @@ class _QimenPageState extends ConsumerState<QimenPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(p.lunarDisplay,
-                style: const TextStyle(
-                    color: AppColors.goldBright,
+                style: TextStyle(
+                    color: c.goldBright,
                     fontSize: 14,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             Text('八字：${p.bazi}',
-                style: const TextStyle(
-                    color: AppColors.textBody, fontSize: 13)),
+                style: TextStyle(
+                    color: c.textBody, fontSize: 13)),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -235,15 +237,15 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                         letterSpacing: 4)),
                 const SizedBox(width: 16),
                 Text('第 ${r.ju} 局',
-                    style: const TextStyle(
-                        color: AppColors.fireGlow,
+                    style: TextStyle(
+                        color: c.fireGlow,
                         fontSize: 18,
                         fontWeight: FontWeight.bold)),
                 const Spacer(),
                 if (p.jieqi.isNotEmpty)
                   Text(p.jieqi,
-                      style: const TextStyle(
-                          color: AppColors.textMeta, fontSize: 13)),
+                      style: TextStyle(
+                          color: c.textMeta, fontSize: 13)),
               ],
             ),
             const SizedBox(height: 8),
@@ -251,29 +253,29 @@ class _QimenPageState extends ConsumerState<QimenPage> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: AppColors.gold.withValues(alpha: 0.08),
+                color: c.gold.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: AppColors.goldBorder, width: 1),
+                border: Border.all(color: c.goldBorder, width: 1),
               ),
               child: Row(
                 children: [
-                  const Text('值符',
+                  Text('值符',
                       style: TextStyle(
-                          color: AppColors.textMeta, fontSize: 11)),
+                          color: c.textMeta, fontSize: 11)),
                   const SizedBox(width: 6),
                   Text('${p.zhiFu}·${palaceNames[p.zhiFuGong - 1]}宫',
-                      style: const TextStyle(
-                          color: AppColors.goldBright,
+                      style: TextStyle(
+                          color: c.goldBright,
                           fontSize: 13,
                           fontWeight: FontWeight.bold)),
                   const SizedBox(width: 16),
-                  const Text('值使',
+                  Text('值使',
                       style: TextStyle(
-                          color: AppColors.textMeta, fontSize: 11)),
+                          color: c.textMeta, fontSize: 11)),
                   const SizedBox(width: 6),
                   Text('${p.zhiShi}·${palaceNames[p.zhiShiGong - 1]}宫',
-                      style: const TextStyle(
-                          color: AppColors.woodGlow,
+                      style: TextStyle(
+                          color: c.woodGlow,
                           fontSize: 13,
                           fontWeight: FontWeight.bold)),
                 ],
@@ -283,9 +285,9 @@ class _QimenPageState extends ConsumerState<QimenPage> {
         ),
       ),
       sections: [
-        const Text('◆ 局盘九宫（天地人神四盘叠加）',
+        Text('◆ 局盘九宫（天地人神四盘叠加）',
             style: TextStyle(
-                color: AppColors.gold,
+                color: c.gold,
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2)),
@@ -304,17 +306,17 @@ class _QimenPageState extends ConsumerState<QimenPage> {
             ],
           ),
         ),
-        const Text('◆ 四盘详表',
+        Text('◆ 四盘详表',
             style: TextStyle(
-                color: AppColors.gold,
+                color: c.gold,
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2)),
-        _buildPanTable('天盘九星', p.tianPanXing, AppColors.goldBright),
-        _buildPanTable('地盘九干', p.diPanGan, AppColors.textPrimary),
-        _buildPanTable('人盘八门', p.renPanMen, AppColors.woodGlow,
+        _buildPanTable('天盘九星', p.tianPanXing, c.goldBright),
+        _buildPanTable('地盘九干', p.diPanGan, c.textPrimary),
+        _buildPanTable('人盘八门', p.renPanMen, c.woodGlow,
             skipEmpty: true),
-        _buildPanTable('神盘八神', p.shenPanShen, AppColors.waterDeepGlow,
+        _buildPanTable('神盘八神', p.shenPanShen, c.waterDeepGlow,
             skipEmpty: true),
       ],
     );
@@ -330,16 +332,17 @@ class _QimenPageState extends ConsumerState<QimenPage> {
     final isZhiFu = palace == p.zhiFuGong;
     final isZhiShi = palace == p.zhiShiGong;
     final isCenter = palace == 5;
+    final c = AppClr.of(context);
 
     final border = isZhiFu
-        ? AppColors.gold
-        : (isZhiShi ? AppColors.woodGlow : const Color.fromRGBO(212, 168, 87, 0.2));
+        ? c.gold
+        : (isZhiShi ? c.woodGlow : c.goldBorder);
     final borderWidth = (isZhiFu || isZhiShi) ? 1.8 : 1.0;
     final bg = isCenter
-        ? AppColors.gold.withValues(alpha: 0.10)
+        ? c.gold.withValues(alpha: 0.10)
         : (isZhiFu
-            ? AppColors.gold.withValues(alpha: 0.08)
-            : (isZhiShi ? AppColors.wood.withValues(alpha: 0.08) : AppColors.card));
+            ? c.gold.withValues(alpha: 0.08)
+            : (isZhiShi ? c.wood.withValues(alpha: 0.08) : c.card));
 
     return Container(
       decoration: BoxDecoration(
@@ -358,8 +361,8 @@ class _QimenPageState extends ConsumerState<QimenPage> {
               Text(name,
                   style: TextStyle(
                       color: isZhiFu
-                          ? AppColors.goldBright
-                          : (isZhiShi ? AppColors.woodGlow : AppColors.textMeta),
+                          ? c.goldBright
+                          : (isZhiShi ? c.woodGlow : c.textMeta),
                       fontSize: 12,
                       fontWeight: FontWeight.bold)),
               if (isZhiFu || isZhiShi)
@@ -367,26 +370,26 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                   padding: const EdgeInsets.only(left: 3),
                   child: Text(isZhiFu ? '符' : '使',
                       style: TextStyle(
-                          color: isZhiFu ? AppColors.gold : AppColors.woodGlow,
+                          color: isZhiFu ? c.gold : c.woodGlow,
                           fontSize: 9)),
                 ),
             ],
           ),
-          const Divider(height: 1, color: Color.fromRGBO(212, 168, 87, 0.18)),
+          Divider(height: 1, color: c.goldBorder),
           // 天盘星
           Text(xing,
-              style: const TextStyle(color: AppColors.goldBright, fontSize: 11, fontWeight: FontWeight.bold, height: 1.3)),
+              style: TextStyle(color: c.goldBright, fontSize: 11, fontWeight: FontWeight.bold, height: 1.3)),
           // 地盘干
           Text(gan,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 11, height: 1.3)),
+              style: TextStyle(color: c.textPrimary, fontSize: 11, height: 1.3)),
           // 人盘门
           if (men.isNotEmpty)
             Text(men,
-                style: const TextStyle(color: AppColors.woodGlow, fontSize: 10, height: 1.3)),
+                style: TextStyle(color: c.woodGlow, fontSize: 10, height: 1.3)),
           // 神盘神
           if (shen.isNotEmpty)
             Text(shen,
-                style: const TextStyle(color: AppColors.waterDeepGlow, fontSize: 10, height: 1.3)),
+                style: TextStyle(color: c.waterDeepGlow, fontSize: 10, height: 1.3)),
         ],
       ),
     );
@@ -395,13 +398,14 @@ class _QimenPageState extends ConsumerState<QimenPage> {
   /// 单盘详表（横向 9 宫，按洛书顺序）。
   Widget _buildPanTable(String title, List<String> values, Color valueColor,
       {bool skipEmpty = false}) {
+    final c = AppClr.of(context);
     return DecorativePanel(
       padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title,
-              style: const TextStyle(color: AppColors.gold, fontSize: 12, fontWeight: FontWeight.bold)),
+              style: TextStyle(color: c.gold, fontSize: 12, fontWeight: FontWeight.bold)),
           const SizedBox(height: 6),
           Wrap(
             spacing: 8,
@@ -412,9 +416,9 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: AppColors.bgInner.withValues(alpha: 0.5),
+                      color: c.bgInner.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: const Color.fromRGBO(212, 168, 87, 0.15)),
+                      border: Border.all(color: c.goldBorder),
                     ),
                     child: Text(
                       '${palaceNames[palace - 1]}:${values[palace - 1]}',
