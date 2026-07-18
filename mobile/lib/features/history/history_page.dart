@@ -3,25 +3,28 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/history/history_store.dart';
 import '../../core/history/history_export.dart';
+import '../../core/history/history_providers.dart';
 import '../../shared/widgets/decorative_panel.dart';
 import '../../shared/widgets/divination_loading_indicator.dart';
 
-/// 历史记录页：列表 + 详情 + 备注 + 删除。
+/// 历史记录页：列表 + 详情 + 备注 + 删除 + 恢复卦象（v2.4.3）。
 ///
 /// v2.4.2：全面主题感知（浅色模式适配）。
-class HistoryPage extends StatefulWidget {
+/// v2.4.3：新增「恢复卦象」按钮（有 extra 可恢复，旧记录置灰）。
+class HistoryPage extends ConsumerStatefulWidget {
   const HistoryPage({super.key});
   @override
-  State<HistoryPage> createState() => _HistoryPageState();
+  ConsumerState<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
+class _HistoryPageState extends ConsumerState<HistoryPage> {
   List<HistoryEntry> _list = const [];
   bool _loading = true;
 
@@ -38,6 +41,13 @@ class _HistoryPageState extends State<HistoryPage> {
       _list = list;
       _loading = false;
     });
+  }
+
+  /// 恢复卦象（v2.4.3）：设置 pendingRestoreProvider 后跳转到该术 page，
+  /// page initState 消费 extra 重建展示。仅对有 extra 的新历史可用。
+  void _restore(HistoryEntry e) {
+    ref.read(pendingRestoreProvider.notifier).state = e;
+    context.go('/tech/${e.techId}');
   }
 
   /// 复制一条历史记录到剪贴板，含术数名、摘要、时间、详情与备注。
@@ -266,6 +276,24 @@ class _HistoryPageState extends State<HistoryPage> {
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
+                              IconButton(
+                                icon: Icon(
+                                  Icons.replay,
+                                  color: e.extra != null
+                                      ? c.gold
+                                      : c.textHint,
+                                  size: 20,
+                                ),
+                                tooltip: e.extra != null
+                                    ? '恢复卦象'
+                                    : '旧记录不支持恢复',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(
+                                    minWidth: 36, minHeight: 36),
+                                onPressed: e.extra != null
+                                    ? () => _restore(e)
+                                    : null,
+                              ),
                               IconButton(
                                 icon: Icon(Icons.copy_all,
                                     color: c.textSubtitle, size: 20),

@@ -10,6 +10,7 @@ import '../../../core/config/platform_info.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/divination/divination_result.dart';
 import '../../../core/history/history_store.dart';
+import '../../../core/history/history_providers.dart';
 import '../../../core/rng/rng_providers.dart';
 import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/decorative_panel.dart';
@@ -58,6 +59,30 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
       _ownCtrl = ScrollController();
       _sheetCtrl = _ownCtrl; // 桌面端把自建 controller 暴露给 reset 复用
     }
+    // v2.4.3：从历史记录恢复卦象（pendingRestoreProvider）
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+  }
+
+  /// v2.4.3：消费 [pendingRestoreProvider]，按 extra.nums 直接重建结果展示
+  ///（不走圆盘动画，不重新入历史）。
+  void _maybeRestore() {
+    final restore = ref.read(pendingRestoreProvider);
+    if (restore == null || restore.techId != 'xiaoliuren') return;
+    final nums = (restore.extra?['nums'] as List?)
+        ?.map((v) => (v as num).toInt())
+        .toList();
+    ref.read(pendingRestoreProvider.notifier).state = null;
+    if (nums == null || nums.length < 3) return;
+    setState(() {
+      _nums = nums;
+      _divine = divine(nums);
+      _entropy = null;
+      _result = buildXiaoliurenResult(
+          nums: nums, divine: _divine!, entropy: null);
+      _inputCtrl.text = nums.join(' ');
+    });
+    _resultAnim.forward(from: 0);
+    if (_sheetCtrl?.hasClients ?? false) _sheetCtrl!.jumpTo(0);
   }
 
   @override
@@ -164,6 +189,7 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
       time: DateTime.now(),
       summary: _result?.cards.map((c) => c.title).join('·') ?? '',
       detail: _buildCopyText(),
+      extra: {'nums': _nums},
     )));
   }
 

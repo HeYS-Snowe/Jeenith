@@ -13,6 +13,10 @@ class HistoryEntry {
   final String summary;  // 摘要（卦名/落宫等，列表展示）
   final String detail;   // 详细文本（复制用，同 _buildCopyText）
   final String? note;    // 用户备注
+  /// 结构化恢复数据（v2.4.3）：用于「预览」重建卦象。各术自行约定 schema
+  /// （如 xiaoliuren {'nums':[2,8,9]}、cezi {'char':'字'}）。
+  /// v2.4.3 之前的旧历史无此字段，历史页预览按钮将置灰。
+  final Map<String, dynamic>? extra;
 
   const HistoryEntry({
     required this.id,
@@ -22,6 +26,7 @@ class HistoryEntry {
     required this.summary,
     required this.detail,
     this.note,
+    this.extra,
   });
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +37,7 @@ class HistoryEntry {
         'summary': summary,
         'detail': detail,
         'note': note,
+        if (extra != null) 'extra': extra,
       };
 
   factory HistoryEntry.fromJson(Map<String, dynamic> j) => HistoryEntry(
@@ -42,11 +48,18 @@ class HistoryEntry {
         summary: j['summary'] as String,
         detail: j['detail'] as String,
         note: j['note'] as String?,
+        extra: (j['extra'] as Map<String, dynamic>?)?.cast<String, dynamic>(),
       );
 
-  HistoryEntry copyWith({String? note}) => HistoryEntry(
+  HistoryEntry copyWith({
+    String? note,
+    Map<String, dynamic>? extra,
+  }) =>
+      HistoryEntry(
         id: id, techId: techId, techName: techName, time: time,
-        summary: summary, detail: detail, note: note ?? this.note,
+        summary: summary, detail: detail,
+        note: note ?? this.note,
+        extra: extra ?? this.extra,
       );
 }
 
