@@ -40,7 +40,6 @@ Jeenith/
   docs/               # PROJECT_SUMMARY / FLUTTER_APK_BUILD_PIPELINE / NEXT_PLAN 等
   tools/              # 占位（工具脚本）
   builds/             # 构建产物归档（APK/ZIP + build_history.json + release_history.json）
-  build_history.json  # 项目内历史副本
 ```
 
 ## 三、技术栈

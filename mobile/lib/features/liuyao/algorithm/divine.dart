@@ -46,6 +46,10 @@ class LiuyaoResult {
   final int? yongPos; // 用神所在爻位（0-5），不上卦为 null
   final String judgment; // 总断
   final List<String> points; // 断卦要点
+  final List<String> dayKong; // 日辰旬空地支（两个）
+  final bool yongKong; // 用神是否落空亡
+  final bool isLiuChong; // 六冲卦
+  final bool isLiuHe; // 六合卦
 
   const LiuyaoResult({
     required this.benName,
@@ -63,6 +67,10 @@ class LiuyaoResult {
     required this.yongPos,
     required this.judgment,
     required this.points,
+    required this.dayKong,
+    required this.yongKong,
+    required this.isLiuChong,
+    required this.isLiuHe,
   });
 }
 
@@ -153,6 +161,36 @@ int? _findYong(List<Yao> lines, String yongShen, int shi) {
   return matches.first;
 }
 
+/// 日柱干支所在旬的旬头（甲子/甲戌/甲申/甲午/甲辰/甲寅）。
+String _xunTou(String dayGz) {
+  final ganIdx = ganChars.indexOf(dayGz[0]);
+  final zhiIdx = zhiChars.indexOf(dayGz[1]);
+  var seq = 0;
+  for (var i = 0; i < 60; i++) {
+    if (i % 10 == ganIdx && i % 12 == zhiIdx) {
+      seq = i;
+      break;
+    }
+  }
+  final xt = (seq ~/ 10) * 10;
+  return '${ganChars[xt % 10]}${zhiChars[xt % 12]}';
+}
+
+/// 日辰旬空地支（两个）。
+List<String> _dayKongOf(String dayGz) => xunKong[_xunTou(dayGz)]!;
+
+/// 六冲卦：初冲四、二冲五、三冲上（本卦六爻地支两两冲）。
+bool _isLiuChong(List<Yao> lines) =>
+    chongMap[lines[0].zhi] == lines[3].zhi &&
+    chongMap[lines[1].zhi] == lines[4].zhi &&
+    chongMap[lines[2].zhi] == lines[5].zhi;
+
+/// 六合卦：初合四、二合五、三合上。
+bool _isLiuHe(List<Yao> lines) =>
+    liuHeMap[lines[0].zhi] == lines[3].zhi &&
+    liuHeMap[lines[1].zhi] == lines[4].zhi &&
+    liuHeMap[lines[2].zhi] == lines[5].zhi;
+
 /// 断卦：综合用神旺衰、动静、原忌神发动、持世，输出总断 + 要点。
 ({String judgment, List<String> points}) _judge({
   required List<Yao> lines,
@@ -162,8 +200,18 @@ int? _findYong(List<Yao> lines, String yongShen, int shi) {
   required String dayZhi,
   required String gongWx,
   required int shi,
+  required List<String> dayKong,
+  required bool isLiuChong,
+  required bool isLiuHe,
 }) {
   final pts = <String>[];
+
+  // 卦象格局：六冲主散、六合主合。
+  if (isLiuChong) {
+    pts.add('卦逢六冲（六爻两两相冲），主散、主变、事多反复，测散事吉、测聚事凶。');
+  } else if (isLiuHe) {
+    pts.add('卦逢六合（六爻两两相合），主合、主聚、事多缓成，测聚事吉、测散事凶。');
+  }
 
   if (yongPos == null) {
     pts.add('卦中不见「$yongShen」（用神不上卦），所求缘浅，主事难成，须待出卦之时再占。');
@@ -174,6 +222,7 @@ int? _findYong(List<Yao> lines, String yongShen, int shi) {
   final ws = _wangShuai(yong.zhi, monthZhi, dayZhi);
   final chiShi = yongPos == shi;
   final dong = yong.changing;
+  final kong = dayKong.contains(yong.zhi); // 用神落旬空
 
   // 原神 = 生用神者；忌神 = 克用神者。先由六亲反推用神五行。
   final yongWx = _liuqinWuxingOf(gongWx, yongShen);
@@ -191,6 +240,11 @@ int? _findYong(List<Yao> lines, String yongShen, int shi) {
   }
   pts.add('用神${yong.zhi}（${zhiWuxing[yong.zhi]}）于月$monthZhi日$dayZhi「$ws」。');
 
+  if (kong) {
+    pts.add('用神${yong.zhi}落旬空（日空${dayKong.join("")}），暂时无力，'
+        '${dong ? "动而空，出空则应" : "静而空，须待出空或冲空之日方有作为"}。');
+  }
+
   if (dong) {
     pts.add('用神发动（${yong.yang ? "老阳○" : "老阴×"}），事已有动向，宜顺势求变。');
   } else {
@@ -199,10 +253,11 @@ int? _findYong(List<Yao> lines, String yongShen, int shi) {
   if (yuanDong) pts.add('原神「$yuanLiuqin」发动生扶用神，有贵人助力，吉。');
   if (jiDong) pts.add('忌神「$jiLiuqin」发动克伤用神，阻力显现，须防破耗。');
 
-  final score = (ws == '旺' ? 1 : ws == '衰' ? -1 : 0) +
+  var score = (ws == '旺' ? 1 : ws == '衰' ? -1 : 0) +
       (yuanDong ? 1 : 0) -
       (jiDong ? 1 : 0) +
       (chiShi ? 1 : 0);
+  if (kong) score -= 1; // 用神空亡减分（旺相可解）
 
   final String judgment;
   if (score >= 2) {
@@ -331,8 +386,14 @@ LiuyaoResult divine({
     ];
   }
 
+  // 卦象格局（六冲/六合）+ 日辰旬空。
+  final isLiuChong = _isLiuChong(lines);
+  final isLiuHe = _isLiuHe(lines);
+  final dayKong = _dayKongOf(dayGz);
+
   // 用神 + 断辞。
   final yongPos = _findYong(lines, yongShen, bg.shi);
+  final yongKong = yongPos != null && dayKong.contains(lines[yongPos].zhi);
   final j = _judge(
     lines: lines,
     yongShen: yongShen,
@@ -341,6 +402,9 @@ LiuyaoResult divine({
     dayZhi: dayZhi,
     gongWx: gwx,
     shi: bg.shi,
+    dayKong: dayKong,
+    isLiuChong: isLiuChong,
+    isLiuHe: isLiuHe,
   );
 
   return LiuyaoResult(
@@ -359,5 +423,9 @@ LiuyaoResult divine({
     yongPos: yongPos,
     judgment: j.judgment,
     points: j.points,
+    dayKong: dayKong,
+    yongKong: yongKong,
+    isLiuChong: isLiuChong,
+    isLiuHe: isLiuHe,
   );
 }

@@ -216,6 +216,26 @@ class _LiuyaoPageState extends ConsumerState<LiuyaoPage> {
     );
   }
 
+  /// 六冲/六合卦标记 chip。
+  Widget _gejuChip(LiuyaoResult r, AppClr c) {
+    final label = r.isLiuChong ? '六冲卦' : '六合卦';
+    final color = r.isLiuChong ? c.changing : c.goldBright;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withValues(alpha: 0.6)),
+      ),
+      child: Text(label,
+          style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2)),
+    );
+  }
+
   Widget _buildResult(LiuyaoResult r) {
     final c = AppClr.of(context);
     final enabled = ref
@@ -240,9 +260,14 @@ class _LiuyaoPageState extends ConsumerState<LiuyaoPage> {
                 '${xiang[r.upperName]}${xiang[r.lowerName]}${r.benName}'
                 ' · ${r.bagong.gong}宫${r.bagong.seqName}（${r.gongWuxing}）',
                 style: TextStyle(color: c.gold, fontSize: 13, letterSpacing: 2)),
+            if (r.isLiuChong || r.isLiuHe) ...[
+              const SizedBox(height: 4),
+              _gejuChip(r, c),
+            ],
             const SizedBox(height: 6),
             Text(
-                '日辰 ${r.dayGan}${r.dayZhi} · 月建${r.monthZhi} · 用神「${r.yongShen}」',
+                '日辰 ${r.dayGan}${r.dayZhi} · 月建${r.monthZhi} · 日空${r.dayKong.join("")}'
+                ' · 用神「${r.yongShen}」${r.yongKong ? "（空）" : ""}',
                 style: TextStyle(color: c.textBody, fontSize: 11)),
           ],
         ),
@@ -306,6 +331,7 @@ class _LiuyaoPageState extends ConsumerState<LiuyaoPage> {
 
     final tags = <Widget>[];
     if (isYong) tags.add(_tag('用', c.goldBright));
+    if (isYong && r.yongKong) tags.add(_tag('空', c.changing));
     if (isShi) tags.add(_tag('世', c.fireGlow));
     if (isYing) tags.add(_tag('应', c.gold));
     if (y.changing) tags.add(_tag(y.yang ? '○' : '×', c.changing));

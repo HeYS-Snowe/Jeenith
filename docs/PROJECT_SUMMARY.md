@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.8.1+35**（2026-07-19，fix — 修复周易/小六壬桌面端 pinned header 崩溃）|
+| 当前版本 | **2.9.0+36**（2026-07-20，feature — 六爻断法深化：旬空/六冲六合）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/HeYS-Snowe/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -100,7 +100,6 @@ Jeenith/                           # 仓库根（solution root）
 │   ├── release_notes/             # 各版本 Release 说明 md（真实换行，复制粘贴用）
 │   ├── build_history.json         # 构建历史（归档区主副本）
 │   └── release_history.json       # 平台发布记录（GitHub Release 等）
-├── build_history.json             # 项目内历史副本
 ├── log/                           # 更新日志（log/update/*.md）+ 崩溃日志（log/crush/）
 ├── CLAUDE.md                      # 项目定制规则
 └── AGENTS.md                      # Agent 规则（与 CLAUDE.md 同步）
@@ -128,7 +127,7 @@ Jeenith/                           # 仓库根（solution root）
 | **八字推演** | bazi | 四柱 + 大运 + 神煞 + 五行喜忌 | ✅ 完整 |
 | **称骨算命** | chenggu | 袁天罡称骨：年月日时四骨重→52 档命格歌 | ✅ v2.6 完整 |
 | **太乙神数** | taiyi | 三式之首：积年推太乙落宫/文昌始击/主客算/格局 | ✅ v2.7 完整（三式齐备）|
-| **六爻** | liuyao | 京房纳甲：金钱卦六爻配六亲六神/世应用神断辞 | ✅ v2.8 完整（八宫算法 + 9 项单测）|
+| **六爻** | liuyao | 京房纳甲：金钱卦六爻配六亲六神/世应用神断辞 | ✅ v2.8 完整 + v2.9 深化（八宫算法 + 旬空/六冲六合）— 12 项单测 |
 
 ### 框架特性
 
@@ -283,6 +282,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.7.1+32** | **2026-07-19** | **fix** | **GoldButton 根治竖线坍塌（Transform.scale intrinsic）+ 按压缩放延迟（Listener 绕过 arena）** |
 | **2.8.0+34** | **2026-07-19** | **feature** | **六爻纳甲（周易深度断法，第 15 术）— 京房纳甲/六亲/六神/世应/用神断辞 + 八宫算法 + 9 项单测** |
 | **2.8.1+35** | **2026-07-19** | **fix** | **修复周易/小六壬桌面端 pinned header 崩溃（SliverPersistentHeader extent 与 ActionBar child 高度不匹配 → paintExtent<layoutExtent 空指针）** |
+| **2.9.0+36** | **2026-07-20** | **feature** | **六爻断法深化：旬空（用神空亡断 + score 调整）+ 六冲/六合卦（格局判断 + 断辞 + UI chip）— 3 项新单测** |
 
 ---
 

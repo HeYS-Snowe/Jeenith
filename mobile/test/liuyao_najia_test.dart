@@ -144,5 +144,33 @@ void main() {
       expect(r.yongPos, isNull);
       expect(r.points.first, contains('不上卦'));
     });
+
+    test('六冲卦：乾为天（八纯卦）六冲', () {
+      // 乾卦六爻 子寅辰·午申戌：初子冲四午、二寅冲五申、三辰冲上戌
+      final raw = [for (var i = 0; i < 6; i++) (yang: true, changing: false)];
+      final r = divine(yongShen: '妻财', rawLines: raw);
+      expect(r.benName, '乾');
+      expect(r.isLiuChong, isTrue);
+      expect(r.isLiuHe, isFalse);
+    });
+
+    test('六合卦：天地否六合', () {
+      // 否卦 坤下乾上：初未合四午、二巳合五申、三卯合上戌
+      final raw = [for (var i = 0; i < 6; i++) (yang: i >= 3, changing: false)];
+      final r = divine(yongShen: '官鬼', rawLines: raw);
+      expect(r.benName, '否');
+      expect(r.isLiuHe, isTrue);
+      expect(r.isLiuChong, isFalse);
+    });
+
+    test('旬空：甲子日空戌亥', () {
+      // 2024-01-01 为甲子日，甲子旬空戌亥
+      final raw = [for (var i = 0; i < 6; i++) (yang: true, changing: false)];
+      final r = divine(
+          yongShen: '官鬼', rawLines: raw, now: DateTime(2024, 1, 1, 12));
+      expect(r.dayGan, '甲');
+      expect(r.dayZhi, '子');
+      expect(r.dayKong, equals(['戌', '亥']));
+    });
   });
 }
