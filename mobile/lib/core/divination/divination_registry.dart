@@ -12,6 +12,7 @@ import '../../features/luopan/luopan_tech.dart';
 import '../../features/meihua/meihua_tech.dart';
 import '../../features/name_test/name_test_tech.dart';
 import '../../features/qimen/qimen_tech.dart';
+import '../../features/taiyi/taiyi_tech.dart';
 import '../../features/xiaoliuren/xiaoliuren_tech.dart';
 import '../../features/zhouyi/zhouyi_tech.dart';
 import '../../features/ziwei/ziwei_tech.dart';
@@ -37,6 +38,7 @@ final divinationTechsProvider = Provider<List<DivinationTech>>((ref) {
     NameTestTech(),
     BaziTech(),
     ChengguTech(),
+    TaiyiTech(),
   ];
   // ID 必须唯一，否则 techByIdProvider.firstOrNull 会静默命中错误项。
   assert(
