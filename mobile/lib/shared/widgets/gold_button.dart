@@ -54,32 +54,6 @@ class _GoldButtonState extends ConsumerState<GoldButton>
     super.dispose();
   }
 
-  void _onTapDown(TapDownDetails _) {
-    if (!_animEnabled || widget.onPressed == null) return;
-    setState(() => _down = true);
-    _press.forward();
-  }
-
-  void _onTapUp(TapUpDetails _) {
-    if (!_animEnabled) {
-      widget.onPressed?.call();
-      return;
-    }
-    setState(() => _down = false);
-    // 立即触发 onPressed，弹回动画与功能执行并行。
-    // 旧实现用 _press.reverse().then(...) 等 260ms 弹回完成才回调，快速点击时
-    // reverse 会被下一次 forward 中断，then 不触发，导致 onPressed 丢失、状态错乱
-    // （表现为"按几下才有反应"）。改为并行后视觉缩放仍由 controller 驱动，体验一致。
-    _press.reverse();
-    widget.onPressed?.call();
-  }
-
-  void _onTapCancel() {
-    if (!_animEnabled) return;
-    setState(() => _down = false);
-    _press.reverse();
-  }
-
   @override
   Widget build(BuildContext context) {
     // 订阅全局配置：设置页切换开关时即时重建，动画/静态形态无缝切换
@@ -143,6 +117,12 @@ class _GoldButtonState extends ConsumerState<GoldButton>
         child: child),
     );
 
+    // box 内层 SizedBox(width: double.infinity)：根治 Transform.scale 在 Row/Expanded
+    // 中阻断 intrinsic 宽度导致按钮坍塌为竖线（v2.3.1 仅修小六壬，此处根治所有用法）。
+    // 所有调用点均在 tight 宽度环境（Column stretch / Expanded / SizedBox 固定宽），
+    // double.infinity 在 bounded tight 下取最大宽度，撑满。
+    final expandedBox = SizedBox(width: double.infinity, child: box);
+
     final inner = animEnabled
         ? AnimatedBuilder(
             animation: _press,
@@ -154,18 +134,37 @@ class _GoldButtonState extends ConsumerState<GoldButton>
               return Transform.scale(
                 scale: scale,
                 alignment: Alignment.center,
-                child: box,
+                child: expandedBox,
               );
             },
           )
-        : box;
+        : expandedBox;
 
-    return GestureDetector(
-      onTapDown: enabled ? _onTapDown : null,
-      onTapUp: enabled ? _onTapUp : null,
-      onTapCancel: _onTapCancel,
+    // 手势：Listener 处理 pointer down/up（缩放），立即响应、不参与 gesture arena，
+    // 绕过 DraggableScrollableSheet 等滚动容器的 tap-vs-scroll 竞争（旧实现 onTapDown
+    // 被 arena 延迟，表现为"多按才有缩放"）；onTap 处理功能触发。
+    return Listener(
       behavior: HitTestBehavior.opaque,
-      child: inner,
+      onPointerDown: (_) {
+        if (!enabled || !animEnabled || widget.onPressed == null) return;
+        setState(() => _down = true);
+        _press.forward();
+      },
+      onPointerUp: (_) {
+        if (!animEnabled) return;
+        setState(() => _down = false);
+        _press.reverse();
+      },
+      onPointerCancel: (_) {
+        if (!animEnabled) return;
+        setState(() => _down = false);
+        _press.reverse();
+      },
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: enabled ? widget.onPressed : null,
+        child: inner,
+      ),
     );
   }
 }

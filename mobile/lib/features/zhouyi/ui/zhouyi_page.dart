@@ -213,8 +213,10 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
         color: AppClr.of(context).bg.withValues(alpha: 0.92),
         constraints: const BoxConstraints(minHeight: 80),
-        alignment: Alignment.center,
+        // 不用 Container(alignment)——Align 会给 child loose 宽度约束，致 Row 中
+        // Expanded 异常。改由 Row crossAxisAlignment 在 tight 高度内垂直居中。
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: GoldButton(
