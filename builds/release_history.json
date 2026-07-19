@@ -937,8 +937,8 @@
       "tag": "v2.5.0",
       "target": "main",
       "title": "v2.5.0 — 紫微四化/大限/长生/补煞 + 奇门天盘干/格局断辞",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.5.0.md",
       "notesFormat": "markdown",
@@ -966,6 +966,45 @@
       "buildStatus": "feature",
       "builtAt": "2026-07-19T19:37:55",
       "commit": "1b09d94",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.6.0",
+      "target": "main",
+      "title": "v2.6.0 — 称骨算命（袁天罡，第 13 术）",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.6.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.6.0_20260719_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61440078,
+          "sizeFormatted": "58.59 MB",
+          "sha256": "0A0CF6FE5E6F75858437AB08CA0387042B5000368459729EE6C8E7035415458E",
+          "localPath": "builds/android/Jeenith_feature_2.6.0_20260719_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16380444,
+          "sizeFormatted": "15.62 MB",
+          "sha256": "2563BF245B522A3456DABA787C10B1212954E572C93ABB0F1143901E942205AF",
+          "localPath": "builds/windows/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.6.0+30",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-19T19:59:11",
+      "commit": "606e409",
       "publishedAt": "",
       "url": "",
       "status": "unpublished"
