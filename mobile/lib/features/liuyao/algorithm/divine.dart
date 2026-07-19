@@ -191,6 +191,24 @@ bool _isLiuHe(List<Yao> lines) =>
     liuHeMap[lines[1].zhi] == lines[4].zhi &&
     liuHeMap[lines[2].zhi] == lines[5].zhi;
 
+/// 飞伏：用神不上卦时，从本宫八纯卦寻伏神。
+/// 伏神 = 本宫八纯卦中用神六亲所在爻；飞神 = 本卦同位爻（压伏神）。
+({String fuZhi, int fuPos, String feiZhi, String feiLiuqin})? _findFuFei(
+    List<Yao> lines, String yongShen, String gong, String gwx) {
+  final benGong = baguaNajia[gong]!; // 本宫八纯卦 6 爻 (gan, zhi)
+  for (var i = 0; i < 6; i++) {
+    if (_liuqin(gwx, benGong[i].$2) == yongShen) {
+      return (
+        fuZhi: benGong[i].$2,
+        fuPos: i,
+        feiZhi: lines[i].zhi,
+        feiLiuqin: lines[i].liuqin,
+      );
+    }
+  }
+  return null;
+}
+
 /// 断卦：综合用神旺衰、动静、原忌神发动、持世，输出总断 + 要点。
 ({String judgment, List<String> points}) _judge({
   required List<Yao> lines,
@@ -199,6 +217,7 @@ bool _isLiuHe(List<Yao> lines) =>
   required String monthZhi,
   required String dayZhi,
   required String gongWx,
+  required String gong,
   required int shi,
   required List<String> dayKong,
   required bool isLiuChong,
@@ -214,7 +233,12 @@ bool _isLiuHe(List<Yao> lines) =>
   }
 
   if (yongPos == null) {
-    pts.add('卦中不见「$yongShen」（用神不上卦），所求缘浅，主事难成，须待出卦之时再占。');
+    pts.add('卦中不见「$yongShen」（用神不上卦），所求缘浅，主事难成。');
+    final ff = _findFuFei(lines, yongShen, gong, gongWx);
+    if (ff != null) {
+      pts.add('伏神「$yongShen${ff.fuZhi}」伏于${_posNames[ff.fuPos]}爻飞神'
+          '「${ff.feiLiuqin}${ff.feiZhi}」之下，须待飞神发动或日月生扶伏神方现。');
+    }
     return (judgment: '用神伏藏不现，事多蹇滞。', points: pts);
   }
 
@@ -401,6 +425,7 @@ LiuyaoResult divine({
     monthZhi: monthZhi,
     dayZhi: dayZhi,
     gongWx: gwx,
+    gong: bg.gong,
     shi: bg.shi,
     dayKong: dayKong,
     isLiuChong: isLiuChong,

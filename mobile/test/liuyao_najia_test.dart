@@ -172,5 +172,20 @@ void main() {
       expect(r.dayZhi, '子');
       expect(r.dayKong, equals(['戌', '亥']));
     });
+
+    test('飞伏：天风姤测妻财，伏神寅伏于飞神亥之下', () {
+      // 姤（乾宫）六爻无木 → 妻财不上卦；本宫乾二爻寅木为伏神，姤二爻亥水为飞神
+      final raw = [
+        (yang: false, changing: false),
+        for (var i = 1; i < 6; i++) (yang: true, changing: false),
+      ];
+      final r = divine(yongShen: '妻财', rawLines: raw);
+      expect(r.benName, '姤');
+      expect(r.yongPos, isNull);
+      final fuFeiPt = r.points.firstWhere((p) => p.contains('伏神'));
+      expect(fuFeiPt, contains('寅')); // 伏神寅
+      expect(fuFeiPt, contains('二爻')); // fuPos=1
+      expect(fuFeiPt, contains('亥')); // 飞神亥
+    });
   });
 }
