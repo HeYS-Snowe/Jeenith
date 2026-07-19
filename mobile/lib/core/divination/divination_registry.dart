@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../divination/divination_tech.dart';
 import '../../features/bazi/bazi_tech.dart';
+import '../../features/chenggu/chenggu_tech.dart';
 import '../../features/cezi/cezi_tech.dart';
 import '../../features/chouqian/chouqian_tech.dart';
 import '../../features/daliuren/daliuren_tech.dart';
@@ -35,6 +36,7 @@ final divinationTechsProvider = Provider<List<DivinationTech>>((ref) {
     LuopanTech(),
     NameTestTech(),
     BaziTech(),
+    ChengguTech(),
   ];
   // ID 必须唯一，否则 techByIdProvider.firstOrNull 会静默命中错误项。
   assert(
