@@ -12,6 +12,8 @@ import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../core/history/history_providers.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
@@ -40,7 +42,31 @@ class _DaliurenPageState extends ConsumerState<DaliurenPage> {
     _month.text = now.month.toString();
     _day.text = now.day.toString();
     _hour.text = now.hour.toString();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _maybeShowTechGuide();
+    });
+  }
+
+  /// v2.4.4：首次进入大六壬时显示使用指引（SharedPreferences 控制只弹一次）。
+  Future<void> _maybeShowTechGuide() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('tech_guide_daliuren') ?? false) return;
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const TechGuideOverlay(
+        title: '大六壬 · 使用指引',
+        steps: [
+          GuideStep('起课输入', '输入公历年月日时（0-23），点「起课」得四课三传。'),
+          GuideStep('四课三传', '四课定体，三传（初 / 中 / 末）断事；天盘绕地盘旋转加临。'),
+          GuideStep('历法', '大六壬用节气干支历（立春换年），月将贵人由昼夜定。'),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    await prefs.setBool('tech_guide_daliuren', true);
   }
 
   /// v2.4.3：从历史记录恢复，按 extra 重建时辰 + 四课三传。

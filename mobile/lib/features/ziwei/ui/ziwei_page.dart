@@ -13,6 +13,8 @@ import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../core/history/history_providers.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
@@ -57,7 +59,31 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _maybeShowTechGuide();
+    });
+  }
+
+  /// v2.4.4：首次进入紫微斗数时显示使用指引（SharedPreferences 控制只弹一次）。
+  Future<void> _maybeShowTechGuide() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('tech_guide_ziwei') ?? false) return;
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const TechGuideOverlay(
+        title: '紫微斗数 · 使用指引',
+        steps: [
+          GuideStep('排盘输入', '输入公历年月日时（0-23），点「排盘」生成命盘。'),
+          GuideStep('命盘解读', '12 宫环绕中心，每宫标注地支 / 宫名 / 主星 / 辅星；命宫为主、身宫为辅。'),
+          GuideStep('交互', '指尖拖拽命盘可旋转查看；排盘时命盘逐宫展开、星曜逐颗降落。'),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    await prefs.setBool('tech_guide_ziwei', true);
   }
 
   /// v2.4.3：从历史记录恢复，按 extra 重建生辰 + 命盘绘制动画。

@@ -11,6 +11,8 @@ import '../../../core/config/config_providers.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/history/history_store.dart';
 import '../../../core/history/history_providers.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
@@ -38,7 +40,31 @@ class _QimenPageState extends ConsumerState<QimenPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _maybeShowTechGuide();
+    });
+  }
+
+  /// v2.4.4：首次进入奇门遁甲时显示使用指引（SharedPreferences 控制只弹一次）。
+  Future<void> _maybeShowTechGuide() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('tech_guide_qimen') ?? false) return;
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const TechGuideOverlay(
+        title: '奇门遁甲 · 使用指引',
+        steps: [
+          GuideStep('排盘输入', '输入公历年月日时（0-23），点「排盘」按节气定阴阳遁与局数。'),
+          GuideStep('四盘九宫', '九宫叠加天盘九星 / 地盘九干 / 人盘八门 / 神盘八神；值符值使宫位高亮。'),
+          GuideStep('历法', '奇门用节气干支历（立春换年），与农历无关。'),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    await prefs.setBool('tech_guide_qimen', true);
   }
 
   /// v2.4.3：从历史记录恢复，按 extra 重建时辰 + 排盘。
