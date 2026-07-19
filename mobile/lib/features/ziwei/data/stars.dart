@@ -52,7 +52,10 @@ const boShiStartByGan = <String, int>{
 };
 
 /// 神煞名。
-const shenSha = ['天马', '华盖', '桃花', '红鸾', '天喜'];
+const shenSha = [
+  '天马', '华盖', '桃花', '红鸾', '天喜',
+  '天刑', '天姚', '天官', '天福', '天巫', '孤辰', '寡宿', '截空',
+];
 
 /// 年干 → 天魁（昼贵）宫位（地支索引）。
 const tianKuiByGan = <String, int>{
@@ -134,4 +137,95 @@ final Map<String, StarCategory> starCategory = {
   for (final s in maleficStars) s: StarCategory.malefic,
   for (final s in boShiShen) s: StarCategory.boshishen,
   for (final s in shenSha) s: StarCategory.shensha,
+};
+
+// === 四化（化禄 / 化权 / 化科 / 化忌）===
+
+/// 四化类型。
+///
+/// 紫微斗数断卦核心：生年天干决定 4 颗星曜各得一化，赋予星盘动态吉凶。
+enum SiHua {
+  /// 化禄：财运、机会、收获、缘起、丰盈。
+  lu('禄', '化禄', '财运 · 机会 · 缘起 · 丰盈'),
+  /// 化权：权力、掌控、主动、进取、担当。
+  quan('权', '化权', '权力 · 掌控 · 主动 · 进取'),
+  /// 化科：名声、功名、贵人、文书、顺遂。
+  ke('科', '化科', '名声 · 功名 · 贵人 · 顺遂'),
+  /// 化忌：阻碍、执着、是非、收敛、欠债。
+  ji('忌', '化忌', '阻碍 · 执着 · 是非 · 收敛');
+
+  const SiHua(this.label, this.name, this.meaning);
+  final String label;   // 单字角标
+  final String name;    // 全名
+  final String meaning; // 断辞含义
+}
+
+/// 一组生年四化（年干 → 化禄 / 化权 / 化科 / 化忌 四星）。
+class SiHuaSet {
+  final String lu;
+  final String quan;
+  final String ke;
+  final String ji;
+  const SiHuaSet(this.lu, this.quan, this.ke, this.ji);
+}
+
+/// 生年四化表（标准）：年干 → 该年四颗化星。
+const sihuaByGan = <String, SiHuaSet>{
+  '甲': SiHuaSet('廉贞', '破军', '武曲', '太阳'),
+  '乙': SiHuaSet('天机', '天梁', '紫微', '太阴'),
+  '丙': SiHuaSet('天同', '天机', '文昌', '廉贞'),
+  '丁': SiHuaSet('太阴', '天同', '天机', '巨门'),
+  '戊': SiHuaSet('贪狼', '太阴', '右弼', '天机'),
+  '己': SiHuaSet('武曲', '贪狼', '天梁', '文曲'),
+  '庚': SiHuaSet('太阳', '武曲', '太阴', '天同'),
+  '辛': SiHuaSet('巨门', '太阳', '文曲', '文昌'),
+  '壬': SiHuaSet('天梁', '紫微', '左辅', '武曲'),
+  '癸': SiHuaSet('破军', '巨门', '太阴', '贪狼'),
+};
+
+// === 补充神煞 ===
+
+/// 年干 → 天官宫位（地支索引）。
+const tianGuanByGan = <String, int>{
+  '甲': 7, '乙': 9, '丙': 0, '丁': 1, '戊': 2, '己': 3,
+  '庚': 5, '辛': 6, '壬': 8, '癸': 11,
+};
+
+/// 年干 → 天福宫位。
+const tianFuByGan = <String, int>{
+  '甲': 9, '乙': 10, '丙': 5, '丁': 6, '戊': 2, '己': 3,
+  '庚': 1, '辛': 8, '壬': 4, '癸': 11,
+};
+
+/// 年支三合 → 天巫宫位（寅午戌→申，申子辰→寅，巳酉丑→亥，亥卯未→巳）。
+const tianWuByZhi = <int, int>{
+  2: 8, 6: 8, 10: 8,
+  8: 2, 0: 2, 4: 2,
+  5: 11, 9: 11, 1: 11,
+  11: 5, 3: 5, 7: 5,
+};
+
+/// 年支季节组 → 孤辰宫位（冬→寅，春→巳，夏→申，秋→亥）。
+const guChenByZhi = <int, int>{
+  11: 2, 0: 2, 1: 2, // 亥子丑（冬）
+  2: 5, 3: 5, 4: 5,  // 寅卯辰（春）
+  5: 8, 6: 8, 7: 8,  // 巳午未（夏）
+  8: 11, 9: 11, 10: 11, // 申酉戌（秋）
+};
+
+/// 年支季节组 → 寡宿宫位（冬→戌，春→丑，夏→辰，秋→未）。
+const guaSuByZhi = <int, int>{
+  11: 10, 0: 10, 1: 10, // 亥子丑
+  2: 1, 3: 1, 4: 1,     // 寅卯辰
+  5: 4, 6: 4, 7: 4,     // 巳午未
+  8: 7, 9: 7, 10: 7,    // 申酉戌
+};
+
+/// 年干 → 截路空亡宫位（两宫）。
+const jieKongByGan = <String, List<int>>{
+  '甲': [8, 9], '己': [8, 9],
+  '乙': [6, 7], '庚': [6, 7],
+  '丙': [4, 5], '辛': [4, 5],
+  '丁': [2, 3], '壬': [2, 3],
+  '戊': [0, 1], '癸': [0, 1],
 };

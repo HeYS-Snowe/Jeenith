@@ -210,6 +210,7 @@ class StarChartPainter extends CustomPainter {
           allStars.add(_StarDrawItem(
             name: star.name,
             category: star.category,
+            sihua: star.sihua,
             anchorX: mx,
             anchorY: my,
             anchorAngle: centerAngle - math.pi / 2,
@@ -240,13 +241,7 @@ class StarChartPainter extends CustomPainter {
         canvas.save();
         canvas.translate(s.anchorX, s.anchorY);
         canvas.rotate(s.anchorAngle);
-        _drawText(
-          canvas,
-          s.name,
-          Offset(0, s.offsetY),
-          color: _categoryColor(s.category).withValues(alpha: alpha),
-          fontSize: s.category == StarCategory.main ? 10.5 : 8.5,
-        );
+        _drawStarText(canvas, s, alpha);
         canvas.restore();
       }
     }
@@ -301,6 +296,53 @@ class StarChartPainter extends CustomPainter {
     }
   }
 
+  /// 四化角标配色：禄金 · 权火 · 科水 · 忌灰。
+  Color _siHuaColor(SiHua sh) {
+    switch (sh) {
+      case SiHua.lu:
+        return clr.gold;
+      case SiHua.quan:
+        return clr.fireGlow;
+      case SiHua.ke:
+        return clr.waterDeepGlow;
+      case SiHua.ji:
+        return clr.textSubtitle;
+    }
+  }
+
+  /// 绘制星名 + 可选四化角标（紧贴右下，四色区分），富文本居中。
+  /// 绘制后立即释放 TextPainter（项目硬约束）。
+  void _drawStarText(Canvas canvas, _StarDrawItem s, double alpha) {
+    final fontSize = s.category == StarCategory.main ? 10.5 : 8.5;
+    final children = <TextSpan>[
+      TextSpan(
+        text: s.name,
+        style: TextStyle(
+          color: _categoryColor(s.category).withValues(alpha: alpha),
+          fontSize: fontSize,
+          fontWeight:
+              s.category == StarCategory.main ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      if (s.sihua != null)
+        TextSpan(
+          text: s.sihua!.label,
+          style: TextStyle(
+            color: _siHuaColor(s.sihua!).withValues(alpha: alpha),
+            fontSize: fontSize - 2,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+    ];
+    final tp = TextPainter(
+      text: TextSpan(children: children),
+      textDirection: ui.TextDirection.ltr,
+      textAlign: TextAlign.center,
+    )..layout();
+    tp.paint(canvas, Offset(-tp.width / 2, s.offsetY - tp.height / 2));
+    tp.dispose();
+  }
+
   /// 绘制居中文本，绘制后立即释放 TextPainter（项目硬约束）。
   void _drawText(
     Canvas canvas,
@@ -336,10 +378,11 @@ class StarChartPainter extends CustomPainter {
       old.clr.t != clr.t;
 }
 
-/// 内部辅助：星曜绘制项（位置 + 分类）。
+/// 内部辅助：星曜绘制项（位置 + 分类 + 四化）。
 class _StarDrawItem {
   final String name;
   final StarCategory category;
+  final SiHua? sihua;
   final double anchorX;
   final double anchorY;
   final double anchorAngle;
@@ -348,6 +391,7 @@ class _StarDrawItem {
   const _StarDrawItem({
     required this.name,
     required this.category,
+    this.sihua,
     required this.anchorX,
     required this.anchorY,
     required this.anchorAngle,

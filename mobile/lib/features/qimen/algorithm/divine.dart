@@ -77,6 +77,8 @@ class QimenPlate {
 
   /// 地盘九干（按宫 1-9 顺序，索引 0=坎1宫）
   final List<String> diPanGan;
+  /// 天盘九干（地盘干按天盘转动量同步偏移，用于格局识别）
+  final List<String> tianPanGan;
   /// 天盘九星（按宫 1-9 顺序）
   final List<String> tianPanXing;
   /// 人盘八门（按宫 1-9 顺序，中宫空字符串）
@@ -100,6 +102,7 @@ class QimenPlate {
     required this.bazi,
     required this.lunarDisplay,
     required this.diPanGan,
+    required this.tianPanGan,
     required this.tianPanXing,
     required this.renPanMen,
     required this.shenPanShen,
@@ -285,6 +288,18 @@ QimenPlate _buildPlate({
     }
   }
 
+  // 7. 天盘九干：地盘干按天盘偏移（与九星同向同量 tianShift）
+  final tianPanGan = List<String>.filled(9, '');
+  for (var srcPalace = 1; srcPalace <= 9; srcPalace++) {
+    final g = diPanGan[srcPalace - 1];
+    if (g.isEmpty) continue;
+    var np = srcPalace;
+    for (var i = 0; i < tianShift; i++) {
+      np = isYang ? _nextPalace(np) : _prevPalace(np);
+    }
+    tianPanGan[np - 1] = g;
+  }
+
   return QimenPlate(
     dunType: isYang ? '阳遁' : '阴遁',
     ju: ju,
@@ -292,6 +307,7 @@ QimenPlate _buildPlate({
     bazi: bazi,
     lunarDisplay: lunarDisplay,
     diPanGan: diPanGan,
+    tianPanGan: tianPanGan,
     tianPanXing: tianPanXing,
     renPanMen: renPanMen,
     shenPanShen: shenPanShen,

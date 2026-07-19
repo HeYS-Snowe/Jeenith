@@ -37,6 +37,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
   final _day = TextEditingController();
   final _hour = TextEditingController();
   ZiweiResult? _r;
+  bool _isMale = true; // 性别：决定大限顺逆
   final GlobalKey _boundaryKey = GlobalKey();
   final GlobalKey _chartKey = GlobalKey();
 
@@ -76,9 +77,10 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       builder: (_) => const TechGuideOverlay(
         title: '紫微斗数 · 使用指引',
         steps: [
-          GuideStep('排盘输入', '输入公历年月日时（0-23），点「排盘」生成命盘。'),
-          GuideStep('命盘解读', '12 宫环绕中心，每宫标注地支 / 宫名 / 主星 / 辅星；命宫为主、身宫为辅。'),
-          GuideStep('交互', '指尖拖拽命盘可旋转查看；排盘时命盘逐宫展开、星曜逐颗降落。'),
+          GuideStep('排盘输入', '输入公历年月日时（0-23）与性别，点「排盘」生成命盘。'),
+          GuideStep('命盘解读', '12 宫环绕中心，标注地支/宫名/主星/辅星；星名后的「禄权科忌」角标即四化。'),
+          GuideStep('四化大限', '生年四化定吉凶动态；性别定大限顺逆（阳男阴女顺行）；每宫标注十年大限与长生神。'),
+          GuideStep('交互', '指尖拖拽命盘可旋转查看；排盘时逐宫展开、星曜降落。'),
         ],
       ),
     );
@@ -100,12 +102,14 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     if (y == null || m == null || d == null || h == null || h < 0 || h > 23) {
       return;
     }
+    final male = extra['isMale'] as bool? ?? true;
     setState(() {
+      _isMale = male;
       _year.text = y.toString();
       _month.text = m.toString();
       _day.text = d.toString();
       _hour.text = h.toString();
-      _r = divine(y, m, d, h);
+      _r = divine(y, m, d, h, isMale: male);
     });
     _chartAnim.forward(from: 0);
   }
@@ -126,7 +130,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     final d = int.tryParse(_day.text) ?? 0;
     final h = int.tryParse(_hour.text) ?? -1;
     if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31 || h < 0 || h > 23) return;
-    setState(() => _r = divine(y, m, d, h));
+    setState(() => _r = divine(y, m, d, h, isMale: _isMale));
     // 触发命盘绘制过程动画（受 painter kind 开关控制）
     final painterOn = ref
             .read(configProvider)
@@ -146,7 +150,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       time: DateTime.now(),
       summary: _r?.wuxingJu ?? '',
       detail: _buildCopyText(),
-      extra: {'year': y, 'month': m, 'day': d, 'hour': h},
+      extra: {'year': y, 'month': m, 'day': d, 'hour': h, 'isMale': _isMale},
     )));
   }
 
@@ -273,6 +277,22 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
                     Expanded(child: _f(_hour, '时')),
                   ],
                 ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text('性别',
+                        style: TextStyle(color: c.textBody, fontSize: 12)),
+                    const SizedBox(width: 10),
+                    _genderChip('男', true),
+                    const SizedBox(width: 6),
+                    _genderChip('女', false),
+                    const Spacer(),
+                    if (_r != null)
+                      Text('大限${_r!.daxianForward ? "顺行" : "逆行"}',
+                          style: TextStyle(
+                              color: c.fireGlow, fontSize: 10)),
+                  ],
+                ),
                 const SizedBox(height: 10),
                 GoldButton(text: '排盘', onPressed: _onDivine),
                 const SizedBox(height: 8),
@@ -308,6 +328,29 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
         keyboardType: TextInputType.number,
         decoration: InputDecoration(hintText: hint, isDense: true),
       );
+
+  /// 性别选择 chip（男/女），决定大限行运方向。
+  Widget _genderChip(String label, bool male) {
+    final c = AppClr.of(context);
+    final selected = _isMale == male;
+    return GestureDetector(
+      onTap: () => setState(() => _isMale = male),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+        decoration: BoxDecoration(
+          color: selected ? c.gold.withValues(alpha: 0.18) : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: selected ? c.gold : c.goldBorder),
+        ),
+        child: Text(label,
+            style: TextStyle(
+              color: selected ? c.goldBright : c.textBody,
+              fontSize: 13,
+              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+            )),
+      ),
+    );
+  }
 
   Widget _buildResult(ZiweiResult r) {
     const dz = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
@@ -408,6 +451,13 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
         Text('指尖拖拽可旋转命盘',
             textAlign: TextAlign.center,
             style: TextStyle(color: c.textHint, fontSize: 11)),
+        Text('◆ 生年四化',
+            style: TextStyle(
+                color: c.gold,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2)),
+        _buildSihuaPanel(r),
         Text('◆ 宫位详情',
             style: TextStyle(
                 color: c.gold,
@@ -418,23 +468,128 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             for (var zhi = 0; zhi < 12; zhi++)
-              _buildGongDetailRow(zhi, dz[zhi], r.gongAtZhi[zhi], r.mingGong,
-                  r.shenGong, r.stars.gongStars[zhi]),
+              _buildGongDetailRow(
+                zhi,
+                dz[zhi],
+                r.gongAtZhi[zhi],
+                r.mingGong,
+                r.shenGong,
+                r.stars.gongStars[zhi],
+                daxianLabel: _daxianLabelFor(r.gongAtZhi[zhi], r),
+                changSheng: r.changShengAtZhi[zhi],
+              ),
           ],
         ),
       ],
     );
   }
 
-  /// 单行宫位详情：地支 + 宫名 + 主星 + 吉星 + 煞星 + 神煞。
-  Widget _buildGongDetailRow(int zhi, String zhiName, int gongIdx, int ming, int shen, List<StarPlacement> stars) {
+  /// 四化角标配色（与 painter 一致）：禄金 · 权火 · 科水 · 忌灰。
+  Color _siHuaColor(SiHua sh, AppClr c) {
+    switch (sh) {
+      case SiHua.lu:
+        return c.gold;
+      case SiHua.quan:
+        return c.fireGlow;
+      case SiHua.ke:
+        return c.waterDeepGlow;
+      case SiHua.ji:
+        return c.textSubtitle;
+    }
+  }
+
+  /// 收集年干四化的 4 颗星及其宫位（地支 + 宫名）。
+  Map<SiHua, ({String star, int zhi, String gong})> _collectSihua(ZiweiResult r) {
+    final out = <SiHua, ({String star, int zhi, String gong})>{};
+    for (var zhi = 0; zhi < 12; zhi++) {
+      for (final sp in r.stars.gongStars[zhi]) {
+        if (sp.sihua != null) {
+          final gIdx = r.gongAtZhi[zhi];
+          out[sp.sihua!] = (
+            star: sp.name,
+            zhi: zhi,
+            gong: (gIdx >= 0 && gIdx < palaceNames.length) ? palaceNames[gIdx] : '—',
+          );
+        }
+      }
+    }
+    return out;
+  }
+
+  /// 生年四化解读面板：禄 → 权 → 科 → 忌 四行，标注星曜落宫与含义。
+  Widget _buildSihuaPanel(ZiweiResult r) {
+    const dz = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+    final c = AppClr.of(context);
+    final collected = _collectSihua(r);
+    const order = [SiHua.lu, SiHua.quan, SiHua.ke, SiHua.ji];
+    return DecorativePanel(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final sh in order)
+            if (collected[sh] != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: _siHuaColor(sh, c).withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: _siHuaColor(sh, c)),
+                      ),
+                      child: Text(sh.name,
+                          style: TextStyle(
+                              color: _siHuaColor(sh, c),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${collected[sh]!.star} · ${collected[sh]!.gong}（${dz[collected[sh]!.zhi]}）',
+                      style: TextStyle(
+                          color: c.textPrimary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const Spacer(),
+                    Flexible(
+                      child: Text(sh.meaning,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: c.textSubtitle, fontSize: 10, height: 1.3)),
+                    ),
+                  ],
+                ),
+              ),
+        ],
+      ),
+    );
+  }
+
+  /// 查 gongIdx 对应的大限年龄段文案（如「限24-33岁」）。
+  String? _daxianLabelFor(int gongIdx, ZiweiResult r) {
+    if (gongIdx < 0) return null;
+    for (final e in r.daxian) {
+      if (e.gongIdx == gongIdx) return '限${e.ageRange}岁';
+    }
+    return null;
+  }
+
+  /// 单行宫位详情：地支 + 宫名 + 主星 + 吉星 + 煞星 + 神煞 + 大限年龄 + 长生。
+  Widget _buildGongDetailRow(int zhi, String zhiName, int gongIdx, int ming,
+      int shen, List<StarPlacement> stars,
+      {String? daxianLabel, String? changSheng}) {
     final isMing = zhi == ming;
     final isShen = zhi == shen;
     final gongName = (gongIdx >= 0 && gongIdx < palaceNames.length) ? palaceNames[gongIdx] : '';
     final c = AppClr.of(context);
 
     String joinByCategory(StarCategory cat) =>
-        stars.where((s) => s.category == cat).map((s) => s.name).join(' ');
+        stars.where((s) => s.category == cat).map((s) => s.sihua != null ? '${s.name}·${s.sihua!.label}' : s.name).join(' ');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
@@ -481,6 +636,12 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
                         color: isMing ? c.gold : c.textPrimary,
                         fontSize: 11,
                         fontWeight: FontWeight.bold)),
+                if (daxianLabel != null)
+                  Text(daxianLabel,
+                      style: TextStyle(color: c.fireGlow, fontSize: 9)),
+                if (changSheng != null && changSheng.isNotEmpty)
+                  Text(changSheng,
+                      style: TextStyle(color: c.woodGlow, fontSize: 9)),
               ],
             ),
           ),
@@ -534,17 +695,41 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     sb.writeln(r.lunarDisplay);
     sb.writeln('八字：${r.bazi}');
     sb.writeln('命宫：${r.mingGanZhi}（${dz[r.mingGong]}）  身宫：${dz[r.shenGong]}  ${r.wuxingJu}');
+
+    String starLabel(StarPlacement s) =>
+        s.sihua != null ? '${s.name}·${s.sihua!.label}' : s.name;
+
+    // 生年四化
+    sb.writeln('\n—— 生年四化 ——');
+    final collected = _collectSihua(r);
+    const order = [SiHua.lu, SiHua.quan, SiHua.ke, SiHua.ji];
+    for (final sh in order) {
+      final v = collected[sh];
+      if (v != null) {
+        sb.writeln('${sh.name}：${v.star} 居 ${v.gong}（${dz[v.zhi]}）—— ${sh.meaning}');
+      }
+    }
+
+    // 大限
+    sb.writeln('\n—— 十二宫大限（${r.daxianForward ? "顺行" : "逆行"}）——');
+    for (final e in r.daxian) {
+      final gName = (e.gongIdx >= 0 && e.gongIdx < palaceNames.length)
+          ? palaceNames[e.gongIdx]
+          : '—';
+      sb.writeln('${e.ageRange}岁：$gName（${dz[e.zhi]}）');
+    }
+
     sb.writeln('\n—— 十二宫星曜 ——');
     for (var zhi = 0; zhi < 12; zhi++) {
       final g = r.gongAtZhi[zhi];
       final gongName = (g >= 0 && g < palaceNames.length) ? palaceNames[g] : '—';
       final stars = r.stars.gongStars[zhi];
-      final main = stars.where((s) => s.category == StarCategory.main).map((s) => s.name).join(' ');
-      final aus = stars.where((s) => s.category == StarCategory.auspicious).map((s) => s.name).join(' ');
-      final mal = stars.where((s) => s.category == StarCategory.malefic).map((s) => s.name).join(' ');
-      final bos = stars.where((s) => s.category == StarCategory.boshishen).map((s) => s.name).join(' ');
-      final sha = stars.where((s) => s.category == StarCategory.shensha).map((s) => s.name).join(' ');
-      sb.writeln('${dz[zhi]}宫（$gongName）：');
+      final main = stars.where((s) => s.category == StarCategory.main).map(starLabel).join(' ');
+      final aus = stars.where((s) => s.category == StarCategory.auspicious).map(starLabel).join(' ');
+      final mal = stars.where((s) => s.category == StarCategory.malefic).map(starLabel).join(' ');
+      final bos = stars.where((s) => s.category == StarCategory.boshishen).map(starLabel).join(' ');
+      final sha = stars.where((s) => s.category == StarCategory.shensha).map(starLabel).join(' ');
+      sb.writeln('${dz[zhi]}宫（$gongName）· ${r.changShengAtZhi[zhi]}：');
       if (main.isNotEmpty) sb.writeln('  主星：$main');
       if (aus.isNotEmpty) sb.writeln('  吉星：$aus');
       if (mal.isNotEmpty) sb.writeln('  煞星：$mal');

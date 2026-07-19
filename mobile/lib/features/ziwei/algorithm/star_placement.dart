@@ -6,14 +6,19 @@ import '../data/stars.dart';
 class StarPlacement {
   final String name;
   final StarCategory category;
-  const StarPlacement(this.name, this.category);
+  /// 四化标记（仅年干所化的 4 颗星有值，其余为 null）。
+  final SiHua? sihua;
+  const StarPlacement(this.name, this.category, {this.sihua});
 
   @override
   bool operator ==(Object other) =>
-      other is StarPlacement && other.name == name && other.category == category;
+      other is StarPlacement &&
+      other.name == name &&
+      other.category == category &&
+      other.sihua == sihua;
 
   @override
-  int get hashCode => Object.hash(name, category);
+  int get hashCode => Object.hash(name, category, sihua);
 }
 
 /// 完整的紫微斗数星盘：12 宫（按地支 0-11 索引）每宫的星曜列表。
@@ -150,9 +155,56 @@ StarChart placeStars({
   final tianXi = (hongLuan + 6) % 12;
   place(tianXi, StarPlacement('天喜', StarCategory.shensha));
 
+  // === 补充神煞 ===
+  // 天刑：正月起酉（9）顺数生月
+  final tianXing = (9 + month - 1) % 12;
+  place(tianXing, StarPlacement('天刑', StarCategory.shensha));
+  // 天姚：正月起丑（1）顺数生月
+  final tianYao = (1 + month - 1) % 12;
+  place(tianYao, StarPlacement('天姚', StarCategory.shensha));
+  // 天官：年干查表
+  final tianGuan = tianGuanByGan[yearGan]!;
+  place(tianGuan, StarPlacement('天官', StarCategory.shensha));
+  // 天福：年干查表
+  final tianFu = tianFuByGan[yearGan]!;
+  place(tianFu, StarPlacement('天福', StarCategory.shensha));
+  // 天巫：年支三合查表
+  final tianWu = tianWuByZhi[yearZhi]!;
+  place(tianWu, StarPlacement('天巫', StarCategory.shensha));
+  // 孤辰：年支季节组查表
+  final guChen = guChenByZhi[yearZhi]!;
+  place(guChen, StarPlacement('孤辰', StarCategory.shensha));
+  // 寡宿：年支季节组查表
+  final guaSu = guaSuByZhi[yearZhi]!;
+  place(guaSu, StarPlacement('寡宿', StarCategory.shensha));
+  // 截空：年干查表（两宫同标）
+  final jieKong = jieKongByGan[yearGan]!;
+  place(jieKong[0], StarPlacement('截空', StarCategory.shensha));
+  place(jieKong[1], StarPlacement('截空', StarCategory.shensha));
+
   // 每宫星曜按 category.index 排序（主→吉→煞→博→神）
   for (var i = 0; i < 12; i++) {
     gong[i].sort((a, b) => a.category.index.compareTo(b.category.index));
+  }
+
+  // === 四化：年干 → 化禄/权/科/忌，给对应星曜打标 ===
+  final sihua = sihuaByGan[yearGan]!;
+  for (var i = 0; i < 12; i++) {
+    final rebuilt = <StarPlacement>[];
+    for (final sp in gong[i]) {
+      SiHua? sh;
+      if (sp.name == sihua.lu) {
+        sh = SiHua.lu;
+      } else if (sp.name == sihua.quan) {
+        sh = SiHua.quan;
+      } else if (sp.name == sihua.ke) {
+        sh = SiHua.ke;
+      } else if (sp.name == sihua.ji) {
+        sh = SiHua.ji;
+      }
+      rebuilt.add(sh == null ? sp : StarPlacement(sp.name, sp.category, sihua: sh));
+    }
+    gong[i] = rebuilt;
   }
 
   return StarChart(gong);

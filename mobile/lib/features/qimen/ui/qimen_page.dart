@@ -18,6 +18,7 @@ import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
+import '../algorithm/geju.dart';
 
 /// 洛书九宫在 3×3 网格中的展示顺序（行优先：上→中→下）。
 /// 4巽 9离 2坤 / 3震 5中 7兑 / 8艮 1坎 6乾
@@ -250,9 +251,18 @@ class _QimenPageState extends ConsumerState<QimenPage> {
     }
     sb.writeln('\n—— 四盘详表 ——');
     sb.writeln('天盘九星：${p.tianPanXing.asMap().entries.map((e) => "${palaceNames[e.key]}:${e.value}").join("  ")}');
+    sb.writeln('天盘九干：${p.tianPanGan.asMap().entries.map((e) => "${palaceNames[e.key]}:${e.value}").join("  ")}');
     sb.writeln('地盘九干：${p.diPanGan.asMap().entries.map((e) => "${palaceNames[e.key]}:${e.value}").join("  ")}');
     sb.writeln('人盘八门：${p.renPanMen.asMap().entries.where((e) => e.value.isNotEmpty).map((e) => "${palaceNames[e.key]}:${e.value}").join("  ")}');
     sb.writeln('神盘八神：${p.shenPanShen.asMap().entries.where((e) => e.value.isNotEmpty).map((e) => "${palaceNames[e.key]}:${e.value}").join("  ")}');
+    // 格局断辞
+    final gejus = identifyGeju(p);
+    if (gejus.isNotEmpty) {
+      sb.writeln('\n—— 格局断辞 ——');
+      for (final g in gejus) {
+        sb.writeln('[${g.auspicious ? "吉" : "凶"}] ${g.name}${g.palace > 0 ? "·${palaceNames[g.palace - 1]}宫" : ""}：${g.text}');
+      }
+    }
     sb.writeln('\n—— 志极 Jeenith · 叩问本心 ——');
     return sb.toString();
   }
@@ -364,6 +374,13 @@ class _QimenPageState extends ConsumerState<QimenPage> {
             ],
           ),
         ),
+        Text('◆ 格局断辞',
+            style: TextStyle(
+                color: c.gold,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2)),
+        _buildGejuPanel(p),
         Text('◆ 四盘详表',
             style: TextStyle(
                 color: c.gold,
@@ -371,12 +388,77 @@ class _QimenPageState extends ConsumerState<QimenPage> {
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2)),
         _buildPanTable('天盘九星', p.tianPanXing, c.goldBright),
+        _buildPanTable('天盘九干', p.tianPanGan, c.gold),
         _buildPanTable('地盘九干', p.diPanGan, c.textPrimary),
         _buildPanTable('人盘八门', p.renPanMen, c.woodGlow,
             skipEmpty: true),
         _buildPanTable('神盘八神', p.shenPanShen, c.waterDeepGlow,
             skipEmpty: true),
       ],
+    );
+  }
+
+  /// 格局断辞面板：吉格（金）/ 凶格（火）分行列出，附落宫与断辞。
+  Widget _buildGejuPanel(QimenPlate p) {
+    final c = AppClr.of(context);
+    final gejus = identifyGeju(p);
+    return DecorativePanel(
+      padding: const EdgeInsets.all(10),
+      child: gejus.isEmpty
+          ? Text('本盘无明显成格，以八门九星生克与值符值使论断。',
+              style: TextStyle(color: c.textHint, fontSize: 11, height: 1.5))
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final g in gejus)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: (g.auspicious ? c.gold : c.fireGlow)
+                                .withValues(alpha: 0.16),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                                color: g.auspicious ? c.gold : c.fireGlow),
+                          ),
+                          child: Text(g.auspicious ? '吉' : '凶',
+                              style: TextStyle(
+                                  color: g.auspicious ? c.gold : c.fireGlow,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${g.name}${g.palace > 0 ? " · ${palaceNames[g.palace - 1]}宫" : ""}',
+                                style: TextStyle(
+                                    color: c.textPrimary,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(g.text,
+                                  style: TextStyle(
+                                      color: c.textBody,
+                                      fontSize: 11,
+                                      height: 1.4)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
     );
   }
 
