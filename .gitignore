@@ -52,12 +52,9 @@ app.*.map.json
 !/builds/release_history.json
 !/builds/release_notes/
 
-# 思源宋体：仅 Regular + Bold 入库（pubspec 声明打包），其余字重本地保留备用不入 git
-mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-ExtraLight-3.otf
-mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Heavy-4.otf
-mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Light-5.otf
-mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-Medium-6.otf
-mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-SemiBold-7.otf
+# 思源宋体：全字重原始 OTF 本地保留备用，不入 git；仅子集化后的 Regular + Bold 入库
+# （子集化：pyftsubset 提取 GB2312 一级 + 符号约 4500 字，每 weight ~1.4MB，原 11MB/weight）
+mobile/assets/fonts/SiYuanSongTiRegular/SourceHanSerifCN-*.otf
 
 
 .对话.txt
