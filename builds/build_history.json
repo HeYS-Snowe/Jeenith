@@ -739,6 +739,23 @@
       "backupPath": null,
       "platform": "android-arm64,android-arm,android-x64",
       "verificationPassed": true
+    },
+    {
+      "version": "2.4.4+28",
+      "status": "feature",
+      "statusLabel": "功能版",
+      "date": "20260719",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.4.4_20260719_01.apk",
+      "timestamp": "2026-07-19T18:17:34",
+      "fileSize": 61079626,
+      "fileSizeFormatted": "58.25 MB",
+      "sha256": "BFB34AFD5C9B11B52F3BAB542F347F61FA8BE4134344E9298776C95BD2508FFD",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\app\\outputs\\flutter-apk\\app-release.apk",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_feature_2.4.4_20260719_01.apk",
+      "backupPath": null,
+      "platform": "android-arm64,android-arm,android-x64",
+      "verificationPassed": true
     }
   ]
 }

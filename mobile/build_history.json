@@ -613,6 +613,23 @@
       "platform": "android",
       "timestamp": "2026-07-19T08:41:11",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.4.4",
+      "buildNumber": 28,
+      "status": "feature",
+      "date": "20260719",
+      "sequence": 1,
+      "filename": "Jeenith_feature_2.4.4_20260719_01.apk",
+      "originalName": "app-release.apk",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_feature_2.4.4_20260719_01.apk",
+      "fileSize": 61079626,
+      "fileSizeHuman": "58.25 MB",
+      "sha256": "BFB34AFD5C9B11B52F3BAB542F347F61FA8BE4134344E9298776C95BD2508FFD",
+      "buildType": "apk",
+      "platform": "android",
+      "timestamp": "2026-07-19T18:17:34",
+      "configSource": "pubspec.yaml"
     }
   ]
 }

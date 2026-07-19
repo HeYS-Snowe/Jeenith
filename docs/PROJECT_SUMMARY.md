@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.4.3+27**（2026-07-19，feature — 历史预览 + 罗盘视觉统一 + 康熙笔画数据集 + 揭示动画修复）|
+| 当前版本 | **2.4.4+28**（2026-07-19，feature — 思源宋体子集化 + 复杂术引导遮罩 + 共享组件浅色收尾）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -222,6 +222,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **Jeenith_feature_2.4.2_20260718_01_windows_x64.zip** | **Windows** | **2.4.2+26** | **32.09 MB** | **feature** |
 | **Jeenith_feature_2.4.3_20260719_01.apk** | **Android** | **2.4.3+27** | **75.01 MB** | **feature** |
 | **Jeenith_feature_2.4.3_20260719_01_windows_x64.zip** | **Windows** | **2.4.3+27** | **32.37 MB** | **feature** |
+| **Jeenith_feature_2.4.4_20260719_01.apk** | **Android** | **2.4.4+28** | **58.26 MB** | **feature** |
+| **Jeenith_feature_2.4.4_20260719_01_windows_x64.zip** | **Windows** | **2.4.4+28** | **15.58 MB** | **feature** |
 
 ### GitHub Release 发布记录
 
@@ -257,6 +259,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.4.1+25** | **2026-07-18** | **fix** | **思源宋体接入 + 分享图主题背景 + 首页使用方法默认折叠 + 首页卡片浅色修复** |
 | **2.4.2+26** | **2026-07-18** | **feature** | **浅色模式全面适配：深浅渐变切换（Color.lerp + ThemeAnimScope）+ 12 术 page 主题感知 + 命盘/天盘/罗盘 painter 注入 AppClr** |
 | **2.4.3+27** | **2026-07-19** | **feature** | **历史预览（11 术恢复）+ 罗盘视觉统一 + 康熙笔画数据集（2 万字）+ RevealAnimation 第二次卜算重放修复** |
+| **2.4.4+28** | **2026-07-19** | **feature** | **思源宋体子集化（APK 75→58 MB）+ 复杂术引导遮罩 + 共享组件浅色收尾** |
 
 ---
 
