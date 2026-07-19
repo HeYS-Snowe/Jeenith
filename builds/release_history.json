@@ -950,7 +950,7 @@
           "sizeFormatted": "58.34 MB",
           "sha256": "9D0E7EE6BD497FB82C8D63944B945BD5C1B8621870F38829A86EAC70FF3A86ED",
           "localPath": "builds/android/Jeenith_feature_2.5.0_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
@@ -959,16 +959,16 @@
           "sizeFormatted": "15.59 MB",
           "sha256": "03223625D0B3126881A49B8AF0B3C5F6B6D43C780BF25F5E68EC41192438E1D",
           "localPath": "builds/windows/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.5.0+29",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T19:37:55",
       "commit": "1b09d94",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T20:20:00",
+      "url": "https://github.com/1010523654/Jeenith/releases/tag/v2.5.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
@@ -989,7 +989,7 @@
           "sizeFormatted": "58.59 MB",
           "sha256": "0A0CF6FE5E6F75858437AB08CA0387042B5000368459729EE6C8E7035415458E",
           "localPath": "builds/android/Jeenith_feature_2.6.0_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
@@ -998,16 +998,16 @@
           "sizeFormatted": "15.62 MB",
           "sha256": "2563BF245B522A3456DABA787C10B1212954E572C93ABB0F1143901E942205AF",
           "localPath": "builds/windows/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.6.0+30",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T19:59:11",
       "commit": "606e409",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T20:50:00",
+      "url": "https://github.com/1010523654/Jeenith/releases/tag/v2.6.0",
+      "status": "published"
     }
   ]
 }
