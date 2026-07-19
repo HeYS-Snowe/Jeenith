@@ -1132,8 +1132,8 @@
       "tag": "v2.8.1",
       "target": "main",
       "title": "v2.8.1 — 修复周易/小六壬桌面端 pinned header 崩溃",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.8.1.md",
       "notesFormat": "markdown",
@@ -1163,6 +1163,45 @@
       "commit": "",
       "publishedAt": "2026-07-19T15:22:23Z",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.8.1",
+      "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.9.0",
+      "target": "main",
+      "title": "v2.9.0 — 六爻断法深化（旬空 + 六冲六合）",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.9.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.9.0_20260720_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61685838,
+          "sizeFormatted": "58.83 MB",
+          "sha256": "4021CB2421882971ED84221E9CD07C978B50D4904F15269868108142FC5AD495",
+          "localPath": "builds/android/Jeenith_feature_2.9.0_20260720_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.0/Jeenith_feature_2.9.0_20260720_01.apk"
+        },
+        {
+          "name": "Jeenith_feature_2.9.0_20260720_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16414042,
+          "sizeFormatted": "15.65 MB",
+          "sha256": "337D16AF48E0ABAA736E83FE40D703795D43B4E99623883820BAF19FA00BBE82",
+          "localPath": "builds/windows/Jeenith_feature_2.9.0_20260720_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.0/Jeenith_feature_2.9.0_20260720_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.9.0+37",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-20T00:50:00",
+      "commit": "",
+      "publishedAt": "2026-07-20T00:55:00Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.9.0",
       "status": "published"
     }
   ]

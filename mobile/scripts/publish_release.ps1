@@ -16,6 +16,8 @@
 #>
 param([Parameter(Mandatory)][string]$Tag)
 $ErrorActionPreference = 'Stop'
+# 合并系统+用户 PATH（pwsh 经 git bash 启动时可能未继承用户级 PATH，导致 gh 等找不到）
+$env:Path = [Environment]::GetEnvironmentVariable('Path','Machine') + ';' + [Environment]::GetEnvironmentVariable('Path','User')
 $root = (Resolve-Path "$PSScriptRoot/../..").Path   # 项目根 Jeenith/
 
 # 读 release_history.json 取该 tag 的元数据
