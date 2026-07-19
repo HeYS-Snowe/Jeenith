@@ -229,6 +229,7 @@ class _CeziPageState extends ConsumerState<CeziPage> {
       padding: const EdgeInsets.all(16),
       child: RevealAnimation(
         enabled: enabled,
+        replayKey: r,
         hero: Center(
           child: Container(
             width: 110,

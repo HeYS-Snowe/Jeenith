@@ -46,6 +46,13 @@ class RevealAnimation extends StatefulWidget {
   /// 全部揭示完成后回调。
   final VoidCallback? onComplete;
 
+  /// 重放触发键（v2.4.3）：当此值变化时重新播放揭示动画。
+  ///
+  /// RevealAnimation 是 StatefulWidget，第二次起卦时 widget rebuild 但 State
+  /// 持久、controller 不会重置，导致结果瞬间显示而无动画。各术传入每次起卦
+  /// 都会变化的标识（通常是结果对象本身），didUpdateWidget 检测到变化即重放。
+  final Object? replayKey;
+
   const RevealAnimation({
     super.key,
     this.hero,
@@ -59,6 +66,7 @@ class RevealAnimation extends StatefulWidget {
     this.titleSpeed = const Duration(milliseconds: 60),
     this.enabled = true,
     this.onComplete,
+    this.replayKey,
   });
 
   @override
@@ -120,6 +128,15 @@ class _RevealAnimationState extends State<RevealAnimation>
       _ctrl.forward().then((_) => widget.onComplete?.call());
     } else {
       _ctrl.value = 1.0; // 静态模式直接完成
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant RevealAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // v2.4.3：同一页面第二次起卦时，replayKey 变化 → 重新播放揭示动画
+    if (widget.replayKey != oldWidget.replayKey && widget.enabled) {
+      _ctrl.forward(from: 0).then((_) => widget.onComplete?.call());
     }
   }
 
@@ -188,7 +205,8 @@ class _RevealAnimationState extends State<RevealAnimation>
 
   Widget _buildTypewriter() {
     final n = _titleChars.value;
-    final shown = widget.title!.substring(0, n);
+    final shown =
+        widget.title!.substring(0, n.clamp(0, widget.title!.length));
     final isTyping = n < widget.title!.length;
     return RichText(
       textAlign: TextAlign.center,

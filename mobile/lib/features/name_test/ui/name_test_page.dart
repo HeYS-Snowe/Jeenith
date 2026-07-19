@@ -231,6 +231,7 @@ class _NameTestPageState extends ConsumerState<NameTestPage> {
       padding: const EdgeInsets.all(16),
       child: RevealAnimation(
         enabled: enabled,
+        replayKey: r,
         hero: Center(
           child: Container(
             padding:

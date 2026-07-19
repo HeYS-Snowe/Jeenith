@@ -243,6 +243,7 @@ class _QimenPageState extends ConsumerState<QimenPage> {
         true;
     return RevealAnimation(
       enabled: enabled,
+      replayKey: r,
       hero: DecorativePanel(
         padding: const EdgeInsets.all(12),
         child: Column(

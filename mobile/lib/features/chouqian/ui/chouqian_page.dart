@@ -252,6 +252,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
       padding: const EdgeInsets.all(16),
       child: RevealAnimation(
         enabled: enabled,
+        replayKey: r,
         hero: Center(
           child: Container(
             padding:

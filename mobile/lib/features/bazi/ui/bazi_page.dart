@@ -478,6 +478,7 @@ class _BaziPageState extends ConsumerState<BaziPage> {
         true;
     return RevealAnimation(
       enabled: enabled,
+      replayKey: r,
       hero: _buildHeader(r),
       sections: [
         _buildPillars(r),

@@ -193,6 +193,7 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
                       .valueOrNull
                       ?.isAnimationEnabled('jiaobei', AnimationKind.reveal) ??
                   true,
+              replayKey: _last,
               hero: DecorativePanel(
                 padding: const EdgeInsets.all(12),
                 child: Column(
