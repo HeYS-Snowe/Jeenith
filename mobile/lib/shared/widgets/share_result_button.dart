@@ -32,8 +32,9 @@ class ShareResultButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return DarkButton(
-      icon: const Icon(Icons.ios_share, color: AppColors.textPrimary, size: 18),
+      icon: Icon(Icons.ios_share, color: c.textPrimary, size: 18),
       text: '分享结果',
       onPressed: enabled ? () => _share(context) : null,
     );

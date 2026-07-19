@@ -54,7 +54,9 @@ class _DivinationLoadingIndicatorState extends State<DivinationLoadingIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final color = widget.color ?? AppColors.gold;
+    final c = AppClr.of(context);
+    final color = widget.color ?? c.gold;
+    final accent = c.goldBright;
     return SizedBox(
       width: widget.size,
       height: widget.size,
@@ -66,6 +68,7 @@ class _DivinationLoadingIndicatorState extends State<DivinationLoadingIndicator>
               spin: _spin.value,
               breath: _breath.value,
               color: color,
+              accent: accent,
             ),
           );
         },
@@ -78,16 +81,18 @@ class _LoadingPainter extends CustomPainter {
   final double spin;
   final double breath;
   final Color color;
+  final Color accent;
 
   _LoadingPainter({
     required this.spin,
     required this.breath,
     required this.color,
+    required this.accent,
   });
 
   @override
   bool shouldRepaint(covariant _LoadingPainter old) =>
-      old.spin != spin || old.breath != breath;
+      old.spin != spin || old.breath != breath || old.accent != accent;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -146,7 +151,7 @@ class _LoadingPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(px, py),
         1.6,
-        Paint()..color = AppColors.goldBright.withValues(alpha: 0.55),
+        Paint()..color = accent.withValues(alpha: 0.55),
       );
     }
     canvas.restore();
@@ -156,7 +161,7 @@ class _LoadingPainter extends CustomPainter {
     canvas.drawCircle(
       Offset(cx, cy),
       pulseR,
-      Paint()..color = AppColors.goldBright,
+      Paint()..color = accent,
     );
   }
 }

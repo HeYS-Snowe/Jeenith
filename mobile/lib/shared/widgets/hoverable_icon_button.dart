@@ -39,9 +39,10 @@ class _HoverableIconButtonState extends State<HoverableIconButton> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     final enabled = widget.onPressed != null;
-    final baseColor = widget.color ?? AppColors.textSubtitle;
-    final hoverColor = widget.hoverColor ?? AppColors.gold;
+    final baseColor = widget.color ?? c.textSubtitle;
+    final hoverColor = widget.hoverColor ?? c.gold;
     final isDesktop = PlatformInfo.isDesktop;
 
     // 计算当前颜色：hover 时变金

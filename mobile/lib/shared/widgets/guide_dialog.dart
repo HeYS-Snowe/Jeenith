@@ -13,6 +13,7 @@ import '../../core/theme/app_theme.dart';
 ///
 /// v2.3.1：升级入场动画（Phase 5）——背景 BackdropFilter 模糊渐入 +
 /// 卡片从中心 scale 0.85→1.0 + easeOutBack 弹回（280ms）。
+/// v2.4.4：全面主题感知（AppClr 浅色适配）。
 class GuideDialog extends StatefulWidget {
   final int countdownSec;
   const GuideDialog({super.key, this.countdownSec = 3});
@@ -53,6 +54,7 @@ class _GuideDialogState extends State<GuideDialog>
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     final ready = _count <= 0;
     // 入场曲线：easeOutBack（带回弹）
     final enterCurve = CurvedAnimation(
@@ -79,26 +81,25 @@ class _GuideDialogState extends State<GuideDialog>
                   child: Opacity(
                     opacity: _enter.value.clamp(0.0, 1.0),
                     child: AlertDialog(
-                      backgroundColor: AppColors.card,
+                      backgroundColor: c.card,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: const BorderSide(
-                            color: Color.fromRGBO(212, 168, 87, 0.5)),
+                        side: BorderSide(color: c.goldBorder),
                       ),
-                      title: const Row(
+                      title: Row(
                         children: [
                           Icon(Icons.menu_book,
-                              color: AppColors.goldBright, size: 20),
-                          SizedBox(width: 8),
+                              color: c.goldBright, size: 20),
+                          const SizedBox(width: 8),
                           Text('使用方法',
                               style: TextStyle(
-                                  color: AppColors.goldBright,
+                                  color: c.goldBright,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   letterSpacing: 2)),
                         ],
                       ),
-                      content: const SingleChildScrollView(
+                      content: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -107,25 +108,25 @@ class _GuideDialogState extends State<GuideDialog>
                               title: '单一卜算术起卦',
                               body: '第一次问大致的问题，第二次问细致的问题。',
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             _GuideItem(
                               num: '2',
                               title: '多卜算术组合使用',
                               body: '先用一种卜算术起卦问大致的问题，再用另外一种起卦问细节上的问题。',
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
                               '3. 可以将卦象的完整截图和问题一并发送给 AI，也可以自己查资料。',
                               style: TextStyle(
-                                  color: AppColors.textBody,
+                                  color: c.textBody,
                                   fontSize: 13,
                                   height: 1.6),
                             ),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                             Text(
                               '4. 点击起卦按钮前，心里默念问题，集中注意力，注意力达到顶点的一刹那起卦。',
                               style: TextStyle(
-                                  color: AppColors.textBody,
+                                  color: c.textBody,
                                   fontSize: 13,
                                   height: 1.6),
                             ),
@@ -140,7 +141,7 @@ class _GuideDialogState extends State<GuideDialog>
                           child: Text(
                             ready ? '我知道了' : '$_count s 后可关闭',
                             style: TextStyle(
-                              color: ready ? AppColors.gold : AppColors.textHint,
+                              color: ready ? c.gold : c.textHint,
                               fontWeight:
                                   ready ? FontWeight.bold : FontWeight.normal,
                             ),
@@ -167,17 +168,18 @@ class _GuideItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('$num. $title',
-            style: const TextStyle(
-                color: AppColors.goldBright,
+            style: TextStyle(
+                color: c.goldBright,
                 fontSize: 14,
                 fontWeight: FontWeight.bold)),
         const SizedBox(height: 2),
         Text(body,
-            style: const TextStyle(color: AppColors.textBody, fontSize: 13, height: 1.6)),
+            style: TextStyle(color: c.textBody, fontSize: 13, height: 1.6)),
       ],
     );
   }

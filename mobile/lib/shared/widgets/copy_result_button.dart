@@ -40,11 +40,11 @@ class _CopyResultButtonState extends State<CopyResultButton> {
     });
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('已复制详细结果到剪贴板'),
-          backgroundColor: AppColors.card,
+        SnackBar(
+          content: const Text('已复制详细结果到剪贴板'),
+          backgroundColor: AppClr.of(context).card,
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -52,6 +52,7 @@ class _CopyResultButtonState extends State<CopyResultButton> {
 
   @override
   Widget build(BuildContext context) {
+    final c = AppClr.of(context);
     // 切换图标：复制成功后用 check 旋转入场
     final icon = AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
@@ -62,13 +63,13 @@ class _CopyResultButtonState extends State<CopyResultButton> {
         );
       },
       child: _copied
-          ? const Icon(Icons.check,
-              key: ValueKey('check'),
-              color: AppColors.goldBright,
+          ? Icon(Icons.check,
+              key: const ValueKey('check'),
+              color: c.goldBright,
               size: 18)
-          : const Icon(Icons.copy_all,
-              key: ValueKey('copy'),
-              color: AppColors.textPrimary,
+          : Icon(Icons.copy_all,
+              key: const ValueKey('copy'),
+              color: c.textPrimary,
               size: 18),
     );
     return DarkButton(
