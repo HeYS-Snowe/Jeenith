@@ -976,8 +976,8 @@
       "tag": "v2.6.0",
       "target": "main",
       "title": "v2.6.0 — 称骨算命（袁天罡，第 13 术）",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.6.0.md",
       "notesFormat": "markdown",
@@ -1008,6 +1008,45 @@
       "publishedAt": "2026-07-19T20:50:00",
       "url": "https://github.com/1010523654/Jeenith/releases/tag/v2.6.0",
       "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.7.0",
+      "target": "main",
+      "title": "v2.7.0 — 太乙神数（三式之首，第 14 术）",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.7.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.7.0_20260719_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61489234,
+          "sizeFormatted": "58.64 MB",
+          "sha256": "E67D2B219D9AD7AD4E2D441AE74C225B8B472C43BE025EA27D40B1F273F84541",
+          "localPath": "builds/android/Jeenith_feature_2.7.0_20260719_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16394616,
+          "sizeFormatted": "15.63 MB",
+          "sha256": "32A2A400F8689985E1AC70E7EB2082AF6E6E94998B60D5F378AEEA74D312A30F",
+          "localPath": "builds/windows/Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.7.0+31",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-19T20:28:24",
+      "commit": "09256ce",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
     }
   ]
 }
