@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.4.4+28**（2026-07-19，feature — 思源宋体子集化 + 复杂术引导遮罩 + 共享组件浅色收尾）|
+| 当前版本 | **2.5.0+29**（2026-07-19，feature — 紫微四化/大限/长生/补煞 + 奇门天盘干/格局断辞）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -224,6 +224,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **Jeenith_feature_2.4.3_20260719_01_windows_x64.zip** | **Windows** | **2.4.3+27** | **32.37 MB** | **feature** |
 | **Jeenith_feature_2.4.4_20260719_01.apk** | **Android** | **2.4.4+28** | **58.26 MB** | **feature** |
 | **Jeenith_feature_2.4.4_20260719_01_windows_x64.zip** | **Windows** | **2.4.4+28** | **15.58 MB** | **feature** |
+| **Jeenith_feature_2.5.0_20260719_01.apk** | **Android** | **2.5.0+29** | **58.34 MB** | **feature** |
+| **Jeenith_feature_2.5.0_20260719_01_windows_x64.zip** | **Windows** | **2.5.0+29** | **15.59 MB** | **feature** |
 
 ### GitHub Release 发布记录
 
@@ -260,6 +262,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.4.2+26** | **2026-07-18** | **feature** | **浅色模式全面适配：深浅渐变切换（Color.lerp + ThemeAnimScope）+ 12 术 page 主题感知 + 命盘/天盘/罗盘 painter 注入 AppClr** |
 | **2.4.3+27** | **2026-07-19** | **feature** | **历史预览（11 术恢复）+ 罗盘视觉统一 + 康熙笔画数据集（2 万字）+ RevealAnimation 第二次卜算重放修复** |
 | **2.4.4+28** | **2026-07-19** | **feature** | **思源宋体子集化（APK 75→58 MB）+ 复杂术引导遮罩 + 共享组件浅色收尾** |
+| **2.5.0+29** | **2026-07-19** | **feature** | **紫微深化（四化/大限/长生/8 补煞）+ 奇门深化（天盘干/11 格局断辞）— 断卦核心补全** |
 
 ---
 
@@ -272,9 +275,10 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 3. **历史记录预览**（v2.4.3）：新历史存结构化 `extra` 字段支持恢复卦象；旧历史（仅文本）预览按钮置灰
 4. **测字词库扩展**（v2.4.3）：接入开源康熙笔画数据集，替代当前 ~400 字 `Map`
 5. **首次使用引导遮罩**：对高度复杂的术数（大六壬、奇门、紫微）新增首次使用遮罩层或指引
-6. **紫微/奇门 v3 深化**：紫微辅星细化（火星/铃星/天空/地劫等）；奇门飞盘细化与断辞
+6. ~~紫微/奇门深化~~ ✅ v2.5.0 已完成紫微四化/大限/长生/补充神煞 + 奇门天盘干/格局断辞（断卦核心补全）；剩余奇门飞盘法（转盘法已完整，飞盘为另一体系可选）
 7. **历史记录云同步**：可选后端账户体系，跨设备同步历史
-8. **更多卜算术**：铁板神数、面相（如果未来需要）
+8. **太乙神数**（v2.6.0 计划）：三式之首，凑齐全套最高权威术数体系（奇门 + 大六壬 + 太乙）
+9. **更多卜算术**：铁板神数（需万条条文）、六爻纳甲（周易深度断法）、诸葛神数（需 384 签数据集）、择日黄历（lunar 库支持）
 
 ---
 
