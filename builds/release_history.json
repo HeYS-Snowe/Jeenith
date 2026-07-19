@@ -1015,8 +1015,8 @@
       "tag": "v2.7.0",
       "target": "main",
       "title": "v2.7.0 — 太乙神数（三式之首，第 14 术）",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.7.0.md",
       "notesFormat": "markdown",
@@ -1044,6 +1044,45 @@
       "buildStatus": "feature",
       "builtAt": "2026-07-19T20:28:24",
       "commit": "09256ce",
+      "publishedAt": "",
+      "url": "",
+      "status": "unpublished"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "1010523654/Jeenith",
+      "tag": "v2.7.1",
+      "target": "main",
+      "title": "v2.7.1 — GoldButton 根治竖线坍塌 + 按压缩放延迟",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.7.1.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_2.7.1_20260719_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61489230,
+          "sizeFormatted": "58.64 MB",
+          "sha256": "494941135F2DCBA167AC2E484EEE98FAEC01E9372507BA7A0695F3A61C10C822",
+          "localPath": "builds/android/Jeenith_fix_2.7.1_20260719_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16393776,
+          "sizeFormatted": "15.63 MB",
+          "sha256": "8D0844BB389C2D85882121E4E7A6F5A0359774CC15ABB9B1D16C49B9700FBC16",
+          "localPath": "builds/windows/Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.7.1+32",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-19T20:45:43",
+      "commit": "",
       "publishedAt": "",
       "url": "",
       "status": "unpublished"

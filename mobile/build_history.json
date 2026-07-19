@@ -681,6 +681,23 @@
       "platform": "android",
       "timestamp": "2026-07-19T20:28:24",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.7.1",
+      "buildNumber": 32,
+      "status": "fix",
+      "date": "20260719",
+      "sequence": 1,
+      "filename": "Jeenith_fix_2.7.1_20260719_01.apk",
+      "originalName": "app-release.apk",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_fix_2.7.1_20260719_01.apk",
+      "fileSize": 61489230,
+      "fileSizeHuman": "58.64 MB",
+      "sha256": "494941135F2DCBA167AC2E484EEE98FAEC01E9372507BA7A0695F3A61C10C822",
+      "buildType": "apk",
+      "platform": "android",
+      "timestamp": "2026-07-19T20:45:43",
+      "configSource": "pubspec.yaml"
     }
   ]
 }

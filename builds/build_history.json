@@ -807,6 +807,23 @@
       "backupPath": null,
       "platform": "android-arm64,android-arm,android-x64",
       "verificationPassed": true
+    },
+    {
+      "version": "2.7.1+32",
+      "status": "fix",
+      "statusLabel": "修复版",
+      "date": "20260719",
+      "sequence": 1,
+      "filename": "Jeenith_fix_2.7.1_20260719_01.apk",
+      "timestamp": "2026-07-19T20:45:43",
+      "fileSize": 61489230,
+      "fileSizeFormatted": "58.64 MB",
+      "sha256": "494941135F2DCBA167AC2E484EEE98FAEC01E9372507BA7A0695F3A61C10C822",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\app\\outputs\\flutter-apk\\app-release.apk",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_fix_2.7.1_20260719_01.apk",
+      "backupPath": null,
+      "platform": "android-arm64,android-arm,android-x64",
+      "verificationPassed": true
     }
   ]
 }

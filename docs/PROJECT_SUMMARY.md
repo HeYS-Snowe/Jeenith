@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.7.0+31**（2026-07-19，feature — 太乙神数 三式之首 第 14 术）|
+| 当前版本 | **2.7.1+32**（2026-07-19，fix — GoldButton 根治竖线坍塌 + 按压缩放延迟）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/1010523654/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -234,6 +234,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **Jeenith_feature_2.6.0_20260719_01_windows_x64.zip** | **Windows** | **2.6.0+30** | **15.62 MB** | **feature** |
 | **Jeenith_feature_2.7.0_20260719_01.apk** | **Android** | **2.7.0+31** | **58.64 MB** | **feature** |
 | **Jeenith_feature_2.7.0_20260719_01_windows_x64.zip** | **Windows** | **2.7.0+31** | **15.63 MB** | **feature** |
+| **Jeenith_fix_2.7.1_20260719_01.apk** | **Android** | **2.7.1+32** | **58.64 MB** | **fix** |
+| **Jeenith_fix_2.7.1_20260719_01_windows_x64.zip** | **Windows** | **2.7.1+32** | **15.63 MB** | **fix** |
 
 ### GitHub Release 发布记录
 
@@ -273,6 +275,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.5.0+29** | **2026-07-19** | **feature** | **紫微深化（四化/大限/长生/8 补煞）+ 奇门深化（天盘干/11 格局断辞）— 断卦核心补全** |
 | **2.6.0+30** | **2026-07-19** | **feature** | **称骨算命（袁天罡，第 13 术）— 年月日时四骨重 + 52 档命格歌** |
 | **2.7.0+31** | **2026-07-19** | **feature** | **太乙神数（三式之首，第 14 术）— 积年推太乙落宫/文昌始击/主客算/格局，三式齐备** |
+| **2.7.1+32** | **2026-07-19** | **fix** | **GoldButton 根治竖线坍塌（Transform.scale intrinsic）+ 按压缩放延迟（Listener 绕过 arena）** |
 
 ---
 
