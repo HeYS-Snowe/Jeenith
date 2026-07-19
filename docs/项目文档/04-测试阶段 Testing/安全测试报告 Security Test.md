@@ -9,7 +9,7 @@
 | 报告版本 Report Version | v1.0.0 |
 | 测试日期 Test Date | YYYY-MM-DD |
 | 测试人 Tester | HeYS-Snowe |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 许可证 License | MIT |
 
 ---

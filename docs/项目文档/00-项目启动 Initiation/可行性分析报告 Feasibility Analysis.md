@@ -51,7 +51,7 @@
 | **当前版本 Current Version** | 2.3.3+23（release，2026-07-15） |
 | **开发者 Developer** | HeYS-Snowe（唯一开发者） |
 | **创建日期 Created Date** | 2026-07-05 |
-| **GitHub 仓库 Repository** | https://github.com/1010523654/Jeenith |
+| **GitHub 仓库 Repository** | https://github.com/HeYS-Snowe/Jeenith |
 | **许可证 License** | MIT |
 
 ### 1.2 项目背景 Project Background

@@ -14,7 +14,7 @@
 | 更新日期 Updated Date | 2026-07-15 |
 | 运维负责人 Operations Owner | HeYS-Snowe（开发者）|
 | 项目位置 Project Location | D:\Code\Project\Qore\Jeenith |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 
@@ -83,7 +83,7 @@
 步骤2：安装 Android Studio + Android SDK
 步骤3：安装 Visual Studio 2022（勾选「使用 C++ 的桌面开发」）
 步骤4：安装 Git + PowerShell 7+
-步骤5：克隆仓库 git clone https://github.com/1010523654/Jeenith.git
+步骤5：克隆仓库 git clone https://github.com/HeYS-Snowe/Jeenith.git
 步骤6：cd mobile && flutter pub get
 步骤7：flutter doctor（确认环境完整）
 ```
@@ -620,9 +620,9 @@ Jeenith/
 
 | 类型 Type | 方式 Method |
 |---------|----------|
-| 问题反馈 | GitHub Issues: https://github.com/1010523654/Jeenith/issues |
+| 问题反馈 | GitHub Issues: https://github.com/HeYS-Snowe/Jeenith/issues |
 | 开发者 | HeYS-Snowe |
-| 仓库 | https://github.com/1010523654/Jeenith |
+| 仓库 | https://github.com/HeYS-Snowe/Jeenith |
 
 ### 附录D：检查清单 Checklists
 

@@ -12,7 +12,7 @@
 | 复盘周期 Retrospective Period | 2026-07-12 ~ 2026-07-15 |
 | 复盘日期 Retrospective Date | 2026-07-15 |
 | 开发者 Developer | HeYS-Snowe（唯一开发者）|
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 

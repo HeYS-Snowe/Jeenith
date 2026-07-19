@@ -54,7 +54,7 @@
 | **产品定位 Positioning** | 叩问本心的卜算合集 |
 | **当前版本 Current Version** | 2.3.3+23（release，2026-07-15） |
 | **品牌精神 Brand Spirit** | 志于本心，知于极处 —— Question the core. Return to origins. |
-| **GitHub 仓库 Repository** | https://github.com/1010523654/Jeenith |
+| **GitHub 仓库 Repository** | https://github.com/HeYS-Snowe/Jeenith |
 | **许可证 License** | MIT |
 
 ### 1.2 产品简介 Product Brief

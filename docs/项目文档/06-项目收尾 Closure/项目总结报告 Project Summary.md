@@ -14,7 +14,7 @@
 | 项目周期 Project Period | 2026-07-12 ~ 2026-07-15 |
 | 当前版本 Current Version | 2.3.3+23（release）|
 | 开发者 Developer | HeYS-Snowe（唯一开发者）|
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 许可证 License | MIT License |
 | 报告日期 Report Date | 2026-07-15 |
 
@@ -380,7 +380,7 @@ AppConfig.isAnimationEnabled(id, kind)
 
 | 项目 Item | 内容 Content |
 |---------|-------------|
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 许可证 License | MIT License |
 | 版权 Copyright | Copyright (c) 2026 Qore |
 | 开发者 Developer | HeYS-Snowe |

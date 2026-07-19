@@ -11,7 +11,7 @@
 | 文档版本 Document Version | v1.0.0 |
 | 创建日期 Created Date | 2026-07-15 |
 | 维护人 Maintainer | HeYS-Snowe |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 许可证 License | MIT |
 
 ---
@@ -381,7 +381,7 @@ builds/
 ```json
 {
   "platform": "GitHub",
-  "repo": "1010523654/Jeenith",
+  "repo": "HeYS-Snowe/Jeenith",
   "tag": "v2.3.3",
   "target": "main",
   "title": "v2.3.3 — 首页按钮间距修复 + MIT LICENSE + Windows 图标产物归档",
@@ -438,7 +438,7 @@ builds/
 
 ### 6.2 创建 GitHub Release 步骤
 
-1. 访问 https://github.com/1010523654/Jeenith/releases/new
+1. 访问 https://github.com/HeYS-Snowe/Jeenith/releases/new
 2. **Choose a tag**：输入 `v{version}`（如 `v2.3.3`），选择「Create new tag: v2.3.3 on publish」
 3. **Target**：`main`
 4. **Release title**：从 `release_history.json` 的 `title` 字段复制
@@ -451,7 +451,7 @@ builds/
 
 1. 从 GitHub Release 页获取下载 URL
 2. 更新 `release_history.json` 中对应记录：
-   - `url`: `https://github.com/1010523654/Jeenith/releases/tag/v{version}`
+   - `url`: `https://github.com/HeYS-Snowe/Jeenith/releases/tag/v{version}`
    - `publishedAt`: ISO8601 时间戳
    - 各 asset 的 `downloadUrl`
    - `status`: `published`
@@ -600,4 +600,4 @@ pwsh -File scripts/build_apk.ps1 -Status hotfix -TargetVersion "2.3.4"
 - [CLAUDE.md](../../CLAUDE.md)
 - [Release Notes](../../builds/release_notes/)
 - 项目位置：`D:\Code\Project\Qore\Jeenith`
-- 仓库：https://github.com/1010523654/Jeenith
+- 仓库：https://github.com/HeYS-Snowe/Jeenith

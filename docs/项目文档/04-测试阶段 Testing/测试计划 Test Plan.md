@@ -11,7 +11,7 @@
 | 创建日期 Created Date | 2026-07-15 |
 | 测试负责人 QA Lead | HeYS-Snowe |
 | 对应开发版本 Dev Version | 2.3.3+23 |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 

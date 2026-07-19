@@ -7,7 +7,7 @@
 | 项目名称 Project Name | 志极 Jeenith |
 | 文档版本 Document Version | v1.0.0 |
 | 创建日期 Created Date | 2026-07-15 |
-| 仓库地址 Repository | https://github.com/1010523654/Jeenith |
+| 仓库地址 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 默认分支 Default Branch | main |
 | 开发者 Developer | HeYS-Snowe |
 

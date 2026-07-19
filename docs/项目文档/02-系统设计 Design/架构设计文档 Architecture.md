@@ -14,7 +14,7 @@
 | 开发者 Developer | HeYS-Snowe（唯一开发者） |
 | 技术栈 Stack | Flutter 3.x（Dart 3.11+）· Riverpod · go_router · lunar |
 | 许可证 License | MIT · Copyright (c) 2026 Qore |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 

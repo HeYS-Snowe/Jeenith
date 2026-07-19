@@ -11,7 +11,7 @@
 | 文档版本 Document Version | v1.0.0 |
 | 创建日期 Created Date | 2026-07-15 |
 | 维护人 Maintainer | HeYS-Snowe |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 
@@ -373,7 +373,7 @@
 - [ ] **MUST** GitHub Release 页可访问
 - [ ] **MUST** 两个 asset 下载链接可访问
 - [ ] **MUST** 更新 `release_history.json`：
-  - `url`: `https://github.com/1010523654/Jeenith/releases/tag/vX.Y.Z`
+  - `url`: `https://github.com/HeYS-Snowe/Jeenith/releases/tag/vX.Y.Z`
   - `publishedAt`: ISO8601 时间戳
   - 各 asset `downloadUrl`
   - `status`: `published`
@@ -495,4 +495,4 @@ docs/项目文档/05-部署上线 Deployment/
 - [AGENTS.md](../../../AGENTS.md)
 - [CLAUDE.md](../../../CLAUDE.md)
 - 项目位置：`D:\Code\Project\Qore\Jeenith`
-- 仓库：https://github.com/1010523654/Jeenith
+- 仓库：https://github.com/HeYS-Snowe/Jeenith

@@ -212,9 +212,10 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
   Widget _buildActionBar(ZhouyiResult? r) => Container(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
         color: AppClr.of(context).bg.withValues(alpha: 0.92),
-        constraints: const BoxConstraints(minHeight: 80),
-        // 不用 Container(alignment)——Align 会给 child loose 宽度约束，致 Row 中
-        // Expanded 异常。改由 Row crossAxisAlignment 在 tight 高度内垂直居中。
+        // minHeight 必须与 _PinHeaderDelegate 的 extent(90) 一致，否则 child 实际
+        // 高度(80) < delegate extent(90) 会产生 paintExtent < layoutExtent 的异常
+        // SliverGeometry，致后续 sliver 不被 layout、viewport paint 时空指针崩溃。
+        constraints: const BoxConstraints(minHeight: 90),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

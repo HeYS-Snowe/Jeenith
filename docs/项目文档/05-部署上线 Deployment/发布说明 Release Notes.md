@@ -11,7 +11,7 @@
 | 文档版本 Document Version | v1.0.0 |
 | 创建日期 Created Date | 2026-07-15 |
 | 发布负责人 Release Manager | HeYS-Snowe |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 | 许可证 License | MIT |
 
 > **本文档为发布说明模板**。实际发布的每个版本应参考 `builds/release_notes/release_notes_v{version}.md` 格式撰写，存于该目录下。
@@ -51,7 +51,7 @@
 | **发布日期 Release Date** | YYYY-MM-DD |
 | **版本类型 Type** | □ 正式版 release □ 测试版 beta □ 修复版 fix □ 功能版 feature □ 紧急修复 hotfix |
 | **GitHub Tag** | vX.Y.Z |
-| **GitHub Release URL** | https://github.com/1010523654/Jeenith/releases/tag/vX.Y.Z |
+| **GitHub Release URL** | https://github.com/HeYS-Snowe/Jeenith/releases/tag/vX.Y.Z |
 | **前置版本 Previous Version** | vX.Y.(Z-1) |
 | **兼容性 Compatibility** | □ 与上一版本兼容 □ 需重新安装 |
 
@@ -210,9 +210,9 @@ shasum -a 256 Jeenith_*.zip
 
 ### 8.3 下载地址 Download URL
 
-- GitHub Release：https://github.com/1010523654/Jeenith/releases/tag/vX.Y.Z
-- 直达 APK：https://github.com/1010523654/Jeenith/releases/download/vX.Y.Z/{apk-filename}
-- 直达 Windows ZIP：https://github.com/1010523654/Jeenith/releases/download/vX.Y.Z/{zip-filename}
+- GitHub Release：https://github.com/HeYS-Snowe/Jeenith/releases/tag/vX.Y.Z
+- 直达 APK：https://github.com/HeYS-Snowe/Jeenith/releases/download/vX.Y.Z/{apk-filename}
+- 直达 Windows ZIP：https://github.com/HeYS-Snowe/Jeenith/releases/download/vX.Y.Z/{zip-filename}
 
 ---
 
@@ -279,12 +279,12 @@ shasum -a 256 Jeenith_*.zip
 
 ### 反馈 Feedback
 
-- 问题反馈：https://github.com/1010523654/Jeenith/issues
-- 仓库：https://github.com/1010523654/Jeenith
+- 问题反馈：https://github.com/HeYS-Snowe/Jeenith/issues
+- 仓库：https://github.com/HeYS-Snowe/Jeenith
 
 ### 版权 License
 
-Copyright (c) 2026 Qore. 本项目基于 MIT 许可证开源，详见 [LICENSE](https://github.com/1010523654/Jeenith/blob/main/LICENSE)。
+Copyright (c) 2026 Qore. 本项目基于 MIT 许可证开源，详见 [LICENSE](https://github.com/HeYS-Snowe/Jeenith/blob/main/LICENSE)。
 
 ---
 

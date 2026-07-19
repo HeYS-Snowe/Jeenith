@@ -53,7 +53,7 @@
 | **项目状态 Project Status** | ☑ 进行中（已发布 release 2.3.3） |
 | **开始日期 Start Date** | 2026-07-05 |
 | **当前版本 Current Version** | 2.3.3+23（release，2026-07-15）|
-| **GitHub 仓库 Repository** | https://github.com/1010523654/Jeenith |
+| **GitHub 仓库 Repository** | https://github.com/HeYS-Snowe/Jeenith |
 | **许可证 License** | MIT |
 | **版权 Copyright** | Copyright (c) 2026 Qore |
 

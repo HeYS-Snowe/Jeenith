@@ -9,7 +9,7 @@
 | 创建日期 Created Date | 2026-07-15 |
 | 开发者 Developer | HeYS-Snowe |
 | 当前版本 Current Version | 2.3.3+23 |
-| 项目仓库 Repository | https://github.com/1010523654/Jeenith |
+| 项目仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 
@@ -146,7 +146,7 @@
 | 资源 Resource | 说明 Description |
 |-------------|---------------|
 | 开发环境 Development Env | Windows + Flutter 3.x（Dart 3.11+） |
-| 代码托管 Code Hosting | GitHub（main 分支）：https://github.com/1010523654/Jeenith |
+| 代码托管 Code Hosting | GitHub（main 分支）：https://github.com/HeYS-Snowe/Jeenith |
 | 农历历法 Calendar | lunar ^1.7.8（寿星天文历） |
 | 真随机 True Random | Random.secure + 触摸轨迹 + random.org |
 | 配置存储 Config Storage | shared_preferences ^2.2 |

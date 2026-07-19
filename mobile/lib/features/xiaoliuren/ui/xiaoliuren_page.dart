@@ -274,7 +274,9 @@ class _XiaoliurenPageState extends ConsumerState<XiaoliurenPage>
   Widget _buildActionBar() => Container(
         padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
         color: AppClr.of(context).bg.withValues(alpha: 0.92),
-        constraints: const BoxConstraints(minHeight: 150),
+        // minHeight 须 == _PinHeaderDelegate extent(200)，否则 child 高度 < extent
+        // 产生 paintExtent < layoutExtent 异常 geometry，致 viewport paint 空指针。
+        constraints: const BoxConstraints(minHeight: 200),
         alignment: Alignment.topCenter,
         child: Column(
           mainAxisSize: MainAxisSize.min,

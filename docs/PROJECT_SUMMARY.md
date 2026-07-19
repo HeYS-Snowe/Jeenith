@@ -12,12 +12,12 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.7.1+32**（2026-07-19，fix — GoldButton 根治竖线坍塌 + 按压缩放延迟）|
+| 当前版本 | **2.8.1+35**（2026-07-19，fix — 修复周易/小六壬桌面端 pinned header 崩溃）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
-| GitHub 仓库 | https://github.com/1010523654/Jeenith |
+| GitHub 仓库 | https://github.com/HeYS-Snowe/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
 
-**定位**：叩问本心的卜算合集——一个 APP 首页选术，承载 10 种中国传统卜算术 + 使用手册。核心价值是**可扩展卜算框架**：加新术 = 新建一个 feature 目录 + 注册一行，不改 core/shared。
+**定位**：叩问本心的卜算合集——一个 APP 首页选术，承载 15 种中国传统卜算术 + 使用手册。核心价值是**可扩展卜算框架**：加新术 = 新建一个 feature 目录 + 注册一行，不改 core/shared。
 
 **v2.0.0 标志**：结束 1.x 功能堆叠阶段，转向 2.x 交互体验与极致细节阶段。按钮物理反馈（0.95 缩放 + easeOutBack 弹回）、图标状态切换动画（+ ↔ x）、设置页全局动效开关三大微交互落地。
 
@@ -110,7 +110,7 @@ Jeenith/                           # 仓库根（solution root）
 
 ## 四、功能清单
 
-### 14 种卜算术
+### 15 种卜算术
 
 | 术 | id | 玩法 | 完成度 |
 |----|----|------|--------|
@@ -128,6 +128,7 @@ Jeenith/                           # 仓库根（solution root）
 | **八字推演** | bazi | 四柱 + 大运 + 神煞 + 五行喜忌 | ✅ 完整 |
 | **称骨算命** | chenggu | 袁天罡称骨：年月日时四骨重→52 档命格歌 | ✅ v2.6 完整 |
 | **太乙神数** | taiyi | 三式之首：积年推太乙落宫/文昌始击/主客算/格局 | ✅ v2.7 完整（三式齐备）|
+| **六爻** | liuyao | 京房纳甲：金钱卦六爻配六亲六神/世应用神断辞 | ✅ v2.8 完整（八宫算法 + 9 项单测）|
 
 ### 框架特性
 
@@ -236,6 +237,10 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **Jeenith_feature_2.7.0_20260719_01_windows_x64.zip** | **Windows** | **2.7.0+31** | **15.63 MB** | **feature** |
 | **Jeenith_fix_2.7.1_20260719_01.apk** | **Android** | **2.7.1+32** | **58.64 MB** | **fix** |
 | **Jeenith_fix_2.7.1_20260719_01_windows_x64.zip** | **Windows** | **2.7.1+32** | **15.63 MB** | **fix** |
+| **Jeenith_feature_2.8.0_20260719_01.apk** | **Android** | **2.8.0+34** | **58.81 MB** | **feature** |
+| **Jeenith_feature_2.8.0_20260719_01_windows_x64.zip** | **Windows** | **2.8.0+34** | **15.65 MB** | **feature** |
+| **Jeenith_fix_2.8.1_20260719_01.apk** | **Android** | **2.8.1+35** | **58.81 MB** | **fix** |
+| **Jeenith_fix_2.8.1_20260719_01_windows_x64.zip** | **Windows** | **2.8.1+35** | **15.65 MB** | **fix** |
 
 ### GitHub Release 发布记录
 
@@ -276,6 +281,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.6.0+30** | **2026-07-19** | **feature** | **称骨算命（袁天罡，第 13 术）— 年月日时四骨重 + 52 档命格歌** |
 | **2.7.0+31** | **2026-07-19** | **feature** | **太乙神数（三式之首，第 14 术）— 积年推太乙落宫/文昌始击/主客算/格局，三式齐备** |
 | **2.7.1+32** | **2026-07-19** | **fix** | **GoldButton 根治竖线坍塌（Transform.scale intrinsic）+ 按压缩放延迟（Listener 绕过 arena）** |
+| **2.8.0+34** | **2026-07-19** | **feature** | **六爻纳甲（周易深度断法，第 15 术）— 京房纳甲/六亲/六神/世应/用神断辞 + 八宫算法 + 9 项单测** |
+| **2.8.1+35** | **2026-07-19** | **fix** | **修复周易/小六壬桌面端 pinned header 崩溃（SliverPersistentHeader extent 与 ActionBar child 高度不匹配 → paintExtent<layoutExtent 空指针）** |
 
 ---
 
@@ -291,7 +298,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 6. ~~紫微/奇门深化~~ ✅ v2.5.0 已完成紫微四化/大限/长生/补充神煞 + 奇门天盘干/格局断辞（断卦核心补全）；剩余奇门飞盘法（转盘法已完整，飞盘为另一体系可选）
 7. **历史记录云同步**：可选后端账户体系，跨设备同步历史
 8. ~~太乙神数~~ ✅ v2.7.0 已完成（三式之首，凑齐全套最高权威术数体系：奇门 + 大六壬 + 太乙）；剩余太乙月日时家推演、阴遁精细校验可后续深化
-9. **更多卜算术**：铁板神数（需万条条文）、六爻纳甲（周易深度断法）、诸葛神数（需 384 签数据集）、择日黄历（lunar 库支持）
+9. **更多卜算术**：~~六爻纳甲~~ ✅ v2.8.0 已完成（周易深度断法：纳甲/六亲/六神/世应/用神断辞 + 八宫算法 + 9 项单测）；铁板神数（需万条条文）、诸葛神数（需 384 签数据集）、择日黄历（lunar 库支持）
 
 ---
 

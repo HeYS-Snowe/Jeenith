@@ -6,7 +6,7 @@
   "releases": [
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.0.0",
       "target": "main",
       "title": "v1.0.0 — 志极首个正式版本",
@@ -23,20 +23,20 @@
           "sizeFormatted": "50.66 MB",
           "sha256": "653EC0FCFEEEF801B59F170257B22BD377449477AF4DF2C6C0E723D1A97B0054",
           "localPath": "builds/android/Jeenith_release_1.0.0_20260711_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.0.0/Jeenith_release_1.0.0_20260711_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.0/Jeenith_release_1.0.0_20260711_01.apk"
         }
       ],
       "versionInPubspec": "1.0.0+1",
       "buildStatus": "release",
       "builtAt": "2026-07-11T07:44:22",
       "commit": "",
-      "publishedAt": "2026-07-12T14:53:36",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v1.0.0",
+      "publishedAt": "2026-07-12T06:34:19Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.0.0",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.0.1",
       "target": "main",
       "title": "v1.0.1 — 新增 Windows 桌面平台",
@@ -53,7 +53,7 @@
           "sizeFormatted": "50.69 MB",
           "sha256": "5C476E952698D44BBB733C3FF6FB114CE279F49EBBDFE6C3A579E7D9669519EE",
           "localPath": "builds/android/Jeenith_release_1.0.1_20260711_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01.apk"
         },
         {
           "name": "Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
@@ -62,20 +62,20 @@
           "sizeFormatted": "12.30 MB",
           "sha256": "F3E690ABE091AAF01A8DD86E0047991281B9268B18133396E39ACC9639984C20",
           "localPath": "builds/windows/Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.0.1+2",
       "buildStatus": "release",
       "builtAt": "2026-07-11T12:59:13",
       "commit": "",
-      "publishedAt": "2026-07-12T14:53:36",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v1.0.1",
+      "publishedAt": "2026-07-12T06:36:13Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.0.1",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.1.0",
       "target": "main",
       "title": "v1.1.0 — 工程迁移至 mobile/ 子目录",
@@ -92,7 +92,7 @@
           "sizeFormatted": "50.97 MB",
           "sha256": "5A37830412A3A25F2ACB909C72217387ECFD04411C51B8FB96BA061F16399BEA",
           "localPath": "builds/android/Jeenith_release_1.1.0_20260712_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01.apk"
         },
         {
           "name": "Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
@@ -101,20 +101,20 @@
           "sizeFormatted": "12.34 MB",
           "sha256": "E17EE2F11E185E07A26D734B5B5CBBC85B40F8EC824A8666D88EBE11914A6666",
           "localPath": "builds/windows/Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.1.0+4",
       "buildStatus": "release",
       "builtAt": "2026-07-12T01:47:12",
       "commit": "",
-      "publishedAt": "2026-07-12T14:53:36",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v1.1.0",
+      "publishedAt": "2026-07-12T06:42:20Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.1.0",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.1.2",
       "target": "main",
       "title": "v1.1.2 — Windows 桌面适配 + 真机在线熵源修复",
@@ -131,7 +131,7 @@
           "sizeFormatted": "50.97 MB",
           "sha256": "24D681E9045DFEC3CF753A81AA6E5E29A60061EEE05404BB5F63CCE4EFB35FB8",
           "localPath": "builds/android/Jeenith_fix_1.1.2_20260712_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01.apk"
         },
         {
           "name": "Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
@@ -140,20 +140,20 @@
           "sizeFormatted": "12.61 MB",
           "sha256": "B37D90090C7409EF07388EAA50FCC11E206F6E3F5A1EDAE570E30E9E5FD6334C",
           "localPath": "builds/windows/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.1.2+6",
       "buildStatus": "fix",
       "builtAt": "2026-07-12T13:34:25",
       "commit": "a725d0b",
-      "publishedAt": "2026-07-12T14:53:36",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v1.1.2",
+      "publishedAt": "2026-07-12T06:45:16Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.1.2",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.1.3",
       "target": "main",
       "title": "v1.1.3 — 全面代码质量审计修复 + 桌面端窗口尺寸修复",
@@ -170,7 +170,7 @@
           "sizeFormatted": "51.23 MB",
           "sha256": "2BB9DF3623088A34ADC1F855F34E8F4C44DA31BBD91F5034F927C42D8D8A37D7",
           "localPath": "builds/android/Jeenith_fix_1.1.3_20260712_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01.apk"
         },
         {
           "name": "Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
@@ -179,20 +179,20 @@
           "sizeFormatted": "12.74 MB",
           "sha256": "F1048AED292E8B90F6E7908ED95ADB34DB50A3E43954F395CFE5E15418842CD1",
           "localPath": "builds/windows/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.1.3+7",
       "buildStatus": "fix",
       "builtAt": "2026-07-12T23:17:25",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-12T15:43:47Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.1.3",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.2.0",
       "target": "main",
       "title": "v1.2.0 — 卦辞爻辞数据与文本展示（周易/梅花）",
@@ -209,7 +209,7 @@
           "sizeFormatted": "51.26 MB",
           "sha256": "B6E276B7C5F1B45B191D3B8E3A81BD3D98EF589F4459EA9B0B9A23ADF4A17E7D",
           "localPath": "builds/android/Jeenith_feature_1.2.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.2.0/Jeenith_feature_1.2.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.2.0_20260713_01_windows_x64.zip",
@@ -218,20 +218,20 @@
           "sizeFormatted": "12.76 MB",
           "sha256": "D928C675CB4405E86A468AC7B72C9F0D918B4D40E06918B466A96E714647F265",
           "localPath": "builds/windows/Jeenith_feature_1.2.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.2.0/Jeenith_feature_1.2.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.2.0+9",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T13:48:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T06:49:20Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.2.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.3.0",
       "target": "main",
       "title": "v1.3.0 — 紫微斗数 v2 全套星曜安星",
@@ -248,7 +248,7 @@
           "sizeFormatted": "51.30 MB",
           "sha256": "74BB7CD2A50D4CC056E41EA89ED454348F32E61FE40F0D6B953151EB5E0E6D99",
           "localPath": "builds/android/Jeenith_feature_1.3.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.3.0/Jeenith_feature_1.3.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.3.0_20260713_01_windows_x64.zip",
@@ -257,20 +257,20 @@
           "sizeFormatted": "12.77 MB",
           "sha256": "518F2F11D30197C2D352A39E3B2834BB39300FD026A891E8321855C42CD7433E",
           "localPath": "builds/windows/Jeenith_feature_1.3.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.3.0/Jeenith_feature_1.3.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.3.0+10",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T17:06:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T09:30:02Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.3.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.4.0",
       "target": "main",
       "title": "v1.4.0 — 奇门遁甲 v2 四盘九宫",
@@ -287,7 +287,7 @@
           "sizeFormatted": "51.31 MB",
           "sha256": "91C336FFC5B37A5FE65ADDDC6F2F38D44B30E0BA38FCA13854D7216E0DF24AB4",
           "localPath": "builds/android/Jeenith_feature_1.4.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.4.0/Jeenith_feature_1.4.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.4.0_20260713_01_windows_x64.zip",
@@ -296,20 +296,20 @@
           "sizeFormatted": "12.77 MB",
           "sha256": "DB069A8A00EB63B38AD6BCA94ADDD41BDAE240D666860123904B791115755656",
           "localPath": "builds/windows/Jeenith_feature_1.4.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.4.0/Jeenith_feature_1.4.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.4.0+11",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T19:05:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T12:47:33Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.4.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.5.0",
       "target": "main",
       "title": "v1.5.0 — 主题切换 + 结果分享 + 历史导出",
@@ -326,7 +326,7 @@
           "sizeFormatted": "52.43 MB",
           "sha256": "4CF4F3C6D999101E6D74724FA89B504DA47D73643908210628751159DFC2438D",
           "localPath": "builds/android/Jeenith_feature_1.5.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.5.0/Jeenith_feature_1.5.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.5.0_20260713_01_windows_x64.zip",
@@ -335,20 +335,20 @@
           "sizeFormatted": "12.70 MB",
           "sha256": "CCE9778BDD889C0D3D995624B81444F2EE6A1527C9FF01AFDF05D272DDFB38A1",
           "localPath": "builds/windows/Jeenith_feature_1.5.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.5.0/Jeenith_feature_1.5.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.5.0+12",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T19:42:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T12:50:49Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.5.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.6.0",
       "target": "main",
       "title": "v1.6.0 — 抽签求签 + 测字",
@@ -365,7 +365,7 @@
           "sizeFormatted": "52.54 MB",
           "sha256": "B9E446462F981A1F9D81E341EC195590CED926642581FADA818635E96F36544D",
           "localPath": "builds/android/Jeenith_feature_1.6.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.6.0/Jeenith_feature_1.6.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.6.0_20260713_01_windows_x64.zip",
@@ -374,20 +374,20 @@
           "sizeFormatted": "13.00 MB",
           "sha256": "D62B6EF22662B46908E72184E36F39F3805C0821E9A1CA101311526D6708876D",
           "localPath": "builds/windows/Jeenith_feature_1.6.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.6.0/Jeenith_feature_1.6.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.6.0+13",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T20:42:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T12:53:11Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.6.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.7.0",
       "target": "main",
       "title": "v1.7.0 — 大六壬全套 + 风水罗盘",
@@ -404,7 +404,7 @@
           "sizeFormatted": "52.92 MB",
           "sha256": "DBE1D2B7763DF8906E9DC1CB48FEDE288CDEC6D1737D52FB521BB61C6036C0B1",
           "localPath": "builds/android/Jeenith_feature_1.7.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.7.0/Jeenith_feature_1.7.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.7.0_20260713_01_windows_x64.zip",
@@ -413,20 +413,20 @@
           "sizeFormatted": "13.03 MB",
           "sha256": "1D9A320525506DF0930DBD0F1968EB97F871C6C88D0BA161E8E45A65A3E2A544",
           "localPath": "builds/windows/Jeenith_feature_1.7.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.7.0/Jeenith_feature_1.7.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.7.0+14",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T21:00:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-13T13:35:46Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.7.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v1.8.0",
       "target": "main",
       "title": "v1.8.0 — 使用手册页面 + 圆角修复 + 历史复制 + 默认深色",
@@ -443,7 +443,7 @@
           "sizeFormatted": "53.04 MB",
           "sha256": "4D3AB64D180AE83445AC31A71F4D991C5B387235D7F94F6CE8E718EFA326B81B",
           "localPath": "builds/android/Jeenith_feature_1.8.0_20260713_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.8.0/Jeenith_feature_1.8.0_20260713_01.apk"
         },
         {
           "name": "Jeenith_feature_1.8.0_20260713_01_windows_x64.zip",
@@ -452,20 +452,20 @@
           "sizeFormatted": "13.06 MB",
           "sha256": "3007DC4362AAF81C6200EC95B03929EB0EA77AE3C1CE913EB06654BEFCD1247A",
           "localPath": "builds/windows/Jeenith_feature_1.8.0_20260713_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.8.0/Jeenith_feature_1.8.0_20260713_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "1.8.0+15",
       "buildStatus": "feature",
       "builtAt": "2026-07-13T23:30:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-14T17:23:04Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v1.8.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.0.0",
       "target": "main",
       "title": "v2.0.0 — 体验深化与品牌定调（按钮/图标微交互升级）",
@@ -482,7 +482,7 @@
           "sizeFormatted": "53.06 MB",
           "sha256": "9E60148F51876CAF35CFC9D04FFE4075265E1FE56FDB502BE75F415413D58095",
           "localPath": "builds/android/Jeenith_release_2.0.0_20260714_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.0.0/Jeenith_release_2.0.0_20260714_01.apk"
         },
         {
           "name": "Jeenith_release_2.0.0_20260714_01_windows_x64.zip",
@@ -491,20 +491,20 @@
           "sizeFormatted": "21.00 MB",
           "sha256": "4D8EAA6204C008D1BB046574FC9C07464B158510BDDBC9DFD5066C606D15158D",
           "localPath": "builds/windows/Jeenith_release_2.0.0_20260714_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.0.0/Jeenith_release_2.0.0_20260714_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.0.0+16",
       "buildStatus": "release",
       "builtAt": "2026-07-14T08:42:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-14T17:32:05Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.0.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.1.0",
       "target": "main",
       "title": "v2.1.0 — 动效体系 Phase 1 + Phase 2a（5 套仪式动画落地）",
@@ -521,7 +521,7 @@
           "sizeFormatted": "53.48 MB",
           "sha256": "FFB7A63FCBDC41BDF43F653FAEF7E8B57B4B786DB0921DF72AB406B006309EC1",
           "localPath": "builds/android/Jeenith_feature_2.1.0_20260714_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.1.0/Jeenith_feature_2.1.0_20260714_01.apk"
         },
         {
           "name": "Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
@@ -530,20 +530,20 @@
           "sizeFormatted": "13.10 MB",
           "sha256": "C8697456546718C5EFE3D94A1724C5F5C223BB797684D8F6770E3C3B2371680A",
           "localPath": "builds/windows/Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.1.0/Jeenith_feature_2.1.0_20260714_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.1.0+17",
       "buildStatus": "feature",
       "builtAt": "2026-07-14T19:48:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-14T17:35:09Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.1.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.2.0",
       "target": "main",
       "title": "v2.2.0 — 动效体系 Phase 2b + Phase 4.3 + Phase 5.1（仪式动画补全 + 路由转场差异化）",
@@ -560,7 +560,7 @@
           "sizeFormatted": "53.60 MB",
           "sha256": "4BE5BECB02B2FC15583FC7426947475F829D4CF637AB848A84641A30937B2ABD",
           "localPath": "builds/android/Jeenith_feature_2.2.0_20260714_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.2.0/Jeenith_feature_2.2.0_20260714_01.apk"
         },
         {
           "name": "Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
@@ -569,20 +569,20 @@
           "sizeFormatted": "13.12 MB",
           "sha256": "47A2D4EFF14C7134B642D6D77AD42721AC610F96FA442D3CE8A2350F0AD0C4B8",
           "localPath": "builds/windows/Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.2.0/Jeenith_feature_2.2.0_20260714_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.2.0+18",
       "buildStatus": "feature",
       "builtAt": "2026-07-14T20:57:29",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-14T17:42:31Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.2.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.3.0",
       "target": "main",
       "title": "v2.3.0 — 新增八字推演与测名字，紫微命盘重构，设置页动画 Map 化",
@@ -599,7 +599,7 @@
           "sizeFormatted": "54.89 MB",
           "sha256": "394A39102CDF00ED00B6B361A2E8AB2FA9B01519FFE3668B12FA6F2BC641C7A8",
           "localPath": "builds/android/Jeenith_feature_2.3.0_20260715_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.0/Jeenith_feature_2.3.0_20260715_01.apk"
         },
         {
           "name": "Jeenith_feature_2.3.0_20260715_01_windows_x64.zip",
@@ -608,20 +608,20 @@
           "sizeFormatted": "13.29 MB",
           "sha256": "1BF39245A3A5CC607CEB22DBBB913F033395B5D59DA28B609D0B80CCC9FE376C",
           "localPath": "builds/windows/Jeenith_feature_2.3.0_20260715_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.0/Jeenith_feature_2.3.0_20260715_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.3.0+20",
       "buildStatus": "feature",
       "builtAt": "2026-07-15T00:44:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-14T17:44:29Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.3.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.3.1",
       "target": "main",
       "title": "v2.3.1 — 动效体系 Phase 3-6 全面落地 + 起卦按钮 BUG 修复",
@@ -638,7 +638,7 @@
           "sizeFormatted": "54.98 MB",
           "sha256": "C5DF5EBD4988BC37EDA91FE6C4FFDC7FFE236C8B8699D0902400DC03A11A506F",
           "localPath": "builds/android/Jeenith_release_2.3.1_20260715_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.1/Jeenith_release_2.3.1_20260715_01.apk"
         },
         {
           "name": "Jeenith_release_2.3.1_20260715_01_windows_x64.zip",
@@ -647,20 +647,20 @@
           "sizeFormatted": "13.30 MB",
           "sha256": "7AB41E9BA8CEA4F91DD3C2E3F21599F557EDB5E91751E9AEC7FA423B3A24B698",
           "localPath": "builds/windows/Jeenith_release_2.3.1_20260715_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.1/Jeenith_release_2.3.1_20260715_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.3.1+21",
       "buildStatus": "release",
       "builtAt": "2026-07-15T11:46:45",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-15T04:10:15Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.3.1",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.3.2",
       "target": "main",
       "title": "v2.3.2 — 设置页动画细分开关 + Windows 应用图标修复",
@@ -677,7 +677,7 @@
           "sizeFormatted": "55.00 MB",
           "sha256": "3ECCD3191D225526A232EA104BBA581EA121F47EBDEFBE44797D798667257BE7",
           "localPath": "builds/android/Jeenith_release_2.3.2_20260715_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.2/Jeenith_release_2.3.2_20260715_01.apk"
         },
         {
           "name": "Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
@@ -686,20 +686,20 @@
           "sizeFormatted": "13.27 MB",
           "sha256": "BB327AC9C028E25DFE55DEA6219446FDED2B5009191E8A36A225D52D3A679923",
           "localPath": "builds/windows/Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.2/Jeenith_release_2.3.2_20260715_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.3.2+22",
       "buildStatus": "release",
       "builtAt": "2026-07-15T13:02:47",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-15T05:34:23Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.3.2",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.3.3",
       "target": "main",
       "title": "v2.3.3 — 首页按钮间距修复 + MIT LICENSE + Windows 图标产物归档",
@@ -716,7 +716,7 @@
           "sizeFormatted": "55.00 MB",
           "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
           "localPath": "builds/android/Jeenith_release_2.3.3_20260715_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.3/Jeenith_release_2.3.3_20260715_01.apk"
         },
         {
           "name": "Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
@@ -725,20 +725,20 @@
           "sizeFormatted": "13.27 MB",
           "sha256": "FF691015789058AD59E730EB6F1338BBDEE860E6C62A5E214CEB4906C31074A8",
           "localPath": "builds/windows/Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.3/Jeenith_release_2.3.3_20260715_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.3.3+23",
       "buildStatus": "release",
       "builtAt": "2026-07-15T20:30:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-15T13:16:56Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.3.3",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.4.0",
       "target": "main",
       "title": "v2.4.0 — 八字/测名字入场仪式 + 一键获取当前时间 + 词库扩展 + All rights reserved 全面移除",
@@ -755,7 +755,7 @@
           "sizeFormatted": "55.14 MB",
           "sha256": "BA2CFB282BBABBB625F2C72651B7AD91B9E5433F92021BD75657FA55D719A608",
           "localPath": "builds/android/Jeenith_release_2.4.0_20260715_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.0/Jeenith_release_2.4.0_20260715_01.apk"
         },
         {
           "name": "Jeenith_release_2.4.0_20260715_01_windows_x64.zip",
@@ -764,20 +764,20 @@
           "sizeFormatted": "13.01 MB",
           "sha256": "ECB700B94A25624A0E854BA782A756F82DC3C7CBD01021FEB9E12562C018FEB2",
           "localPath": "builds/windows/Jeenith_release_2.4.0_20260715_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.0/Jeenith_release_2.4.0_20260715_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.4.0+24",
       "buildStatus": "release",
       "builtAt": "2026-07-16T00:10:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-16T00:26:43Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.4.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.4.1",
       "target": "main",
       "title": "v2.4.1 — 思源宋体 + 分享图主题背景 + 首页折叠 + 首页卡片浅色修复",
@@ -794,7 +794,7 @@
           "sizeFormatted": "73.89 MB",
           "sha256": "A427A2401D4A22E9AE57F6543BFBD9677F2B7AB581D8B7B652A239237777A774",
           "localPath": "builds/android/Jeenith_fix_2.4.1_20260718_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.1/Jeenith_fix_2.4.1_20260718_01.apk"
         },
         {
           "name": "Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
@@ -803,20 +803,20 @@
           "sizeFormatted": "40.01 MB",
           "sha256": "3622DA62B9429FA86B877258DC0ECF6C383F9C57E6EA12AFEABA625CFF622C14",
           "localPath": "builds/windows/Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.1/Jeenith_fix_2.4.1_20260718_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.4.1+25",
       "buildStatus": "fix",
       "builtAt": "2026-07-18T13:31:27",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "draft"
+      "publishedAt": "2026-07-18T07:05:05Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.4.1",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.4.2",
       "target": "main",
       "title": "v2.4.2 — 浅色模式全面适配（深浅渐变切换 + 12 术主题感知）",
@@ -833,7 +833,7 @@
           "sizeFormatted": "74.06 MB",
           "sha256": "3E573869E85B1E918CE11AC190290CBE18320D9987CAB520610DD053B1B9001D",
           "localPath": "builds/android/Jeenith_feature_2.4.2_20260718_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.2/Jeenith_feature_2.4.2_20260718_01.apk"
         },
         {
           "name": "Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
@@ -842,20 +842,20 @@
           "sizeFormatted": "32.09 MB",
           "sha256": "AE80E9461E426C4D4C00466D52BB76861DDD0D6A2AAA6F5A124EF304BC8A624C",
           "localPath": "builds/windows/Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.2/Jeenith_feature_2.4.2_20260718_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.4.2+26",
       "buildStatus": "feature",
       "builtAt": "2026-07-18T23:58:12",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-18T16:45:54Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.4.2",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.4.3",
       "target": "main",
       "title": "v2.4.3 — 历史预览 + 罗盘视觉统一 + 康熙笔画数据集 + 揭示动画修复",
@@ -872,7 +872,7 @@
           "sizeFormatted": "75.01 MB",
           "sha256": "15668644284A17AA3ECF07D1100293F97A9BA7447385D09E213A3F4B936D2F67",
           "localPath": "builds/android/Jeenith_feature_2.4.3_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.3/Jeenith_feature_2.4.3_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.4.3_20260719_01_windows_x64.zip",
@@ -881,20 +881,20 @@
           "sizeFormatted": "32.37 MB",
           "sha256": "97EEBB04F2CBD0C5B492E4569BB5B21B47413F951FCF5616E45967F094C846EE",
           "localPath": "builds/windows/Jeenith_feature_2.4.3_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.3/Jeenith_feature_2.4.3_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.4.3+27",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T08:41:11",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T00:55:16Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.4.3",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.4.4",
       "target": "main",
       "title": "v2.4.4 — 思源宋体子集化 + 复杂术引导遮罩 + 共享组件浅色收尾",
@@ -911,7 +911,7 @@
           "sizeFormatted": "58.26 MB",
           "sha256": "BFB34AFD5C9B11B52F3BAB542F347F61FA8BE4134344E9298776C95BD2508FFD",
           "localPath": "builds/android/Jeenith_feature_2.4.4_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.4/Jeenith_feature_2.4.4_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.4.4_20260719_01_windows_x64.zip",
@@ -920,20 +920,20 @@
           "sizeFormatted": "15.58 MB",
           "sha256": "65A572877C99FAC527261D38B4D4D6A8D3EA72F1641C9A32C714E25B75F4FF71",
           "localPath": "builds/windows/Jeenith_feature_2.4.4_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.4/Jeenith_feature_2.4.4_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.4.4+28",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T18:17:34",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T10:33:45Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.4.4",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.5.0",
       "target": "main",
       "title": "v2.5.0 — 紫微四化/大限/长生/补煞 + 奇门天盘干/格局断辞",
@@ -950,7 +950,7 @@
           "sizeFormatted": "58.34 MB",
           "sha256": "9D0E7EE6BD497FB82C8D63944B945BD5C1B8621870F38829A86EAC70FF3A86ED",
           "localPath": "builds/android/Jeenith_feature_2.5.0_20260719_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
@@ -959,20 +959,20 @@
           "sizeFormatted": "15.59 MB",
           "sha256": "03223625D0B3126881A49B8AF0B3C5F6B6D43C780BF25F5E68EC41192438E1D",
           "localPath": "builds/windows/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.5.0+29",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T19:37:55",
       "commit": "1b09d94",
-      "publishedAt": "2026-07-19T20:20:00",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v2.5.0",
+      "publishedAt": "2026-07-19T12:06:01Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.5.0",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.6.0",
       "target": "main",
       "title": "v2.6.0 — 称骨算命（袁天罡，第 13 术）",
@@ -989,7 +989,7 @@
           "sizeFormatted": "58.59 MB",
           "sha256": "0A0CF6FE5E6F75858437AB08CA0387042B5000368459729EE6C8E7035415458E",
           "localPath": "builds/android/Jeenith_feature_2.6.0_20260719_01.apk",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01.apk"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
@@ -998,20 +998,20 @@
           "sizeFormatted": "15.62 MB",
           "sha256": "2563BF245B522A3456DABA787C10B1212954E572C93ABB0F1143901E942205AF",
           "localPath": "builds/windows/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
-          "downloadUrl": "https://github.com/1010523654/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip"
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.6.0+30",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T19:59:11",
       "commit": "606e409",
-      "publishedAt": "2026-07-19T20:50:00",
-      "url": "https://github.com/1010523654/Jeenith/releases/tag/v2.6.0",
+      "publishedAt": "2026-07-19T12:07:01Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.6.0",
       "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.7.0",
       "target": "main",
       "title": "v2.7.0 — 太乙神数（三式之首，第 14 术）",
@@ -1028,7 +1028,7 @@
           "sizeFormatted": "58.64 MB",
           "sha256": "E67D2B219D9AD7AD4E2D441AE74C225B8B472C43BE025EA27D40B1F273F84541",
           "localPath": "builds/android/Jeenith_feature_2.7.0_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.0/Jeenith_feature_2.7.0_20260719_01.apk"
         },
         {
           "name": "Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
@@ -1037,25 +1037,25 @@
           "sizeFormatted": "15.63 MB",
           "sha256": "32A2A400F8689985E1AC70E7EB2082AF6E6E94998B60D5F378AEEA74D312A30F",
           "localPath": "builds/windows/Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.0/Jeenith_feature_2.7.0_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.7.0+31",
       "buildStatus": "feature",
       "builtAt": "2026-07-19T20:28:24",
       "commit": "09256ce",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T15:29:09Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.7.0",
+      "status": "published"
     },
     {
       "platform": "GitHub",
-      "repo": "1010523654/Jeenith",
+      "repo": "HeYS-Snowe/Jeenith",
       "tag": "v2.7.1",
       "target": "main",
       "title": "v2.7.1 — GoldButton 根治竖线坍塌 + 按压缩放延迟",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.7.1.md",
       "notesFormat": "markdown",
@@ -1067,7 +1067,7 @@
           "sizeFormatted": "58.64 MB",
           "sha256": "494941135F2DCBA167AC2E484EEE98FAEC01E9372507BA7A0695F3A61C10C822",
           "localPath": "builds/android/Jeenith_fix_2.7.1_20260719_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.1/Jeenith_fix_2.7.1_20260719_01.apk"
         },
         {
           "name": "Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
@@ -1076,16 +1076,94 @@
           "sizeFormatted": "15.63 MB",
           "sha256": "8D0844BB389C2D85882121E4E7A6F5A0359774CC15ABB9B1D16C49B9700FBC16",
           "localPath": "builds/windows/Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.1/Jeenith_fix_2.7.1_20260719_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.7.1+32",
       "buildStatus": "fix",
       "builtAt": "2026-07-19T20:45:43",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "publishedAt": "2026-07-19T23:35:00Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.7.1",
+      "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.8.0",
+      "target": "main",
+      "title": "v2.8.0 — 六爻纳甲（周易深度断法，第 15 术）",
+      "label": "None",
+      "isLatest": false,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.8.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.8.0_20260719_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61669450,
+          "sizeFormatted": "58.81 MB",
+          "sha256": "95115C668603B4CD3988669748F7242C8BA72DF1DCC1DD09364C50FA58AB04DA",
+          "localPath": "builds/android/Jeenith_feature_2.8.0_20260719_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.0/Jeenith_feature_2.8.0_20260719_01.apk"
+        },
+        {
+          "name": "Jeenith_feature_2.8.0_20260719_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16413724,
+          "sizeFormatted": "15.65 MB",
+          "sha256": "69F16B8771622CA4CA8E4415692B594218C620770519232885D10EA8DA086315",
+          "localPath": "builds/windows/Jeenith_feature_2.8.0_20260719_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.0/Jeenith_feature_2.8.0_20260719_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.8.0+34",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-19T22:10:00",
+      "commit": "",
+      "publishedAt": "2026-07-19T15:24:20Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.8.0",
+      "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.8.1",
+      "target": "main",
+      "title": "v2.8.1 — 修复周易/小六壬桌面端 pinned header 崩溃",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.8.1.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_2.8.1_20260719_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61669450,
+          "sizeFormatted": "58.81 MB",
+          "sha256": "E75A63ED592A6392088491716CA67BFFCF728A33D540FF968EF0092756680DB1",
+          "localPath": "builds/android/Jeenith_fix_2.8.1_20260719_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.1/Jeenith_fix_2.8.1_20260719_01.apk"
+        },
+        {
+          "name": "Jeenith_fix_2.8.1_20260719_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16413722,
+          "sizeFormatted": "15.65 MB",
+          "sha256": "2EAFD245A64884FA6F99C92FE1377A6C08519A6ABC42E56D2AE60A92F0FA9013",
+          "localPath": "builds/windows/Jeenith_fix_2.8.1_20260719_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.1/Jeenith_fix_2.8.1_20260719_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.8.1+35",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-19T23:08:00",
+      "commit": "",
+      "publishedAt": "2026-07-19T15:22:23Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.8.1",
+      "status": "published"
     }
   ]
 }

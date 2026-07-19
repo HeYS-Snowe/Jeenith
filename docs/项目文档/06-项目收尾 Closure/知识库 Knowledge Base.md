@@ -438,7 +438,7 @@ pwsh -File scripts/build_apk.ps1 -Status release
 
 | 资源 Resource | 位置 Location |
 |------------|-------------|
-| 项目仓库 | https://github.com/1010523654/Jeenith |
+| 项目仓库 | https://github.com/HeYS-Snowe/Jeenith |
 | 项目规则 | AGENTS.md / CLAUDE.md |
 | 身份信息 | D:\Code\.Rules\OrganizationAndUser.md |
 | 构建规范 | docs/FLUTTER_APK_BUILD_PIPELINE.md |

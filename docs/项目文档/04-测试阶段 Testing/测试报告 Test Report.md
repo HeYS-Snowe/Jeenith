@@ -10,7 +10,7 @@
 | 测试周期 Test Period | 2026-07-XX ~ 2026-07-XX |
 | 报告日期 Report Date | YYYY-MM-DD |
 | 测试负责人 QA Lead | HeYS-Snowe |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 

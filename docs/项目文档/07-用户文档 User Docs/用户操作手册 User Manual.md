@@ -13,7 +13,7 @@
 | 更新日期 Updated Date | 2026-07-15 |
 | 目标用户 Target Users | 最终用户 End Users |
 | 适用平台 Platforms | Android 5.0+ / Windows 10+ |
-| 仓库 Repository | https://github.com/1010523654/Jeenith |
+| 仓库 Repository | https://github.com/HeYS-Snowe/Jeenith |
 
 ---
 
@@ -623,7 +623,7 @@ A: 真随机引擎的三源中，系统熵（Random.secure）与在线熵（rand
 
 | 类型 Type | 方式 Method |
 |---------|----------|
-| 项目仓库 | https://github.com/1010523654/Jeenith |
+| 项目仓库 | https://github.com/HeYS-Snowe/Jeenith |
 | 问题反馈 | GitHub Issues |
 | 开源许可 | MIT License |
 | 版权 | Copyright (c) 2026 Qore |

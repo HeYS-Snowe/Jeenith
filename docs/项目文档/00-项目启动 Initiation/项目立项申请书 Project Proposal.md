@@ -85,7 +85,7 @@
 | **项目类型 Project Type** | 移动 App（Flutter，Android + Windows 桌面） |
 | **项目定位 Positioning** | 叩问本心的卜算合集 |
 | **当前版本 Current Version** | 2.3.3+23（release，2026-07-15） |
-| **GitHub 仓库 Repository** | https://github.com/1010523654/Jeenith |
+| **GitHub 仓库 Repository** | https://github.com/HeYS-Snowe/Jeenith |
 | **许可证 License** | MIT |
 | **品牌精神 Brand Spirit** | 志于本心，知于极处 —— Question the core. Return to origins. |
 | **开发者 Developer** | HeYS-Snowe（唯一开发者） |
