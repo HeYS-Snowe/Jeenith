@@ -51,6 +51,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             ZhouyiRitual(onCompleted: () => context.go('/tech/zhouyi')),
       ),
+      // v2.9.x 仪式入场动画：六爻铜钱抛落（复用 ZhouyiRitual，watermark「六爻」）
+      GoRoute(
+        path: '/ritual/liuyao',
+        builder: (context, state) => ZhouyiRitual(
+            watermark: '六爻', onCompleted: () => context.go('/tech/liuyao')),
+      ),
       // v2.1.0 仪式入场动画：紫微命盘展开（6s，12 宫辐射 + 14 主星降落）
       GoRoute(
         path: '/ritual/ziwei',

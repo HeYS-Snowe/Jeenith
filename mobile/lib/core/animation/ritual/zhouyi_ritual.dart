@@ -17,7 +17,9 @@ import 'ritual_animation.dart';
 ///  - At 0.95–1.0 the complete hexagram glows with a golden border and the
 ///    word "周易" appears faintly in the background.
 class ZhouyiRitual extends RitualAnimation {
-  const ZhouyiRitual({super.key, super.onCompleted});
+  /// 背景水印文字（周易默认「周易」，六爻纳甲复用时传「六爻」——同为金钱卦铜钱仪式）。
+  final String watermark;
+  const ZhouyiRitual({super.key, super.onCompleted, this.watermark = '周易'});
 
   @override
   RitualAnimationState<ZhouyiRitual> createState() => _ZhouyiRitualState();
@@ -49,7 +51,7 @@ class _ZhouyiRitualState extends RitualAnimationState<ZhouyiRitual> {
       AnimatedBuilder(
         animation: _ctrl,
         builder: (context, _) => CustomPaint(
-          painter: _RitualPainter(_ctrl.value, _p),
+          painter: _RitualPainter(_ctrl.value, _p, widget.watermark),
           child: const SizedBox.expand(),
         ),
       ),
@@ -93,8 +95,9 @@ class _RitualParams {
 class _RitualPainter extends CustomPainter {
   final double t; // overall progress 0..1
   final _RitualParams p;
+  final String watermark;
 
-  _RitualPainter(this.t, this.p);
+  _RitualPainter(this.t, this.p, this.watermark);
 
   @override
   bool shouldRepaint(covariant _RitualPainter old) => true;
@@ -294,7 +297,7 @@ class _RitualPainter extends CustomPainter {
     if (progress <= 0) return;
     _drawText(
       canvas,
-      '周易',
+      watermark,
       Offset(size.width / 2, size.height / 2),
       TextStyle(
         color: AppColors.gold.withValues(alpha: progress * 0.06),

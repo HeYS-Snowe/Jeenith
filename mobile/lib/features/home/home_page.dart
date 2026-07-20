@@ -81,6 +81,7 @@ class _HomePageState extends ConsumerState<HomePage>
     'cezi',
     'bazi',
     'name_test',
+    'liuyao',
   };
 
   void _onTapTech(String id) {
