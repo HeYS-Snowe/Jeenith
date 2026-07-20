@@ -1301,7 +1301,7 @@
           "sizeFormatted": "58.84 MB",
           "sha256": "7FFAAD49DC8D4D118268057A83DF9B988106FE927B972649995D252134D026AC",
           "localPath": "builds/android/Jeenith_feature_2.10.0_20260721_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.0/Jeenith_feature_2.10.0_20260721_01.apk"
         },
         {
           "name": "Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
@@ -1310,16 +1310,16 @@
           "sizeFormatted": "15.66 MB",
           "sha256": "DE21FCD8B1A4A3B0BD11BB8805902FF3A3FBF78478ECE8221AD9547C986EBA1D",
           "localPath": "builds/windows/Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.0/Jeenith_feature_2.10.0_20260721_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.10.0+40",
       "buildStatus": "feature",
       "builtAt": "2026-07-21T00:50:00",
       "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "draft"
+      "publishedAt": "2026-07-20T16:51:18Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.0",
+      "status": "published"
     }
   ]
 }
