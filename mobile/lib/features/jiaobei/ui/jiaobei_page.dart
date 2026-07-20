@@ -257,25 +257,32 @@ class _JiaobeiPageState extends ConsumerState<JiaobeiPage>
   }
 
   Widget _jiaoPiece(bool? yangUp, double flip) {
+    final c = AppClr.of(context);
     // 翻转中：交替正反；落定后显示真实结果
     final showYang = _busy ? (flip * 6).floor().isOdd : (yangUp ?? true);
+    // 阳面：鎏金亮（深色用 goldLight，浅色用更深的鎏金以保证对比度）
+    // 阴面：暗褐（深色用紫黑褐，浅色用浅褐与浅色背景协调）
     return Transform.translate(
       offset: Offset(0, _busy ? -20 * (1 - flip.abs() * 2).abs() : 0),
       child: Container(
         width: 86,
         height: 56,
         decoration: BoxDecoration(
-          color: showYang ? const Color(0xFFD4A857) : const Color(0xFF6A4A2A),
+          color: showYang
+              ? c.goldLight
+              : c.resolve(const Color(0xFF6A4A2A), const Color(0xFF8A6A3A)),
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(
-              color: const Color(0xFFE8C87A),
-              width: 1.5),
+          border: Border.all(color: c.goldBright, width: 1.5),
         ),
         alignment: Alignment.center,
         child: Text(
           showYang ? '阳' : '阴',
           style: TextStyle(
-            color: showYang ? const Color(0xFF1A1208) : const Color(0xFFE0BF7E),
+            // 阳面（亮鎏金底）：深棕文字（两模式通用）
+            // 阴面（暗褐底）：浅金文字（深色）/深褐文字（浅色，与浅褐背景对比）
+            color: showYang
+                ? c.resolve(const Color(0xFF1A1208), const Color(0xFF1A1208))
+                : c.earthGlow,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),

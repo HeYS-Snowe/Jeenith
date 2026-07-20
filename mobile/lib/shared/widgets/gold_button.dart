@@ -4,12 +4,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/config/config_providers.dart';
 import '../../core/theme/animations.dart';
+import '../../core/theme/app_theme.dart';
 
-/// 鎏金主按钮。
+/// 鎏金主按钮（主题感知）。
 ///
 /// v2.0.0 升级：按动 0.95 缩放 + 阴影变化，抬起用 [AppAnimations.pressReleaseCurve]
 /// （[Curves.easeOutBack] 变体）弹回——模拟物理弹性，质感来自曲线而非饱和度。
-/// 配色遵循 oklch 思路（黑金低饱和度），不引入光污染。
+///
+/// **v2.10.0 双重修复**：
+/// 1. **竖线坍塌根治**（继 v2.3.1/v2.7.1 后第三次"根治"）：v2.7.1 用
+///    `SizedBox(width: double.infinity)` 在 tight 约束下撑满，但在某些
+///    SliverPersistentHeader + DraggableScrollableSheet 嵌套场景下父级约束
+///    为 loose(maxWidth=inf) 时仍会坍塌为竖线。本次改用 `ConstrainedBox
+///    (minWidth: 88, maxWidth: double.infinity)` 双保险：tight 下取父级宽度
+///    撑满，loose 下至少 88px 兜底，unbounded 下取 88px。详见频发 BUG 文档
+///    `docs/频发BUG/GoldButton竖线坍塌.md`。
+/// 2. **主题感知**：颜色全部从 `AppClr.of(context)` 取，浅色模式下自动切换
+///    为深鎏金（保证对比度），深色模式下保持原黑金。
 ///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class GoldButton extends ConsumerStatefulWidget {
@@ -34,8 +45,6 @@ class _GoldButtonState extends ConsumerState<GoldButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _press;
   bool _down = false;
-  // 最近一次 build 时确定的动画开关，供 tap 回调安全读取（避免在非 build
-  // 上下文调用 ref.watch）。在 build 中通过 ref.watch 订阅以即时重建。
   bool _animEnabled = true;
 
   @override
@@ -56,15 +65,28 @@ class _GoldButtonState extends ConsumerState<GoldButton>
 
   @override
   Widget build(BuildContext context) {
-    // 订阅全局配置：设置页切换开关时即时重建，动画/静态形态无缝切换
     _animEnabled =
         ref.watch(configProvider).valueOrNull?.animationsEnabled ?? true;
     final enabled = widget.onPressed != null;
     final animEnabled = _animEnabled;
+    final c = AppClr.of(context);
+    // 主题感知色板：浅色取深鎏金（保证对比度），深色取原鎏金
+    final labelColor = c.resolve(const Color(0xFF1A1208), const Color(0xFFF6F0E2));
+    final gradTop = enabled
+        ? c.resolve(const Color(0xFFF0D488), const Color(0xFFB89534))
+        : c.resolve(const Color(0xFF6E5C36), const Color(0xFF8A7A55));
+    final gradBottom = enabled
+        ? c.resolve(const Color(0xFFD4A857), const Color(0xFF9B7A2A))
+        : c.resolve(const Color(0xFF5A4A2A), const Color(0xFF6B5A3A));
+    final borderColor = enabled
+        ? c.resolve(const Color(0xFFE8C87A), const Color(0xFF8A6A1E))
+        : c.resolve(const Color(0xFF4A3E26), const Color(0xFF6B5A3A));
+    final glowColor = c.gold;
+
     final label = Text(
       widget.text,
-      style: const TextStyle(
-        color: Color(0xFF1A1208),
+      style: TextStyle(
+        color: labelColor,
         fontSize: 15,
         fontWeight: FontWeight.bold,
       ),
@@ -74,7 +96,7 @@ class _GoldButtonState extends ConsumerState<GoldButton>
         : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(widget.icon, color: const Color(0xFF1A1208), size: 18),
+              Icon(widget.icon, color: labelColor, size: 18),
               const SizedBox(width: 6),
               label,
             ],
@@ -85,20 +107,14 @@ class _GoldButtonState extends ConsumerState<GoldButton>
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: enabled
-              ? const [Color(0xFFF0D488), Color(0xFFD4A857)]
-              : const [Color(0xFF6E5C36), Color(0xFF5A4A2A)],
+          colors: [gradTop, gradBottom],
         ),
         borderRadius: BorderRadius.circular(widget.radius),
-        border: Border.all(
-          color: enabled
-              ? const Color(0xFFE8C87A)
-              : const Color(0xFF4A3E26),
-        ),
+        border: Border.all(color: borderColor),
         boxShadow: _down
             ? [
                 BoxShadow(
-                  color: const Color(0xFFD4A857).withValues(alpha: 0.22),
+                  color: glowColor.withValues(alpha: 0.22),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),
@@ -112,16 +128,20 @@ class _GoldButtonState extends ConsumerState<GoldButton>
               ],
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
         child: child),
     );
 
-    // box 内层 SizedBox(width: double.infinity)：根治 Transform.scale 在 Row/Expanded
-    // 中阻断 intrinsic 宽度导致按钮坍塌为竖线（v2.3.1 仅修小六壬，此处根治所有用法）。
-    // 所有调用点均在 tight 宽度环境（Column stretch / Expanded / SizedBox 固定宽），
-    // double.infinity 在 bounded tight 下取最大宽度，撑满。
-    final expandedBox = SizedBox(width: double.infinity, child: box);
+    // ★ v2.10.0 竖线坍塌终极根治（继 v2.3.1/v2.7.1 后第三次）：
+    // 用 ConstrainedBox + minWidth 兜底，无论父级约束如何都不会坍塌为竖线。
+    // - tight(width=W) 下：ConstrainedBox 不改变约束，box 撑满 W
+    // - loose(maxWidth=W, minWidth=0) 下：强制 minWidth=88，box 至少 88px
+    // - unbounded 下：强制 88px，避免 SizedBox(width: inf) panic
+    // 详见 docs/频发BUG/GoldButton竖线坍塌.md
+    final expandedBox = ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 88, maxWidth: double.infinity),
+      child: SizedBox(width: double.infinity, child: box),
+    );
 
     final inner = animEnabled
         ? AnimatedBuilder(
@@ -140,9 +160,6 @@ class _GoldButtonState extends ConsumerState<GoldButton>
           )
         : expandedBox;
 
-    // 手势：Listener 处理 pointer down/up（缩放），立即响应、不参与 gesture arena，
-    // 绕过 DraggableScrollableSheet 等滚动容器的 tap-vs-scroll 竞争（旧实现 onTapDown
-    // 被 arena 延迟，表现为"多按才有缩放"）；onTap 处理功能触发。
     return Listener(
       behavior: HitTestBehavior.opaque,
       onPointerDown: (_) {

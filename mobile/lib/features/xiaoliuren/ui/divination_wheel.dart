@@ -148,12 +148,13 @@ class DivinationWheelState extends State<DivinationWheel> {
 
   @override
   Widget build(BuildContext context) =>
-      CustomPaint(painter: _WheelPainter(this), child: const SizedBox.expand());
+      CustomPaint(painter: _WheelPainter(this, AppClr.of(context)), child: const SizedBox.expand());
 }
 
 class _WheelPainter extends CustomPainter {
   final DivinationWheelState s;
-  _WheelPainter(this.s);
+  final AppClr clr;
+  _WheelPainter(this.s, this.clr);
 
   @override
   bool shouldRepaint(covariant _WheelPainter oldDelegate) => true;
@@ -168,14 +169,15 @@ class _WheelPainter extends CustomPainter {
     final cx = w / 2, cy = h / 2;
     final R = math.min(w, h) * DivinationWheelState._radiusRatio;
     final breath = 0.5 + 0.5 * math.sin(s.pulse * 0.12);
+    final c = clr;
 
-    // —— 背景径向渐变 ——
+    // —— 背景径向渐变（深色：紫黑；浅色：浅米，随主题切换）——
     final bgRect = Rect.fromCircle(center: Offset(cx, cy), radius: math.max(w, h) * 0.7);
     canvas.drawRRect(
       RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(24)),
       Paint()
-        ..shader = const RadialGradient(colors: [
-          Color(0xFF1B1626), Color(0xFF120F1A), Color(0xFF0A0810),
+        ..shader = RadialGradient(colors: [
+          c.bgInner, c.bgMid, c.bgOuter,
         ]).createShader(bgRect),
     );
 
@@ -186,7 +188,7 @@ class _WheelPainter extends CustomPainter {
         r,
         Paint()
           ..style = PaintingStyle.stroke
-          ..color = const Color.fromRGBO(212, 168, 87, 0.15)
+          ..color = c.gold.withValues(alpha: 0.15)
           ..strokeWidth = 1,
       );
     }
@@ -203,7 +205,7 @@ class _WheelPainter extends CustomPainter {
         Offset(R + 60, 0),
         Offset(R + (major ? 52 : 56), 0),
         Paint()
-          ..color = Color.fromRGBO(212, 168, 87, major ? 0.35 : 0.16)
+          ..color = c.gold.withValues(alpha: major ? 0.35 : 0.16)
           ..strokeWidth = major ? 2 : 1,
       );
     }
@@ -215,7 +217,7 @@ class _WheelPainter extends CustomPainter {
       R,
       Paint()
         ..style = PaintingStyle.stroke
-        ..color = const Color.fromRGBO(212, 168, 87, 0.22)
+        ..color = c.gold.withValues(alpha: 0.22)
         ..strokeWidth = 1.5,
     );
 
@@ -227,14 +229,16 @@ class _WheelPainter extends CustomPainter {
       final p = s._igniteFrame / DivinationWheelState._igniteFrames;
       final radius = R * 0.34 + R * 1.3 * p;
       final alpha = (1 - p) * 0.7;
+      // 深色用亮米白 0xFFFFF0C0；浅色用 gold 0xFFD4A857 以保证可见
+      final igniteHot = c.resolve(const Color(0xFFFFF0C0), AppColors.gold);
       canvas.drawCircle(
         Offset(cx, cy),
         radius,
         Paint()
           ..shader = RadialGradient(colors: [
-            const Color(0xFFFFF0C0).withValues(alpha: alpha),
-            const Color(0xFFD4A857).withValues(alpha: alpha * 0.4),
-            const Color(0xFFD4A857).withValues(alpha: 0),
+            igniteHot.withValues(alpha: alpha),
+            c.gold.withValues(alpha: alpha * 0.4),
+            c.gold.withValues(alpha: 0),
           ]).createShader(
               Rect.fromCircle(center: Offset(cx, cy), radius: radius)),
       );
@@ -269,7 +273,8 @@ class _WheelPainter extends CustomPainter {
         );
       }
 
-      // 节点渐变填充
+      // 节点渐变填充（info.color 是五行色，主题感知由 palaces 数据驱动；
+      // 这里仍用 AppColors.darker 计算暗版，浅色模式下五行色已通过 AppClr 切换）
       canvas.drawCircle(
         pos,
         r,
@@ -287,7 +292,7 @@ class _WheelPainter extends CustomPainter {
         r,
         Paint()
           ..style = PaintingStyle.stroke
-          ..color = isLit ? info.glow : const Color.fromRGBO(212, 168, 87, 0.47)
+          ..color = isLit ? info.glow : c.gold.withValues(alpha: 0.47)
           ..strokeWidth = isLit ? 2.2 : 1.4,
       );
 
@@ -297,7 +302,7 @@ class _WheelPainter extends CustomPainter {
         info.name,
         pos + Offset(0, -r * 0.2),
         TextStyle(
-          color: isLit ? const Color(0xFFFDF6E3) : const Color(0xFFF0E6CF),
+          color: isLit ? c.textHighlight : c.textPrimary,
           fontSize: r * 0.46,
           fontWeight: FontWeight.bold,
         ),
@@ -307,7 +312,7 @@ class _WheelPainter extends CustomPainter {
         '${info.wuxing}·${info.fangwei}',
         pos + Offset(0, r * 0.32),
         TextStyle(
-          color: const Color.fromRGBO(232, 217, 176, 0.78),
+          color: c.goldBright.withValues(alpha: 0.78),
           fontSize: math.max(7.0, r * 0.22),
         ),
       );
@@ -324,19 +329,24 @@ class _WheelPainter extends CustomPainter {
     if (s.cursor != -1) {
       final ang = -math.pi / 2 + (2 * math.pi / 6) * s.cursor;
       final cpos = Offset(cx + R * math.cos(ang), cy + R * math.sin(ang));
+      // 深色用 0xFFFFE6A0 亮黄；浅色用 gold 0xFFD4A857
+      final cursorHot = c.resolve(const Color(0xFFFFE6A0), AppColors.gold);
       canvas.drawCircle(
         Offset(cx, cy),
         4,
-        Paint()..color = const Color(0xFFFFE6A0),
+        Paint()..color = cursorHot,
       );
       canvas.drawLine(
         Offset(cx, cy),
         cpos,
         Paint()
-          ..color = const Color.fromRGBO(255, 215, 130, 0.55)
+          ..color = c.resolve(
+            const Color.fromRGBO(255, 215, 130, 0.55),
+            AppColors.gold.withValues(alpha: 0.55),
+          )
           ..strokeWidth = 2,
       );
-      canvas.drawCircle(cpos, 5, Paint()..color = const Color(0xFFFFE6A0));
+      canvas.drawCircle(cpos, 5, Paint()..color = cursorHot);
     }
   }
 
@@ -346,6 +356,8 @@ class _WheelPainter extends CustomPainter {
     const baseAlpha = 0.55;
     const fadeBand = 0.32; // 消失前沿过渡宽度
     final globalFade = 1 - age * 0.3;
+    // 深色用 0xFFFFD782 暖黄；浅色用 gold
+    final trailHot = clr.resolve(const Color(0xFFFFD782), AppColors.gold);
     for (var k = 0; k < segs; k++) {
       final tm = (k + 0.5) / segs; // 段中点：0=圆心端，1=宫位端
       final a = ((tm - (age - fadeBand)) / fadeBand).clamp(0.0, 1.0) *
@@ -358,7 +370,7 @@ class _WheelPainter extends CustomPainter {
         p0,
         p1,
         Paint()
-          ..color = const Color(0xFFFFD782).withValues(alpha: a)
+          ..color = trailHot.withValues(alpha: a)
           ..strokeWidth = 1.8
           ..strokeCap = StrokeCap.round,
       );
@@ -381,8 +393,15 @@ class _WheelPainter extends CustomPainter {
     canvas.translate(center.dx, center.dy);
     canvas.rotate(s.pulse * 0.6 * math.pi / 180);
 
-    const white = Color.fromRGBO(238, 230, 205, 0.94);
-    const black = Color.fromRGBO(20, 16, 28, 0.92);
+    // 太极两色：深色用浅米白 + 紫黑；浅色用深鎏金 + 深棕（保证与浅色背景对比）
+    final white = clr.resolve(
+      const Color.fromRGBO(238, 230, 205, 0.94),
+      const Color.fromRGBO(155, 122, 42, 0.94),
+    );
+    final black = clr.resolve(
+      const Color.fromRGBO(20, 16, 28, 0.92),
+      const Color.fromRGBO(26, 18, 8, 0.92),
+    );
     final rect = Rect.fromCircle(center: Offset.zero, radius: r);
 
     // 整圆白底
@@ -397,8 +416,8 @@ class _WheelPainter extends CustomPainter {
     canvas.drawCircle(Offset(0, -r / 2), r / 2, Paint()..color = white);
     canvas.drawCircle(Offset(0, r / 2), r / 2, Paint()..color = black);
     // 鱼眼
-    canvas.drawCircle(Offset(0, -r / 2), r * 0.14, Paint()..color = const Color.fromRGBO(20, 16, 28, 1));
-    canvas.drawCircle(Offset(0, r / 2), r * 0.14, Paint()..color = const Color.fromRGBO(238, 230, 205, 1));
+    canvas.drawCircle(Offset(0, -r / 2), r * 0.14, Paint()..color = black);
+    canvas.drawCircle(Offset(0, r / 2), r * 0.14, Paint()..color = white);
 
     canvas.restore();
   }

@@ -477,7 +477,7 @@ class _TianPanPainter extends CustomPainter {
 
     // 12 等分放射线
     final linePaint = Paint()
-      ..color = const Color.fromRGBO(212, 168, 87, 0.25)
+      ..color = clr.gold.withValues(alpha: 0.25)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.6;
     for (var i = 0; i < 12; i++) {

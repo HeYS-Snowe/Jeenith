@@ -189,6 +189,7 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
 
   /// 竹签筒：摇动时左右摆动，落签时一根竹签从筒中升起。
   Widget _buildHolder() {
+    final c = AppClr.of(context);
     // 摇摆：sin(8π * t) * (1 - t) 阻尼振荡
     final t = _shake.value;
     final swing = _busy ? math.sin(t * math.pi * 8) * (1 - t) * 0.18 : 0.0;
@@ -200,37 +201,41 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          // 筒身
+          // 筒身：深色用紫黑褐，浅色用浅褐与浅色背景协调
           Container(
             width: 110,
             height: 170,
             decoration: BoxDecoration(
-              color: const Color(0xFF6A4A2A),
+              color: c.resolve(const Color(0xFF6A4A2A), const Color(0xFF8A6A3A)),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFFE8C87A), width: 2),
+              border: Border.all(color: c.goldBright, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: AppClr.of(context).gold.withValues(alpha: 0.3),
+                  color: c.gold.withValues(alpha: 0.3),
                   blurRadius: 12,
                   spreadRadius: 1,
                 ),
               ],
             ),
             child: CustomPaint(
-              painter: _SticksPainter(fallProgress: fallProgress, busy: _busy),
+              painter: _SticksPainter(
+                fallProgress: fallProgress,
+                busy: _busy,
+                clr: c,
+              ),
               size: const Size(110, 170),
             ),
           ),
-          // 筒口装饰
+          // 筒口装饰：稍亮一档褐色
           Positioned(
             top: 0,
             child: Container(
               width: 110,
               height: 16,
               decoration: BoxDecoration(
-                color: const Color(0xFF8A6A3A),
+                color: c.resolve(const Color(0xFF8A6A3A), const Color(0xFFA88A5A)),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                border: Border.all(color: const Color(0xFFE8C87A), width: 2),
+                border: Border.all(color: c.goldBright, width: 2),
               ),
             ),
           ),
@@ -391,8 +396,13 @@ class _ChouqianPageState extends ConsumerState<ChouqianPage>
 class _SticksPainter extends CustomPainter {
   final double fallProgress;
   final bool busy;
+  final AppClr clr;
 
-  const _SticksPainter({required this.fallProgress, required this.busy});
+  _SticksPainter({
+    required this.fallProgress,
+    required this.busy,
+    required this.clr,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -400,10 +410,10 @@ class _SticksPainter extends CustomPainter {
     final h = size.height;
     // 签筒内的竹签（背景一束）
     final stickPaint = Paint()
-      ..color = const Color(0xFFD4A857)
+      ..color = clr.gold
       ..style = PaintingStyle.fill;
     final tipPaint = Paint()
-      ..color = const Color(0xFFE8C87A)
+      ..color = clr.goldBright
       ..style = PaintingStyle.fill;
 
     // 后排多根签
@@ -435,15 +445,15 @@ class _SticksPainter extends CustomPainter {
           Rect.fromCenter(center: Offset(frontX, frontY), width: 8, height: 110),
           const Radius.circular(4),
         ),
-        Paint()..color = const Color(0xFFE8C87A),
+        Paint()..color = clr.goldBright,
       );
       // 签头红色装饰
-      canvas.drawCircle(Offset(frontX, frontY - 58), 5, Paint()..color = const Color(0xFFE85A3C));
+      canvas.drawCircle(Offset(frontX, frontY - 58), 5, Paint()..color = clr.fire);
       // 签号
       final tp = TextPainter(
         text: TextSpan(
           text: '签',
-          style: TextStyle(color: const Color(0xFF1A1208), fontSize: 9, fontWeight: FontWeight.bold),
+          style: TextStyle(color: clr.textHighlight, fontSize: 9, fontWeight: FontWeight.bold),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
@@ -454,5 +464,7 @@ class _SticksPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _SticksPainter old) =>
-      fallProgress != old.fallProgress || busy != old.busy;
+      fallProgress != old.fallProgress ||
+      busy != old.busy ||
+      clr != old.clr;
 }

@@ -157,7 +157,8 @@ class _BaziPageState extends ConsumerState<BaziPage> {
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
                   primary: c.gold,
-                  onPrimary: const Color(0xFF1A1208),
+                  // 深色模式：亮鎏金底配深棕字；浅色模式：深鎏金底配浅米字
+                  onPrimary: c.resolve(const Color(0xFF1A1208), const Color(0xFFF6F0E2)),
                   surface: c.bgInner,
                   onSurface: c.textPrimary,
                 ),

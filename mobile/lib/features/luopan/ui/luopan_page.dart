@@ -193,7 +193,7 @@ class _LuopanPainter extends CustomPainter {
 
     // 24 等分线
     final linePaint = Paint()
-      ..color = const Color.fromRGBO(212, 168, 87, 0.30)
+      ..color = clr.gold.withValues(alpha: 0.30)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
     for (var i = 0; i < 24; i++) {

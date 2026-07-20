@@ -4,11 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/config/config_providers.dart';
 import '../../core/theme/animations.dart';
+import '../../core/theme/app_theme.dart';
 
-/// 深色次要按钮，可选前置图标（接受任意 Widget：[Icon] / [SvgIcon] / [Image]）。
+/// 深色次要按钮（主题感知），可选前置图标（接受任意 Widget：[Icon] / [SvgIcon] / [Image]）。
 ///
 /// v2.0.0 升级：与 [GoldButton] 同款按动 0.95 缩放 + 阴影变化 + 抬起 easeOutBack 弹回。
-/// 配色沿用既有黑金低饱和度（紫黑渐变 + 鎏金描边），不引入额外光污染。
+///
+/// **v2.10.0 双重升级**：
+/// 1. **主题感知**：浅色模式下改为浅米渐变 + 深鎏金描边，不再保留深色块。
+/// 2. **竖线坍塌防御**：与 GoldButton 同款加 `ConstrainedBox(minWidth: 72)`
+///    兜底，防止 Transform.scale 阻断 intrinsic 导致坍塌。
 ///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class DarkButton extends ConsumerStatefulWidget {
@@ -33,8 +38,6 @@ class _DarkButtonState extends ConsumerState<DarkButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _press;
   bool _down = false;
-  // 最近一次 build 时确定的动画开关，供 tap 回调安全读取（避免在非 build
-  // 上下文调用 ref.watch）。在 build 中通过 ref.watch 订阅以即时重建。
   bool _animEnabled = true;
 
   @override
@@ -78,15 +81,28 @@ class _DarkButtonState extends ConsumerState<DarkButton>
 
   @override
   Widget build(BuildContext context) {
-    // 订阅全局配置：设置页切换开关时即时重建，动画/静态形态无缝切换
     _animEnabled =
         ref.watch(configProvider).valueOrNull?.animationsEnabled ?? true;
     final enabled = widget.onPressed != null;
     final animEnabled = _animEnabled;
+    final c = AppClr.of(context);
+    // 主题感知色板
+    // 深色：紫黑渐变 + 鎏金描边（原配色）
+    // 浅色：浅米渐变 + 深鎏金描边（与浅色背景协调，不留深色块）
+    final labelColor = c.resolve(const Color(0xFFF0E6CF), const Color(0xFF2E2210));
+    final gradTop = enabled
+        ? c.resolve(const Color(0xFF3A2F4A), const Color(0xFFEBE2CC))
+        : c.resolve(const Color(0xFF2A2235), const Color(0xFFD9CBA8));
+    final gradBottom = enabled
+        ? c.resolve(const Color(0xFF241C30), const Color(0xFFD9CBA8))
+        : c.resolve(const Color(0xFF1A1525), const Color(0xFFC9BB98));
+    final borderAlpha = enabled ? 0.43 : 0.18;
+    final borderColor = c.goldBorder.withValues(alpha: borderAlpha);
+
     final label = Text(
       widget.text,
-      style: const TextStyle(
-        color: Color(0xFFF0E6CF),
+      style: TextStyle(
+        color: labelColor,
         fontSize: 13,
         fontWeight: FontWeight.bold,
       ),
@@ -97,8 +113,7 @@ class _DarkButtonState extends ConsumerState<DarkButton>
             mainAxisSize: MainAxisSize.min,
             children: [
               IconTheme.merge(
-                data: const IconThemeData(
-                    size: 16, color: Color(0xFFF0E6CF)),
+                data: IconThemeData(size: 16, color: labelColor),
                 child: widget.icon!,
               ),
               const SizedBox(width: 6),
@@ -111,16 +126,10 @@ class _DarkButtonState extends ConsumerState<DarkButton>
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: enabled
-              ? const [Color(0xFF3A2F4A), Color(0xFF241C30)]
-              : const [Color(0xFF2A2235), Color(0xFF1A1525)],
+          colors: [gradTop, gradBottom],
         ),
         borderRadius: BorderRadius.circular(widget.radius),
-        border: Border.all(
-          color: enabled
-              ? const Color.fromRGBO(212, 168, 87, 0.43)
-              : const Color.fromRGBO(212, 168, 87, 0.18),
-        ),
+        border: Border.all(color: borderColor),
         boxShadow: _down
             ? [
                 BoxShadow(
@@ -138,9 +147,15 @@ class _DarkButtonState extends ConsumerState<DarkButton>
               ],
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         child: innerContent),
+    );
+
+    // ★ v2.10.0 竖线坍塌防御（与 GoldButton 同款方案）：
+    // minWidth 兜底防止 Transform.scale 阻断 intrinsic 导致坍塌
+    final expandedBox = ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 72, maxWidth: double.infinity),
+      child: SizedBox(width: double.infinity, child: box),
     );
 
     final inner = animEnabled
@@ -154,11 +169,11 @@ class _DarkButtonState extends ConsumerState<DarkButton>
               return Transform.scale(
                 scale: scale,
                 alignment: Alignment.center,
-                child: box,
+                child: expandedBox,
               );
             },
           )
-        : box;
+        : expandedBox;
 
     return GestureDetector(
       onTapDown: enabled ? _onTapDown : null,

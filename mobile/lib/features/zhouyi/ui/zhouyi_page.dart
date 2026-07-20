@@ -170,9 +170,9 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
                           color: c.bg.withValues(alpha: 0.95),
                           borderRadius:
                               const BorderRadius.vertical(top: Radius.circular(16)),
-                          border: const Border(
+                          border: Border(
                               top: BorderSide(
-                                  color: Color.fromRGBO(212, 168, 87, 0.5))),
+                                  color: c.gold.withValues(alpha: 0.5))),
                         ),
                         child: CustomScrollView(
                           controller: scrollController,
@@ -196,17 +196,20 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
   }
 
   /// 拖拽把手（仅移动端 sheet 用）。
-  Widget _buildDragHandle() => Center(
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          width: 40,
-          height: 4,
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(212, 168, 87, 0.5),
-            borderRadius: BorderRadius.circular(2),
-          ),
+  Widget _buildDragHandle() {
+    final c = AppClr.of(context);
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        width: 40,
+        height: 4,
+        decoration: BoxDecoration(
+          color: c.gold.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(2),
         ),
-      );
+      ),
+    );
+  }
 
   /// 交互区（摇卦/重置/复制/分享）—— pinned header 内容，移动/桌面共用。
   Widget _buildActionBar(ZhouyiResult? r) => Container(
@@ -261,7 +264,9 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
 
   /// 桌面端布局：可视化（固定）+ 交互结果（滚轮滚动）。
   /// 桌面端鼠标拖拽不灵，弃用 DraggableScrollableSheet，改上下分栏。
-  Widget _buildDesktopBody(ZhouyiResult? r) => Column(
+  Widget _buildDesktopBody(ZhouyiResult? r) {
+    final c = AppClr.of(context);
+    return Column(
         children: [
           SizedBox(
             height: 280,
@@ -269,10 +274,10 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
               child: HexagramView(lines: r?.lines, onDone: _onRevealed),
             ),
           ),
-          const Divider(
+          Divider(
             height: 1,
             thickness: 1,
-            color: Color.fromRGBO(212, 168, 87, 0.5),
+            color: c.gold.withValues(alpha: 0.5),
           ),
           Expanded(
             child: CustomScrollView(
@@ -288,6 +293,7 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
           ),
         ],
       );
+  }
 
   List<Widget> _resultItems(ZhouyiResult? r) {
     final c = AppClr.of(context);
