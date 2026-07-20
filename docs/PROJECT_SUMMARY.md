@@ -12,7 +12,7 @@
 | 品牌精神 | 志于本心，知于极处 |
 | 所属组织 | Qore（叩心）· 口号「叩问本心，不忘初心」 |
 | 包名 | `com.qore.jeenith` |
-| 当前版本 | **2.9.0+37**（2026-07-20，feature — 六爻断法深化：旬空/六冲六合）|
+| 当前版本 | **2.9.1+38**（2026-07-20，feature — 六爻断法深化续：飞伏/旺衰细分/三合三刑 + 仪式动画）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 | GitHub 仓库 | https://github.com/HeYS-Snowe/Jeenith |
 | 身份信息源 | `D:\Code\.Rules\OrganizationAndUser.md`（唯一事实来源）|
@@ -242,6 +242,8 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **Jeenith_fix_2.8.1_20260719_01_windows_x64.zip** | **Windows** | **2.8.1+35** | **15.65 MB** | **fix** |
 | **Jeenith_feature_2.9.0_20260720_01.apk** | **Android** | **2.9.0+37** | **58.83 MB** | **feature** |
 | **Jeenith_feature_2.9.0_20260720_01_windows_x64.zip** | **Windows** | **2.9.0+37** | **15.65 MB** | **feature** |
+| **Jeenith_feature_2.9.1_20260720_01.apk** | **Android** | **2.9.1+38** | **58.83 MB** | **feature** |
+| **Jeenith_feature_2.9.1_20260720_01_windows_x64.zip** | **Windows** | **2.9.1+38** | **15.66 MB** | **feature** |
 
 ### GitHub Release 发布记录
 
@@ -285,6 +287,7 @@ pwsh -c "Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationP
 | **2.8.0+34** | **2026-07-19** | **feature** | **六爻纳甲（周易深度断法，第 15 术）— 京房纳甲/六亲/六神/世应/用神断辞 + 八宫算法 + 9 项单测** |
 | **2.8.1+35** | **2026-07-19** | **fix** | **修复周易/小六壬桌面端 pinned header 崩溃（SliverPersistentHeader extent 与 ActionBar child 高度不匹配 → paintExtent<layoutExtent 空指针）** |
 | **2.9.0+37** | **2026-07-20** | **feature** | **六爻断法深化：旬空（用神空亡断 + score 调整）+ 六冲/六合卦（格局判断 + 断辞 + UI chip）— 3 项新单测** |
+| **2.9.1+38** | **2026-07-20** | **feature** | **六爻断法深化续：飞神伏神 + 月破日冲暗动 + 三合三刑 + 仪式入场动画（铜钱抛落）— 15 项单测，断法体系完整** |
 
 ---
 
