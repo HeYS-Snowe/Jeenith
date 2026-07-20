@@ -1249,8 +1249,8 @@
       "tag": "v2.9.2",
       "target": "main",
       "title": "v2.9.2 — 六爻深化完整版（进退神）",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "None",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.9.2.md",
       "notesFormat": "markdown",
@@ -1281,6 +1281,45 @@
       "publishedAt": "2026-07-20T14:20:00Z",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.9.2",
       "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.10.0",
+      "target": "main",
+      "title": "v2.10.0 — 浅色模式深度适配 + GoldButton 竖线 BUG 第三次根治",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.10.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_feature_2.10.0_20260721_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61702222,
+          "sizeFormatted": "58.84 MB",
+          "sha256": "7FFAAD49DC8D4D118268057A83DF9B988106FE927B972649995D252134D026AC",
+          "localPath": "builds/android/Jeenith_feature_2.10.0_20260721_01.apk",
+          "downloadUrl": ""
+        },
+        {
+          "name": "Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16421949,
+          "sizeFormatted": "15.66 MB",
+          "sha256": "DE21FCD8B1A4A3B0BD11BB8805902FF3A3FBF78478ECE8221AD9547C986EBA1D",
+          "localPath": "builds/windows/Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
+          "downloadUrl": ""
+        }
+      ],
+      "versionInPubspec": "2.10.0+40",
+      "buildStatus": "feature",
+      "builtAt": "2026-07-21T00:50:00",
+      "commit": "",
+      "publishedAt": "",
+      "url": "",
+      "status": "draft"
     }
   ]
 }
