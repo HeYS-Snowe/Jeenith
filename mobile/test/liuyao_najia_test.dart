@@ -196,5 +196,20 @@ void main() {
       expect(r.dayZhi, '申');
       expect(r.points.any((p) => p.contains('暗动')), isTrue);
     });
+
+    test('三合：水雷屯含申子辰三合水局', () {
+      // 屯 = 坎上震下：内震子寅辰，外坎申戌子 → 六爻含申子辰
+      final raw = [
+        (yang: true, changing: false),
+        (yang: false, changing: false),
+        (yang: false, changing: false),
+        (yang: false, changing: false),
+        (yang: true, changing: false),
+        (yang: false, changing: false),
+      ];
+      final r = divine(yongShen: '官鬼', rawLines: raw);
+      expect(r.benName, '屯');
+      expect(r.points.any((p) => p.contains('三合') && p.contains('水')), isTrue);
+    });
   });
 }

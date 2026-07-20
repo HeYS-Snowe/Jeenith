@@ -209,6 +209,31 @@ bool _isLiuHe(List<Yao> lines) =>
   return null;
 }
 
+/// 卦中三合局（六爻含某三合局三支）。返回 (五行, 三支)。
+MapEntry<String, List<String>>? _findSanHeIn(List<Yao> lines) {
+  final zhis = lines.map((y) => y.zhi).toSet();
+  for (final e in sanHe.entries) {
+    if (e.value.every((z) => zhis.contains(z))) return e;
+  }
+  return null;
+}
+
+/// 卦中三刑（六爻含三刑组合，或自刑同支重复）。
+List<String>? _findSanXingIn(List<Yao> lines) {
+  final zhis = lines.map((y) => y.zhi).toSet();
+  for (final xing in sanXing) {
+    if (xing.every((z) => zhis.contains(z))) return xing;
+  }
+  final counts = <String, int>{};
+  for (final y in lines) {
+    counts[y.zhi] = (counts[y.zhi] ?? 0) + 1;
+  }
+  for (final e in counts.entries) {
+    if (ziXing.contains(e.key) && e.value >= 2) return [e.key, e.key];
+  }
+  return null;
+}
+
 /// 断卦：综合用神旺衰、动静、原忌神发动、持世，输出总断 + 要点。
 ({String judgment, List<String> points}) _judge({
   required List<Yao> lines,
@@ -230,6 +255,16 @@ bool _isLiuHe(List<Yao> lines) =>
     pts.add('卦逢六冲（六爻两两相冲），主散、主变、事多反复，测散事吉、测聚事凶。');
   } else if (isLiuHe) {
     pts.add('卦逢六合（六爻两两相合），主合、主聚、事多缓成，测聚事吉、测散事凶。');
+  }
+
+  // 三合局 / 三刑（卦级格局）。
+  final sh = _findSanHeIn(lines);
+  if (sh != null) {
+    pts.add('卦中${sh.value.join("")}三合${sh.key}局，${sh.key}气齐整，相关谋为得助。');
+  }
+  final sx = _findSanXingIn(lines);
+  if (sx != null) {
+    pts.add('卦中见${sx.join("")}三刑，主刑伤、口舌、阻滞，须防纠纷。');
   }
 
   if (yongPos == null) {
