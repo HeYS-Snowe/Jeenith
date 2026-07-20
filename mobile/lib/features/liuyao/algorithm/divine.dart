@@ -247,6 +247,7 @@ List<String>? _findSanXingIn(List<Yao> lines) {
   required List<String> dayKong,
   required bool isLiuChong,
   required bool isLiuHe,
+  required List<Yao>? bianLines,
 }) {
   final pts = <String>[];
 
@@ -318,6 +319,15 @@ List<String>? _findSanXingIn(List<Yao> lines) {
 
   if (dong) {
     pts.add('用神发动（${yong.yang ? "老阳○" : "老阴×"}），事已有动向，宜顺势求变。');
+    // 进退神：用神动爻化进 / 化退（看变卦同位地支）
+    if (bianLines != null) {
+      final bz = bianLines[yongPos].zhi;
+      if (jinShen[yong.zhi] == bz) {
+        pts.add('用神化进神（${yong.zhi}→$bz），渐进高升，吉。');
+      } else if (jinShen[bz] == yong.zhi) {
+        pts.add('用神化退神（${yong.zhi}→$bz），减退之象，须防退步。');
+      }
+    }
   } else {
     pts.add('用神安静未动，稳而待时。');
   }
@@ -478,6 +488,7 @@ LiuyaoResult divine({
     dayKong: dayKong,
     isLiuChong: isLiuChong,
     isLiuHe: isLiuHe,
+    bianLines: bianLines,
   );
 
   return LiuyaoResult(

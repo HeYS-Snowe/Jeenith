@@ -211,5 +211,21 @@ void main() {
       expect(r.benName, '屯');
       expect(r.points.any((p) => p.contains('三合') && p.contains('水')), isTrue);
     });
+
+    test('进退神：用神动爻变卦不崩 + 进退逻辑', () {
+      // 乾为天用神妻财二爻寅（老阳动），变卦同人二爻丑；寅→丑 非进非退
+      final raw = [
+        (yang: true, changing: false),
+        (yang: true, changing: true),
+        for (var i = 2; i < 6; i++) (yang: true, changing: false),
+      ];
+      final r = divine(yongShen: '妻财', rawLines: raw);
+      expect(r.benName, '乾');
+      expect(r.bianName, isNotNull);
+      expect(r.points, isNotEmpty);
+      // jinShen 数据自洽
+      expect(jinShen['亥'], '子');
+      expect(jinShen['寅'], '卯');
+    });
   });
 }

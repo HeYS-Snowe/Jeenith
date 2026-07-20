@@ -108,6 +108,13 @@ const sanXing = <List<String>>[
 /// 自刑地支（同支重复见刑：辰辰、午午、酉酉、亥亥）。
 const ziXing = ['辰', '午', '酉', '亥'];
 
+/// 化进神（动爻变卦地支前进）：亥→子、丑→辰、寅→卯、辰→未、巳→午、未→戌、申→酉、戌→亥。
+/// 化进 = jinShen[原地支] == 变地支；化退 = jinShen[变地支] == 原地支（反向）。
+const jinShen = <String, String>{
+  '亥': '子', '丑': '辰', '寅': '卯', '辰': '未',
+  '巳': '午', '未': '戌', '申': '酉', '戌': '亥',
+};
+
 /// 八卦名 → 3 bit（与 data/yijing/trigrams.dart 的 bin8ToName 对应）。
 const nameToBin8 = <String, int>{
   '坤': 0, '震': 1, '坎': 2, '兑': 3,
