@@ -269,6 +269,18 @@ bool _isLiuHe(List<Yao> lines) =>
         '${dong ? "动而空，出空则应" : "静而空，须待出空或冲空之日方有作为"}。');
   }
 
+  // 月破（冲月建）/ 日冲 / 暗动（静爻被日冲）
+  final yuePo = chongMap[yong.zhi] == monthZhi;
+  final riChong = chongMap[yong.zhi] == dayZhi;
+  if (yuePo) {
+    pts.add('用神${yong.zhi}逢月破（冲月建$monthZhi），月内虚耗无力，出月方有转机。');
+  }
+  if (riChong && !dong) {
+    pts.add('用神${yong.zhi}静爻被日辰$dayZhi冲为暗动，虽静犹动，暗中已有动向。');
+  } else if (riChong && dong) {
+    pts.add('用神发动又被日辰$dayZhi冲，冲散受伤，谋为反复。');
+  }
+
   if (dong) {
     pts.add('用神发动（${yong.yang ? "老阳○" : "老阴×"}），事已有动向，宜顺势求变。');
   } else {
@@ -282,6 +294,7 @@ bool _isLiuHe(List<Yao> lines) =>
       (jiDong ? 1 : 0) +
       (chiShi ? 1 : 0);
   if (kong) score -= 1; // 用神空亡减分（旺相可解）
+  if (yuePo) score -= 1; // 月破减分
 
   final String judgment;
   if (score >= 2) {

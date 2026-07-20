@@ -187,5 +187,14 @@ void main() {
       expect(fuFeiPt, contains('二爻')); // fuPos=1
       expect(fuFeiPt, contains('亥')); // 飞神亥
     });
+
+    test('暗动：用神静爻被日辰冲', () {
+      // 2024-01-09 为壬申日；乾为天用神妻财寅（二爻，静），申冲寅 → 暗动
+      final raw = [for (var i = 0; i < 6; i++) (yang: true, changing: false)];
+      final r = divine(
+          yongShen: '妻财', rawLines: raw, now: DateTime(2024, 1, 9, 12));
+      expect(r.dayZhi, '申');
+      expect(r.points.any((p) => p.contains('暗动')), isTrue);
+    });
   });
 }
