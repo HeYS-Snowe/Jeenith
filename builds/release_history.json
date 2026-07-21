@@ -1288,8 +1288,8 @@
       "tag": "v2.10.0",
       "target": "main",
       "title": "v2.10.0 — 浅色模式深度适配 + GoldButton 竖线 BUG 第三次根治",
-      "label": "Latest",
-      "isLatest": true,
+      "label": "",
+      "isLatest": false,
       "isPreRelease": false,
       "notesFile": "builds/release_notes/release_notes_v2.10.0.md",
       "notesFormat": "markdown",
@@ -1319,6 +1319,45 @@
       "commit": "",
       "publishedAt": "2026-07-20T16:51:18Z",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.0",
+      "status": "published"
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.10.2",
+      "target": "main",
+      "title": "v2.10.2 — 合并 v2.10.1 修复 + InteractableCard 崩溃修复 + 文字过渡动画",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.10.2.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_fix_2.10.2_20260721_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 61702222,
+          "sizeFormatted": "58.84 MB",
+          "sha256": "8A971AF9E5F172EC69ADECB947C519CD29E768BEB14A4802647523F902D3175C",
+          "localPath": "builds/android/Jeenith_fix_2.10.2_20260721_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.2/Jeenith_fix_2.10.2_20260721_01.apk"
+        },
+        {
+          "name": "Jeenith_fix_2.10.2_20260721_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16422213,
+          "sizeFormatted": "15.66 MB",
+          "sha256": "BEE2CB6683031617191D28CA73CC11E4F4A3389C97D3DF7E867E7FF289424F60",
+          "localPath": "builds/windows/Jeenith_fix_2.10.2_20260721_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.2/Jeenith_fix_2.10.2_20260721_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.10.2+42",
+      "buildStatus": "fix",
+      "builtAt": "2026-07-21T20:12:00",
+      "commit": "1335f957abed45b67c7b1db02ab42d70f49d64cb",
+      "publishedAt": "2026-07-21T20:17:18+08:00",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.2",
       "status": "published"
     }
   ]
