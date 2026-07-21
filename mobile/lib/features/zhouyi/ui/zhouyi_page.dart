@@ -212,37 +212,56 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
   }
 
   /// 交互区（摇卦/重置/复制/分享）—— pinned header 内容，移动/桌面共用。
+  ///
+  /// v2.10.3 竖线坍塌第 5 次修复：原单行 4 按钮 + Expanded(GoldButton) 在
+  /// 320-411px 屏触发矛盾约束（其他按钮 minWidth 之和 > 可用宽度，Expanded
+  /// 给 GoldButton width<88，ConstrainedBox(minWidth:88).enforce(tight(W<88))
+  /// 产生 size=0/child=88 撕裂，release 模式渲染降级为竖线）。
+  ///
+  /// 改为 4 按钮 intrinsic 宽度单行 + FittedBox(scaleDown) 自适应：
+  ///   - 大屏（≥480px）：4 按钮 intrinsic 总宽 < 可用宽，原尺寸居中，左右留白
+  ///   - 小屏（<480px）：4 按钮 intrinsic 总宽 > 可用宽，整体等比缩小到一行容纳
+  /// 不用 Expanded（避免 tight(W<88) 矛盾约束）；不用 SingleChildScrollView
+  /// 横向滚动（嵌套 viewport 在 pinned SliverPersistentHeader 内会导致 hit test
+  /// 时 sliver.geometry 为 null，抛 Null check operator 崩溃）。
+  /// GoldButton 内部 LayoutBuilder 防御层仍保留作为兜底。同步 _PinHeaderDelegate
+  /// extent 90 → 104 → 90（单行）。
   Widget _buildActionBar(ZhouyiResult? r) => Container(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
         color: AppClr.of(context).bg.withValues(alpha: 0.92),
         // minHeight 必须与 _PinHeaderDelegate 的 extent(90) 一致，否则 child 实际
-        // 高度(80) < delegate extent(90) 会产生 paintExtent < layoutExtent 的异常
+        // 高度 < delegate extent(90) 会产生 paintExtent < layoutExtent 的异常
         // SliverGeometry，致后续 sliver 不被 layout、viewport paint 时空指针崩溃。
         constraints: const BoxConstraints(minHeight: 90),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: GoldButton(
-                text: _busy ? '摇卦中…' : '摇卦',
-                onPressed: _busy ? null : _onToss,
-              ),
+        child: Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GoldButton(
+                  text: _busy ? '摇卦中…' : '摇卦',
+                  onPressed: _busy ? null : _onToss,
+                ),
+                const SizedBox(width: 8),
+                DarkButton(
+                  icon: const SvgIcon('refresh'),
+                  text: '重置',
+                  onPressed: _busy ? null : _onReset,
+                ),
+                const SizedBox(width: 8),
+                CopyResultButton(
+                    text: _buildCopyText(), enabled: r != null),
+                const SizedBox(width: 8),
+                ShareResultButton(
+                  boundaryKey: _boundaryKey,
+                  enabled: r != null,
+                  fallbackText: _buildCopyText(),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            DarkButton(
-              icon: const SvgIcon('refresh'),
-              text: '重置',
-              onPressed: _busy ? null : _onReset,
-            ),
-            const SizedBox(width: 8),
-            CopyResultButton(text: _buildCopyText(), enabled: r != null),
-            const SizedBox(width: 8),
-            ShareResultButton(
-              boundaryKey: _boundaryKey,
-              enabled: r != null,
-              fallbackText: _buildCopyText(),
-            ),
-          ],
+          ),
         ),
       );
 
@@ -561,6 +580,9 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
 }
 
 /// 交互区粘顶 delegate（pinned，固定高度）。
+///
+/// v2.10.3：extent 90 → 104（两行布局）→ 90（单行 + 横向滚动）。
+/// 必须 == Container minHeight，否则会产生 paintExtent < layoutExtent 异常。
 class _PinHeaderDelegate extends SliverPersistentHeaderDelegate {
   final Widget child;
   const _PinHeaderDelegate({required this.child});
