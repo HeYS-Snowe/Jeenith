@@ -10,10 +10,11 @@ import '../../core/theme/app_theme.dart';
 ///
 /// v2.0.0 升级：与 [GoldButton] 同款按动 0.95 缩放 + 阴影变化 + 抬起 easeOutBack 弹回。
 ///
-/// **v2.10.0 双重升级**：
+/// **v2.10.1 双重升级修正**：
 /// 1. **主题感知**：浅色模式下改为浅米渐变 + 深鎏金描边，不再保留深色块。
-/// 2. **竖线坍塌防御**：与 GoldButton 同款加 `ConstrainedBox(minWidth: 72)`
-///    兜底，防止 Transform.scale 阻断 intrinsic 导致坍塌。
+/// 2. **竖线坍塌防御修正**：v2.10.0 用 `ConstrainedBox(minWidth:72, maxWidth:inf) +
+///    SizedBox(width:inf)` 双层嵌套，反而让 DarkButton 在 Wrap / Row 中被强制撑满
+///    整个剩余宽度（详见 GoldButton 同款 BUG）。本次简化为仅 `ConstrainedBox(minWidth:72)`。
 ///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class DarkButton extends ConsumerStatefulWidget {
@@ -151,11 +152,12 @@ class _DarkButtonState extends ConsumerState<DarkButton>
         child: innerContent),
     );
 
-    // ★ v2.10.0 竖线坍塌防御（与 GoldButton 同款方案）：
-    // minWidth 兜底防止 Transform.scale 阻断 intrinsic 导致坍塌
+    // ★ v2.10.1 竖线坍塌防御修正（与 GoldButton 同款方案）：
+    // 仅保留 ConstrainedBox(minWidth:72)，去掉 v2.10.0 错误的 maxWidth:inf + SizedBox(width:inf)。
+    // 详见 GoldButton 注释 + docs/频发BUG/GoldButton竖线坍塌.md
     final expandedBox = ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 72, maxWidth: double.infinity),
-      child: SizedBox(width: double.infinity, child: box),
+      constraints: const BoxConstraints(minWidth: 72),
+      child: box,
     );
 
     final inner = animEnabled

@@ -11,16 +11,21 @@ import '../../core/theme/app_theme.dart';
 /// v2.0.0 升级：按动 0.95 缩放 + 阴影变化，抬起用 [AppAnimations.pressReleaseCurve]
 /// （[Curves.easeOutBack] 变体）弹回——模拟物理弹性，质感来自曲线而非饱和度。
 ///
-/// **v2.10.0 双重修复**：
-/// 1. **竖线坍塌根治**（继 v2.3.1/v2.7.1 后第三次"根治"）：v2.7.1 用
-///    `SizedBox(width: double.infinity)` 在 tight 约束下撑满，但在某些
-///    SliverPersistentHeader + DraggableScrollableSheet 嵌套场景下父级约束
-///    为 loose(maxWidth=inf) 时仍会坍塌为竖线。本次改用 `ConstrainedBox
-///    (minWidth: 88, maxWidth: double.infinity)` 双保险：tight 下取父级宽度
-///    撑满，loose 下至少 88px 兜底，unbounded 下取 88px。详见频发 BUG 文档
-///    `docs/频发BUG/GoldButton竖线坍塌.md`。
-/// 2. **主题感知**：颜色全部从 `AppClr.of(context)` 取，浅色模式下自动切换
-///    为深鎏金（保证对比度），深色模式下保持原黑金。
+/// **v2.10.1 竖线坍塌"根治"修正**（继 v2.3.1/v2.7.1/v2.10.0 后第四次）：
+/// v2.10.0 用 `ConstrainedBox(minWidth:88, maxWidth:inf) + SizedBox(width:inf)` 双层嵌套，
+/// 反而在 loose(maxWidth=W) 场景下让内层 SizedBox.size=inf，外层 ConstrainedBox.size=
+/// clamp(inf, 0, W)=W，按钮被强制撑满整个剩余宽度，导致 Row 后续按钮无空间而消失
+/// （周易 _buildActionBar 所有按钮消失 / 小六壬 DarkButton 在 Wrap 中失去宽度约束）。
+/// 本次简化：仅保留 `ConstrainedBox(minWidth:88)`，去掉 `maxWidth:inf` 和 `SizedBox(width:inf)`。
+/// - tight(W) 下：enforce 后 tight(W)，撑满 W（Expanded / SizedBox(width:88) 包裹场景）
+/// - loose(maxWidth=W) 下：enforce 后 (minWidth:88, maxWidth=W)，box 按 intrinsic 测量，
+///   minWidth 兜底（DarkButton 在 Wrap 中保持 intrinsic 宽度）
+/// - loose unbounded(maxWidth=inf) 下：enforce 后 (minWidth:88, maxWidth:inf)，
+///   box 按 intrinsic 测量，minWidth 兜底（SliverPersistentHeader 中不再坍塌为竖线）
+/// 详见频发 BUG 文档 `docs/频发BUG/GoldButton竖线坍塌.md`。
+///
+/// **v2.10.0 主题感知**：颜色全部从 `AppClr.of(context)` 取，浅色模式下自动切换
+/// 为深鎏金（保证对比度），深色模式下保持原黑金。
 ///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class GoldButton extends ConsumerStatefulWidget {
@@ -132,15 +137,20 @@ class _GoldButtonState extends ConsumerState<GoldButton>
         child: child),
     );
 
-    // ★ v2.10.0 竖线坍塌终极根治（继 v2.3.1/v2.7.1 后第三次）：
-    // 用 ConstrainedBox + minWidth 兜底，无论父级约束如何都不会坍塌为竖线。
-    // - tight(width=W) 下：ConstrainedBox 不改变约束，box 撑满 W
-    // - loose(maxWidth=W, minWidth=0) 下：强制 minWidth=88，box 至少 88px
-    // - unbounded 下：强制 88px，避免 SizedBox(width: inf) panic
+    // ★ v2.10.1 竖线坍塌修复修正（继 v2.3.1/v2.7.1/v2.10.0 后第四次）：
+    // 仅保留 ConstrainedBox(minWidth:88)，去掉 v2.10.0 错误的 maxWidth:inf + SizedBox(width:inf)
+    // 双层嵌套。后者在 loose(maxWidth=W) 下会让内层 SizedBox.size=inf，外层
+    // ConstrainedBox.size=clamp(inf,0,W)=W，强制撑满剩余宽度，致 Row 后续按钮无空间。
+    // 现在：
+    // - tight(W) 下 enforce → tight(W)，撑满 W（Expanded / SizedBox(width:88) 包裹场景）
+    // - loose(maxWidth=W) 下 enforce → (minWidth:88, maxWidth:W)，box 按 intrinsic 测量，
+    //   minWidth 兜底（DarkButton 在 Wrap 中保持 intrinsic 宽度）
+    // - loose unbounded(maxWidth=inf) 下 enforce → (minWidth:88, maxWidth:inf)，
+    //   box 按 intrinsic 测量，minWidth 兜底（SliverPersistentHeader 中不再坍塌为竖线）
     // 详见 docs/频发BUG/GoldButton竖线坍塌.md
     final expandedBox = ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 88, maxWidth: double.infinity),
-      child: SizedBox(width: double.infinity, child: box),
+      constraints: const BoxConstraints(minWidth: 88),
+      child: box,
     );
 
     final inner = animEnabled
