@@ -90,9 +90,9 @@
 
 | 项 Item | 值 Value |
 |--------|---------|
-| APK 文件 | Jeenith_release_2.3.3_20260715_01.apk |
+| APK 文件 | Jeenith_2.3.3_release_20260715_01.apk |
 | APK 大小 | 55.00 MB |
-| Windows ZIP | Jeenith_release_2.3.3_20260715_01_windows_x64.zip |
+| Windows ZIP | Jeenith_2.3.3_release_20260715_01_windows_x64.zip |
 | Windows ZIP 大小 | 13.27 MB |
 | 构建模式 Build Mode | release |
 
@@ -271,8 +271,8 @@
 
 | 产物 Artifact | 大小 Size | 目标 Target | 结果 Result |
 |-------------|---------|-----------|-----------|
-| Jeenith_release_2.3.3_20260715_01.apk | 55.00 MB | ≤ 60 MB | □ Pass |
-| Jeenith_release_2.3.3_20260715_01_windows_x64.zip | 13.27 MB | ≤ 15 MB | □ Pass |
+| Jeenith_2.3.3_release_20260715_01.apk | 55.00 MB | ≤ 60 MB | □ Pass |
+| Jeenith_2.3.3_release_20260715_01_windows_x64.zip | 13.27 MB | ≤ 15 MB | □ Pass |
 
 ### 8.2 历史版本趋势 Historical Trend
 

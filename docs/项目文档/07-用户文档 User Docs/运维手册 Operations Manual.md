@@ -175,10 +175,10 @@ mobile\build\windows\x64\runner\Release\jeenith.exe
 cd D:\Code\Project\Qore\Jeenith\mobile\build\windows\x64\runner\Release
 
 # 压缩为 ZIP（手动）
-Compress-Archive -Path * -DestinationPath "Jeenith_release_2.3.3_20260715_01.zip"
+Compress-Archive -Path * -DestinationPath "Jeenith_2.3.3_release_20260715_01.zip"
 
 # 移动到归档目录
-Move-Item "Jeenith_release_2.3.3_20260715_01.zip" "D:\Code\Project\Qore\Jeenith\builds\windows\"
+Move-Item "Jeenith_2.3.3_release_20260715_01.zip" "D:\Code\Project\Qore\Jeenith\builds\windows\"
 ```
 
 **Windows 图标生成**：
@@ -263,8 +263,8 @@ version: 2.3.3+23
 
 **示例**：
 
-- `Jeenith_release_2.3.3_20260715_01.apk`
-- `Jeenith_release_2.3.3_20260715_01.zip`
+- `Jeenith_2.3.3_release_20260715_01.apk`
+- `Jeenith_2.3.3_release_20260715_01.zip`
 
 ### 4.4 版本历史记录 Version History
 
@@ -339,11 +339,11 @@ python archive_history.py <apk_filename>
 Jeenith/
   builds/
     android/                    # Android APK 归档
-      Jeenith_release_2.3.3_20260715_01.apk
-      Jeenith_release_2.3.2_20260715_01.apk
+      Jeenith_2.3.3_release_20260715_01.apk
+      Jeenith_2.3.2_release_20260715_01.apk
       ...
     windows/                    # Windows ZIP 归档
-      Jeenith_release_2.3.3_20260715_01.zip
+      Jeenith_2.3.3_release_20260715_01.zip
       ...
     build_history.json          # 构建历史
     release_history.json        # 发布历史

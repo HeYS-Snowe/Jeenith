@@ -186,8 +186,8 @@ Jeenith_<status>_<version>_<date>_<sequence>.<ext>
 ```
 
 示例：
-- `Jeenith_release_2.3.3_20260715_01.apk`
-- `Jeenith_release_2.3.3_20260715_01_windows_x64.zip`
+- `Jeenith_2.3.3_release_20260715_01.apk`
+- `Jeenith_2.3.3_release_20260715_01_windows_x64.zip`
 
 ### 4.5 版本历史记录 Version History
 
@@ -225,9 +225,9 @@ flutter build windows --release
 ```
 builds/
 ├── android/                    # APK 产物
-│   └── Jeenith_release_2.3.3_20260715_01.apk
+│   └── Jeenith_2.3.3_release_20260715_01.apk
 ├── windows/                    # Windows ZIP 产物
-│   └── Jeenith_release_2.3.3_20260715_01_windows_x64.zip
+│   └── Jeenith_2.3.3_release_20260715_01_windows_x64.zip
 ├── release_notes/              # 发布说明
 │   └── release_notes_v2.3.3.md
 ├── build_history.json          # 构建历史
@@ -293,7 +293,7 @@ pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "2.3.3"
 flutter build windows --release
 
 # 手动打包 Windows ZIP
-Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath builds\windows\Jeenith_release_2.3.3_20260715_01_windows_x64.zip
+Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath builds\windows\Jeenith_2.3.3_release_20260715_01_windows_x64.zip
 ```
 
 ---

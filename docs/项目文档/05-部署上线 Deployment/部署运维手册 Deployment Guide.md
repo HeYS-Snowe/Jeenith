@@ -193,7 +193,7 @@ flutter build apk --release
 
 # 4. 重命名并归档（参考自动脚本逻辑）
 $src = "build\app\outputs\flutter-apk\app-release.apk"
-$dst = "..\builds\android\Jeenith_release_2.3.3_20260715_01.apk"
+$dst = "..\builds\android\Jeenith_2.3.3_release_20260715_01.apk"
 Copy-Item -Path $src -Destination $dst -Force
 
 # 5. 计算 SHA-256
@@ -259,10 +259,10 @@ android {
 
 ```powershell
 # 查看 APK 签名信息
-jarsigner -verify -verbose -certs builds\android\Jeenith_release_2.3.3_20260715_01.apk
+jarsigner -verify -verbose -certs builds\android\Jeenith_2.3.3_release_20260715_01.apk
 
 # 查看 APK 包名与版本
-aapt dump badging builds\android\Jeenith_release_2.3.3_20260715_01.apk | findstr "package versionName"
+aapt dump badging builds\android\Jeenith_2.3.3_release_20260715_01.apk | findstr "package versionName"
 ```
 
 ---
@@ -308,7 +308,7 @@ flutter build windows --release
 
 ```powershell
 $src = "build\windows\x64\runner\Release\*"
-$dst = "..\builds\windows\Jeenith_release_2.3.3_20260715_01_windows_x64.zip"
+$dst = "..\builds\windows\Jeenith_2.3.3_release_20260715_01_windows_x64.zip"
 Compress-Archive -Path $src -DestinationPath $dst -Force
 
 # 计算 SHA-256
@@ -336,12 +336,12 @@ Windows 资源管理器对 exe 图标有缓存机制。若替换 exe 后仍显�
 ```
 builds/
 ├── android/
-│   ├── Jeenith_release_1.0.0_20260711_01.apk
-│   ├── Jeenith_release_2.3.3_20260715_01.apk
+│   ├── Jeenith_1.0.0_release_20260711_01.apk
+│   ├── Jeenith_2.3.3_release_20260715_01.apk
 │   └── ...
 ├── windows/
-│   ├── Jeenith_release_1.0.1_20260711_01_windows_x64.zip
-│   ├── Jeenith_release_2.3.3_20260715_01_windows_x64.zip
+│   ├── Jeenith_1.0.1_release_20260711_01_windows_x64.zip
+│   ├── Jeenith_2.3.3_release_20260715_01_windows_x64.zip
 │   └── ...
 ├── release_notes/
 │   ├── release_notes_v1.0.0.md
@@ -362,13 +362,13 @@ builds/
   "statusLabel": "正式版",
   "date": "20260715",
   "sequence": 1,
-  "filename": "Jeenith_release_2.3.3_20260715_01.apk",
+  "filename": "Jeenith_2.3.3_release_20260715_01.apk",
   "timestamp": "2026-07-15T20:27:13",
   "fileSize": 57667575,
   "fileSizeFormatted": "55.00 MB",
   "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
   "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\app\\outputs\\flutter-apk\\app-release.apk",
-  "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_release_2.3.3_20260715_01.apk",
+  "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_2.3.3_release_20260715_01.apk",
   "platform": "android-arm64,android-arm,android-x64",
   "verificationPassed": true
 }
@@ -392,12 +392,12 @@ builds/
   "notesFormat": "markdown",
   "assets": [
     {
-      "name": "Jeenith_release_2.3.3_20260715_01.apk",
+      "name": "Jeenith_2.3.3_release_20260715_01.apk",
       "platform": "android-arm64,android-arm,android-x64",
       "size": 57667575,
       "sizeFormatted": "55.00 MB",
       "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
-      "localPath": "builds/android/Jeenith_release_2.3.3_20260715_01.apk",
+      "localPath": "builds/android/Jeenith_2.3.3_release_20260715_01.apk",
       "downloadUrl": ""
     }
   ],

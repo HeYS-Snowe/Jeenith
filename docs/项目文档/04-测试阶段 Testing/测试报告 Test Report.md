@@ -105,10 +105,10 @@
 | 项 Item | 值 Value |
 |--------|---------|
 | pubspec version | 2.3.3+23 |
-| APK 文件名 | Jeenith_release_2.3.3_20260715_01.apk |
+| APK 文件名 | Jeenith_2.3.3_release_20260715_01.apk |
 | APK SHA-256 | E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D |
 | APK 大小 | 55.00 MB |
-| Windows ZIP | Jeenith_release_2.3.3_20260715_01_windows_x64.zip |
+| Windows ZIP | Jeenith_2.3.3_release_20260715_01_windows_x64.zip |
 | Windows SHA-256 | FF691015789058AD59E730EB6F1338BBDEE860E6C62A5E214CEB4906C31074A8 |
 | Windows ZIP 大小 | 13.27 MB |
 

@@ -428,7 +428,7 @@ pwsh -File scripts/build_apk.ps1 -Status release
 
 **命名规则**：`{AppName}_{Status}_{Version}_{Date}_{Seq}.{ext}`
 
-示例：`Jeenith_release_2.3.3_20260715_01.apk`
+示例：`Jeenith_2.3.3_release_20260715_01.apk`
 
 ---
 

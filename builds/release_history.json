@@ -17,12 +17,12 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_1.0.0_20260711_01.apk",
+          "name": "Jeenith_1.0.0_release_20260711_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53117070,
           "sizeFormatted": "50.66 MB",
           "sha256": "653EC0FCFEEEF801B59F170257B22BD377449477AF4DF2C6C0E723D1A97B0054",
-          "localPath": "builds/android/Jeenith_release_1.0.0_20260711_01.apk",
+          "localPath": "builds/android/Jeenith_1.0.0_release_20260711_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.0/Jeenith_release_1.0.0_20260711_01.apk"
         }
       ],
@@ -47,21 +47,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_1.0.1_20260711_01.apk",
+          "name": "Jeenith_1.0.1_release_20260711_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53149842,
           "sizeFormatted": "50.69 MB",
           "sha256": "5C476E952698D44BBB733C3FF6FB114CE279F49EBBDFE6C3A579E7D9669519EE",
-          "localPath": "builds/android/Jeenith_release_1.0.1_20260711_01.apk",
+          "localPath": "builds/android/Jeenith_1.0.1_release_20260711_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01.apk"
         },
         {
-          "name": "Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
+          "name": "Jeenith_1.0.1_release_20260711_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 12901379,
           "sizeFormatted": "12.30 MB",
           "sha256": "F3E690ABE091AAF01A8DD86E0047991281B9268B18133396E39ACC9639984C20",
-          "localPath": "builds/windows/Jeenith_release_1.0.1_20260711_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.0.1_release_20260711_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.0.1/Jeenith_release_1.0.1_20260711_01_windows_x64.zip"
         }
       ],
@@ -86,21 +86,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_1.1.0_20260712_01.apk",
+          "name": "Jeenith_1.1.0_release_20260712_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53445010,
           "sizeFormatted": "50.97 MB",
           "sha256": "5A37830412A3A25F2ACB909C72217387ECFD04411C51B8FB96BA061F16399BEA",
-          "localPath": "builds/android/Jeenith_release_1.1.0_20260712_01.apk",
+          "localPath": "builds/android/Jeenith_1.1.0_release_20260712_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01.apk"
         },
         {
-          "name": "Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
+          "name": "Jeenith_1.1.0_release_20260712_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 12943882,
           "sizeFormatted": "12.34 MB",
           "sha256": "E17EE2F11E185E07A26D734B5B5CBBC85B40F8EC824A8666D88EBE11914A6666",
-          "localPath": "builds/windows/Jeenith_release_1.1.0_20260712_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.1.0_release_20260712_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.0/Jeenith_release_1.1.0_20260712_01_windows_x64.zip"
         }
       ],
@@ -125,21 +125,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_1.1.2_20260712_01.apk",
+          "name": "Jeenith_1.1.2_fix_20260712_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53445038,
           "sizeFormatted": "50.97 MB",
           "sha256": "24D681E9045DFEC3CF753A81AA6E5E29A60061EEE05404BB5F63CCE4EFB35FB8",
-          "localPath": "builds/android/Jeenith_fix_1.1.2_20260712_01.apk",
+          "localPath": "builds/android/Jeenith_1.1.2_fix_20260712_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01.apk"
         },
         {
-          "name": "Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
+          "name": "Jeenith_1.1.2_fix_20260712_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13226117,
           "sizeFormatted": "12.61 MB",
           "sha256": "B37D90090C7409EF07388EAA50FCC11E206F6E3F5A1EDAE570E30E9E5FD6334C",
-          "localPath": "builds/windows/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.1.2_fix_20260712_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.2/Jeenith_fix_1.1.2_20260712_01_windows_x64.zip"
         }
       ],
@@ -164,21 +164,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_1.1.3_20260712_01.apk",
+          "name": "Jeenith_1.1.3_fix_20260712_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53723746,
           "sizeFormatted": "51.23 MB",
           "sha256": "2BB9DF3623088A34ADC1F855F34E8F4C44DA31BBD91F5034F927C42D8D8A37D7",
-          "localPath": "builds/android/Jeenith_fix_1.1.3_20260712_01.apk",
+          "localPath": "builds/android/Jeenith_1.1.3_fix_20260712_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01.apk"
         },
         {
-          "name": "Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
+          "name": "Jeenith_1.1.3_fix_20260712_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13354337,
           "sizeFormatted": "12.74 MB",
           "sha256": "F1048AED292E8B90F6E7908ED95ADB34DB50A3E43954F395CFE5E15418842CD1",
-          "localPath": "builds/windows/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.1.3_fix_20260712_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.1.3/Jeenith_fix_1.1.3_20260712_01_windows_x64.zip"
         }
       ],
@@ -203,21 +203,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.2.0_20260713_01.apk",
+          "name": "Jeenith_1.2.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53755030,
           "sizeFormatted": "51.26 MB",
           "sha256": "B6E276B7C5F1B45B191D3B8E3A81BD3D98EF589F4459EA9B0B9A23ADF4A17E7D",
-          "localPath": "builds/android/Jeenith_feature_1.2.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.2.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.2.0/Jeenith_feature_1.2.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.2.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.2.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13375182,
           "sizeFormatted": "12.76 MB",
           "sha256": "D928C675CB4405E86A468AC7B72C9F0D918B4D40E06918B466A96E714647F265",
-          "localPath": "builds/windows/Jeenith_feature_1.2.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.2.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.2.0/Jeenith_feature_1.2.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -242,21 +242,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.3.0_20260713_01.apk",
+          "name": "Jeenith_1.3.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53787794,
           "sizeFormatted": "51.30 MB",
           "sha256": "74BB7CD2A50D4CC056E41EA89ED454348F32E61FE40F0D6B953151EB5E0E6D99",
-          "localPath": "builds/android/Jeenith_feature_1.3.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.3.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.3.0/Jeenith_feature_1.3.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.3.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.3.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13388251,
           "sizeFormatted": "12.77 MB",
           "sha256": "518F2F11D30197C2D352A39E3B2834BB39300FD026A891E8321855C42CD7433E",
-          "localPath": "builds/windows/Jeenith_feature_1.3.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.3.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.3.0/Jeenith_feature_1.3.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -281,21 +281,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.4.0_20260713_01.apk",
+          "name": "Jeenith_1.4.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 53804182,
           "sizeFormatted": "51.31 MB",
           "sha256": "91C336FFC5B37A5FE65ADDDC6F2F38D44B30E0BA38FCA13854D7216E0DF24AB4",
-          "localPath": "builds/android/Jeenith_feature_1.4.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.4.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.4.0/Jeenith_feature_1.4.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.4.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.4.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13395388,
           "sizeFormatted": "12.77 MB",
           "sha256": "DB069A8A00EB63B38AD6BCA94ADDD41BDAE240D666860123904B791115755656",
-          "localPath": "builds/windows/Jeenith_feature_1.4.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.4.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.4.0/Jeenith_feature_1.4.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -320,21 +320,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.5.0_20260713_01.apk",
+          "name": "Jeenith_1.5.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 54978704,
           "sizeFormatted": "52.43 MB",
           "sha256": "4CF4F3C6D999101E6D74724FA89B504DA47D73643908210628751159DFC2438D",
-          "localPath": "builds/android/Jeenith_feature_1.5.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.5.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.5.0/Jeenith_feature_1.5.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.5.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.5.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13317110,
           "sizeFormatted": "12.70 MB",
           "sha256": "CCE9778BDD889C0D3D995624B81444F2EE6A1527C9FF01AFDF05D272DDFB38A1",
-          "localPath": "builds/windows/Jeenith_feature_1.5.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.5.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.5.0/Jeenith_feature_1.5.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -359,21 +359,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.6.0_20260713_01.apk",
+          "name": "Jeenith_1.6.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 55093452,
           "sizeFormatted": "52.54 MB",
           "sha256": "B9E446462F981A1F9D81E341EC195590CED926642581FADA818635E96F36544D",
-          "localPath": "builds/android/Jeenith_feature_1.6.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.6.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.6.0/Jeenith_feature_1.6.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.6.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.6.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13633367,
           "sizeFormatted": "13.00 MB",
           "sha256": "D62B6EF22662B46908E72184E36F39F3805C0821E9A1CA101311526D6708876D",
-          "localPath": "builds/windows/Jeenith_feature_1.6.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.6.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.6.0/Jeenith_feature_1.6.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -398,21 +398,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.7.0_20260713_01.apk",
+          "name": "Jeenith_1.7.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 55486808,
           "sizeFormatted": "52.92 MB",
           "sha256": "DBE1D2B7763DF8906E9DC1CB48FEDE288CDEC6D1737D52FB521BB61C6036C0B1",
-          "localPath": "builds/android/Jeenith_feature_1.7.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.7.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.7.0/Jeenith_feature_1.7.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.7.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.7.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13661115,
           "sizeFormatted": "13.03 MB",
           "sha256": "1D9A320525506DF0930DBD0F1968EB97F871C6C88D0BA161E8E45A65A3E2A544",
-          "localPath": "builds/windows/Jeenith_feature_1.7.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.7.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.7.0/Jeenith_feature_1.7.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -437,21 +437,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_1.8.0_20260713_01.apk",
+          "name": "Jeenith_1.8.0_feature_20260713_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 55618339,
           "sizeFormatted": "53.04 MB",
           "sha256": "4D3AB64D180AE83445AC31A71F4D991C5B387235D7F94F6CE8E718EFA326B81B",
-          "localPath": "builds/android/Jeenith_feature_1.8.0_20260713_01.apk",
+          "localPath": "builds/android/Jeenith_1.8.0_feature_20260713_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.8.0/Jeenith_feature_1.8.0_20260713_01.apk"
         },
         {
-          "name": "Jeenith_feature_1.8.0_20260713_01_windows_x64.zip",
+          "name": "Jeenith_1.8.0_feature_20260713_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13694696,
           "sizeFormatted": "13.06 MB",
           "sha256": "3007DC4362AAF81C6200EC95B03929EB0EA77AE3C1CE913EB06654BEFCD1247A",
-          "localPath": "builds/windows/Jeenith_feature_1.8.0_20260713_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_1.8.0_feature_20260713_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v1.8.0/Jeenith_feature_1.8.0_20260713_01_windows_x64.zip"
         }
       ],
@@ -476,21 +476,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_2.0.0_20260714_01.apk",
+          "name": "Jeenith_2.0.0_release_20260714_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 55634715,
           "sizeFormatted": "53.06 MB",
           "sha256": "9E60148F51876CAF35CFC9D04FFE4075265E1FE56FDB502BE75F415413D58095",
-          "localPath": "builds/android/Jeenith_release_2.0.0_20260714_01.apk",
+          "localPath": "builds/android/Jeenith_2.0.0_release_20260714_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.0.0/Jeenith_release_2.0.0_20260714_01.apk"
         },
         {
-          "name": "Jeenith_release_2.0.0_20260714_01_windows_x64.zip",
+          "name": "Jeenith_2.0.0_release_20260714_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 22017518,
           "sizeFormatted": "21.00 MB",
           "sha256": "4D8EAA6204C008D1BB046574FC9C07464B158510BDDBC9DFD5066C606D15158D",
-          "localPath": "builds/windows/Jeenith_release_2.0.0_20260714_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.0.0_release_20260714_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.0.0/Jeenith_release_2.0.0_20260714_01_windows_x64.zip"
         }
       ],
@@ -515,21 +515,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.1.0_20260714_01.apk",
+          "name": "Jeenith_2.1.0_feature_20260714_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 56077267,
           "sizeFormatted": "53.48 MB",
           "sha256": "FFB7A63FCBDC41BDF43F653FAEF7E8B57B4B786DB0921DF72AB406B006309EC1",
-          "localPath": "builds/android/Jeenith_feature_2.1.0_20260714_01.apk",
+          "localPath": "builds/android/Jeenith_2.1.0_feature_20260714_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.1.0/Jeenith_feature_2.1.0_20260714_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+          "name": "Jeenith_2.1.0_feature_20260714_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13732869,
           "sizeFormatted": "13.10 MB",
           "sha256": "C8697456546718C5EFE3D94A1724C5F5C223BB797684D8F6770E3C3B2371680A",
-          "localPath": "builds/windows/Jeenith_feature_2.1.0_20260714_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.1.0_feature_20260714_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.1.0/Jeenith_feature_2.1.0_20260714_01_windows_x64.zip"
         }
       ],
@@ -554,21 +554,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.2.0_20260714_01.apk",
+          "name": "Jeenith_2.2.0_feature_20260714_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 56208335,
           "sizeFormatted": "53.60 MB",
           "sha256": "4BE5BECB02B2FC15583FC7426947475F829D4CF637AB848A84641A30937B2ABD",
-          "localPath": "builds/android/Jeenith_feature_2.2.0_20260714_01.apk",
+          "localPath": "builds/android/Jeenith_2.2.0_feature_20260714_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.2.0/Jeenith_feature_2.2.0_20260714_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+          "name": "Jeenith_2.2.0_feature_20260714_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13757168,
           "sizeFormatted": "13.12 MB",
           "sha256": "47A2D4EFF14C7134B642D6D77AD42721AC610F96FA442D3CE8A2350F0AD0C4B8",
-          "localPath": "builds/windows/Jeenith_feature_2.2.0_20260714_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.2.0_feature_20260714_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.2.0/Jeenith_feature_2.2.0_20260714_01_windows_x64.zip"
         }
       ],
@@ -593,21 +593,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.3.0_20260715_01.apk",
+          "name": "Jeenith_2.3.0_feature_20260715_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 57552887,
           "sizeFormatted": "54.89 MB",
           "sha256": "394A39102CDF00ED00B6B361A2E8AB2FA9B01519FFE3668B12FA6F2BC641C7A8",
-          "localPath": "builds/android/Jeenith_feature_2.3.0_20260715_01.apk",
+          "localPath": "builds/android/Jeenith_2.3.0_feature_20260715_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.0/Jeenith_feature_2.3.0_20260715_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.3.0_20260715_01_windows_x64.zip",
+          "name": "Jeenith_2.3.0_feature_20260715_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13932018,
           "sizeFormatted": "13.29 MB",
           "sha256": "1BF39245A3A5CC607CEB22DBBB913F033395B5D59DA28B609D0B80CCC9FE376C",
-          "localPath": "builds/windows/Jeenith_feature_2.3.0_20260715_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.3.0_feature_20260715_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.0/Jeenith_feature_2.3.0_20260715_01_windows_x64.zip"
         }
       ],
@@ -632,21 +632,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_2.3.1_20260715_01.apk",
+          "name": "Jeenith_2.3.1_release_20260715_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 57651191,
           "sizeFormatted": "54.98 MB",
           "sha256": "C5DF5EBD4988BC37EDA91FE6C4FFDC7FFE236C8B8699D0902400DC03A11A506F",
-          "localPath": "builds/android/Jeenith_release_2.3.1_20260715_01.apk",
+          "localPath": "builds/android/Jeenith_2.3.1_release_20260715_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.1/Jeenith_release_2.3.1_20260715_01.apk"
         },
         {
-          "name": "Jeenith_release_2.3.1_20260715_01_windows_x64.zip",
+          "name": "Jeenith_2.3.1_release_20260715_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13945376,
           "sizeFormatted": "13.30 MB",
           "sha256": "7AB41E9BA8CEA4F91DD3C2E3F21599F557EDB5E91751E9AEC7FA423B3A24B698",
-          "localPath": "builds/windows/Jeenith_release_2.3.1_20260715_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.3.1_release_20260715_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.1/Jeenith_release_2.3.1_20260715_01_windows_x64.zip"
         }
       ],
@@ -671,21 +671,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_2.3.2_20260715_01.apk",
+          "name": "Jeenith_2.3.2_release_20260715_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 57667575,
           "sizeFormatted": "55.00 MB",
           "sha256": "3ECCD3191D225526A232EA104BBA581EA121F47EBDEFBE44797D798667257BE7",
-          "localPath": "builds/android/Jeenith_release_2.3.2_20260715_01.apk",
+          "localPath": "builds/android/Jeenith_2.3.2_release_20260715_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.2/Jeenith_release_2.3.2_20260715_01.apk"
         },
         {
-          "name": "Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
+          "name": "Jeenith_2.3.2_release_20260715_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13911822,
           "sizeFormatted": "13.27 MB",
           "sha256": "BB327AC9C028E25DFE55DEA6219446FDED2B5009191E8A36A225D52D3A679923",
-          "localPath": "builds/windows/Jeenith_release_2.3.2_20260715_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.3.2_release_20260715_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.2/Jeenith_release_2.3.2_20260715_01_windows_x64.zip"
         }
       ],
@@ -710,21 +710,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_2.3.3_20260715_01.apk",
+          "name": "Jeenith_2.3.3_release_20260715_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 57667575,
           "sizeFormatted": "55.00 MB",
           "sha256": "E3F5E13FA6E7BFB7F3A45D31BC2DE421D32CC5379E1E777B0F440794180F625D",
-          "localPath": "builds/android/Jeenith_release_2.3.3_20260715_01.apk",
+          "localPath": "builds/android/Jeenith_2.3.3_release_20260715_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.3/Jeenith_release_2.3.3_20260715_01.apk"
         },
         {
-          "name": "Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+          "name": "Jeenith_2.3.3_release_20260715_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13911748,
           "sizeFormatted": "13.27 MB",
           "sha256": "FF691015789058AD59E730EB6F1338BBDEE860E6C62A5E214CEB4906C31074A8",
-          "localPath": "builds/windows/Jeenith_release_2.3.3_20260715_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.3.3_release_20260715_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.3.3/Jeenith_release_2.3.3_20260715_01_windows_x64.zip"
         }
       ],
@@ -749,21 +749,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_release_2.4.0_20260715_01.apk",
+          "name": "Jeenith_2.4.0_release_20260715_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 57815079,
           "sizeFormatted": "55.14 MB",
           "sha256": "BA2CFB282BBABBB625F2C72651B7AD91B9E5433F92021BD75657FA55D719A608",
-          "localPath": "builds/android/Jeenith_release_2.4.0_20260715_01.apk",
+          "localPath": "builds/android/Jeenith_2.4.0_release_20260715_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.0/Jeenith_release_2.4.0_20260715_01.apk"
         },
         {
-          "name": "Jeenith_release_2.4.0_20260715_01_windows_x64.zip",
+          "name": "Jeenith_2.4.0_release_20260715_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 13640746,
           "sizeFormatted": "13.01 MB",
           "sha256": "ECB700B94A25624A0E854BA782A756F82DC3C7CBD01021FEB9E12562C018FEB2",
-          "localPath": "builds/windows/Jeenith_release_2.4.0_20260715_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.4.0_release_20260715_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.0/Jeenith_release_2.4.0_20260715_01_windows_x64.zip"
         }
       ],
@@ -788,21 +788,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_2.4.1_20260718_01.apk",
+          "name": "Jeenith_2.4.1_fix_20260718_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 77482422,
           "sizeFormatted": "73.89 MB",
           "sha256": "A427A2401D4A22E9AE57F6543BFBD9677F2B7AB581D8B7B652A239237777A774",
-          "localPath": "builds/android/Jeenith_fix_2.4.1_20260718_01.apk",
+          "localPath": "builds/android/Jeenith_2.4.1_fix_20260718_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.1/Jeenith_fix_2.4.1_20260718_01.apk"
         },
         {
-          "name": "Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
+          "name": "Jeenith_2.4.1_fix_20260718_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 41952823,
           "sizeFormatted": "40.01 MB",
           "sha256": "3622DA62B9429FA86B877258DC0ECF6C383F9C57E6EA12AFEABA625CFF622C14",
-          "localPath": "builds/windows/Jeenith_fix_2.4.1_20260718_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.4.1_fix_20260718_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.1/Jeenith_fix_2.4.1_20260718_01_windows_x64.zip"
         }
       ],
@@ -827,21 +827,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.4.2_20260718_01.apk",
+          "name": "Jeenith_2.4.2_feature_20260718_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 77662646,
           "sizeFormatted": "74.06 MB",
           "sha256": "3E573869E85B1E918CE11AC190290CBE18320D9987CAB520610DD053B1B9001D",
-          "localPath": "builds/android/Jeenith_feature_2.4.2_20260718_01.apk",
+          "localPath": "builds/android/Jeenith_2.4.2_feature_20260718_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.2/Jeenith_feature_2.4.2_20260718_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
+          "name": "Jeenith_2.4.2_feature_20260718_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 33650599,
           "sizeFormatted": "32.09 MB",
           "sha256": "AE80E9461E426C4D4C00466D52BB76861DDD0D6A2AAA6F5A124EF304BC8A624C",
-          "localPath": "builds/windows/Jeenith_feature_2.4.2_20260718_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.4.2_feature_20260718_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.2/Jeenith_feature_2.4.2_20260718_01_windows_x64.zip"
         }
       ],
@@ -866,21 +866,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.4.3_20260719_01.apk",
+          "name": "Jeenith_2.4.3_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 78645746,
           "sizeFormatted": "75.01 MB",
           "sha256": "15668644284A17AA3ECF07D1100293F97A9BA7447385D09E213A3F4B936D2F67",
-          "localPath": "builds/android/Jeenith_feature_2.4.3_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.4.3_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.3/Jeenith_feature_2.4.3_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.4.3_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.4.3_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 33947979,
           "sizeFormatted": "32.37 MB",
           "sha256": "97EEBB04F2CBD0C5B492E4569BB5B21B47413F951FCF5616E45967F094C846EE",
-          "localPath": "builds/windows/Jeenith_feature_2.4.3_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.4.3_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.3/Jeenith_feature_2.4.3_20260719_01_windows_x64.zip"
         }
       ],
@@ -905,21 +905,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.4.4_20260719_01.apk",
+          "name": "Jeenith_2.4.4_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61079626,
           "sizeFormatted": "58.26 MB",
           "sha256": "BFB34AFD5C9B11B52F3BAB542F347F61FA8BE4134344E9298776C95BD2508FFD",
-          "localPath": "builds/android/Jeenith_feature_2.4.4_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.4.4_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.4/Jeenith_feature_2.4.4_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.4.4_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.4.4_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16329558,
           "sizeFormatted": "15.58 MB",
           "sha256": "65A572877C99FAC527261D38B4D4D6A8D3EA72F1641C9A32C714E25B75F4FF71",
-          "localPath": "builds/windows/Jeenith_feature_2.4.4_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.4.4_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.4.4/Jeenith_feature_2.4.4_20260719_01_windows_x64.zip"
         }
       ],
@@ -944,21 +944,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.5.0_20260719_01.apk",
+          "name": "Jeenith_2.5.0_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61177938,
           "sizeFormatted": "58.34 MB",
           "sha256": "9D0E7EE6BD497FB82C8D63944B945BD5C1B8621870F38829A86EAC70FF3A86ED",
-          "localPath": "builds/android/Jeenith_feature_2.5.0_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.5.0_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.5.0_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16344525,
           "sizeFormatted": "15.59 MB",
           "sha256": "03223625D0B3126881A49B8AF0B3C5F6B6D43C780BF25F5E68EC41192438E1D",
-          "localPath": "builds/windows/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.5.0_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.5.0/Jeenith_feature_2.5.0_20260719_01_windows_x64.zip"
         }
       ],
@@ -983,21 +983,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.6.0_20260719_01.apk",
+          "name": "Jeenith_2.6.0_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61440078,
           "sizeFormatted": "58.59 MB",
           "sha256": "0A0CF6FE5E6F75858437AB08CA0387042B5000368459729EE6C8E7035415458E",
-          "localPath": "builds/android/Jeenith_feature_2.6.0_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.6.0_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.6.0_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16380444,
           "sizeFormatted": "15.62 MB",
           "sha256": "2563BF245B522A3456DABA787C10B1212954E572C93ABB0F1143901E942205AF",
-          "localPath": "builds/windows/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.6.0_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.6.0/Jeenith_feature_2.6.0_20260719_01_windows_x64.zip"
         }
       ],
@@ -1022,21 +1022,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.7.0_20260719_01.apk",
+          "name": "Jeenith_2.7.0_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61489234,
           "sizeFormatted": "58.64 MB",
           "sha256": "E67D2B219D9AD7AD4E2D441AE74C225B8B472C43BE025EA27D40B1F273F84541",
-          "localPath": "builds/android/Jeenith_feature_2.7.0_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.7.0_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.0/Jeenith_feature_2.7.0_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.7.0_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16394616,
           "sizeFormatted": "15.63 MB",
           "sha256": "32A2A400F8689985E1AC70E7EB2082AF6E6E94998B60D5F378AEEA74D312A30F",
-          "localPath": "builds/windows/Jeenith_feature_2.7.0_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.7.0_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.0/Jeenith_feature_2.7.0_20260719_01_windows_x64.zip"
         }
       ],
@@ -1061,21 +1061,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_2.7.1_20260719_01.apk",
+          "name": "Jeenith_2.7.1_fix_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61489230,
           "sizeFormatted": "58.64 MB",
           "sha256": "494941135F2DCBA167AC2E484EEE98FAEC01E9372507BA7A0695F3A61C10C822",
-          "localPath": "builds/android/Jeenith_fix_2.7.1_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.7.1_fix_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.1/Jeenith_fix_2.7.1_20260719_01.apk"
         },
         {
-          "name": "Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.7.1_fix_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16393776,
           "sizeFormatted": "15.63 MB",
           "sha256": "8D0844BB389C2D85882121E4E7A6F5A0359774CC15ABB9B1D16C49B9700FBC16",
-          "localPath": "builds/windows/Jeenith_fix_2.7.1_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.7.1_fix_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.7.1/Jeenith_fix_2.7.1_20260719_01_windows_x64.zip"
         }
       ],
@@ -1100,21 +1100,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.8.0_20260719_01.apk",
+          "name": "Jeenith_2.8.0_feature_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61669450,
           "sizeFormatted": "58.81 MB",
           "sha256": "95115C668603B4CD3988669748F7242C8BA72DF1DCC1DD09364C50FA58AB04DA",
-          "localPath": "builds/android/Jeenith_feature_2.8.0_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.8.0_feature_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.0/Jeenith_feature_2.8.0_20260719_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.8.0_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.8.0_feature_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16413724,
           "sizeFormatted": "15.65 MB",
           "sha256": "69F16B8771622CA4CA8E4415692B594218C620770519232885D10EA8DA086315",
-          "localPath": "builds/windows/Jeenith_feature_2.8.0_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.8.0_feature_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.0/Jeenith_feature_2.8.0_20260719_01_windows_x64.zip"
         }
       ],
@@ -1139,21 +1139,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_2.8.1_20260719_01.apk",
+          "name": "Jeenith_2.8.1_fix_20260719_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61669450,
           "sizeFormatted": "58.81 MB",
           "sha256": "E75A63ED592A6392088491716CA67BFFCF728A33D540FF968EF0092756680DB1",
-          "localPath": "builds/android/Jeenith_fix_2.8.1_20260719_01.apk",
+          "localPath": "builds/android/Jeenith_2.8.1_fix_20260719_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.1/Jeenith_fix_2.8.1_20260719_01.apk"
         },
         {
-          "name": "Jeenith_fix_2.8.1_20260719_01_windows_x64.zip",
+          "name": "Jeenith_2.8.1_fix_20260719_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16413722,
           "sizeFormatted": "15.65 MB",
           "sha256": "2EAFD245A64884FA6F99C92FE1377A6C08519A6ABC42E56D2AE60A92F0FA9013",
-          "localPath": "builds/windows/Jeenith_fix_2.8.1_20260719_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.8.1_fix_20260719_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.8.1/Jeenith_fix_2.8.1_20260719_01_windows_x64.zip"
         }
       ],
@@ -1178,21 +1178,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.9.0_20260720_01.apk",
+          "name": "Jeenith_2.9.0_feature_20260720_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61685838,
           "sizeFormatted": "58.83 MB",
           "sha256": "4021CB2421882971ED84221E9CD07C978B50D4904F15269868108142FC5AD495",
-          "localPath": "builds/android/Jeenith_feature_2.9.0_20260720_01.apk",
+          "localPath": "builds/android/Jeenith_2.9.0_feature_20260720_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.0/Jeenith_feature_2.9.0_20260720_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.9.0_20260720_01_windows_x64.zip",
+          "name": "Jeenith_2.9.0_feature_20260720_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16414042,
           "sizeFormatted": "15.65 MB",
           "sha256": "337D16AF48E0ABAA736E83FE40D703795D43B4E99623883820BAF19FA00BBE82",
-          "localPath": "builds/windows/Jeenith_feature_2.9.0_20260720_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.9.0_feature_20260720_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.0/Jeenith_feature_2.9.0_20260720_01_windows_x64.zip"
         }
       ],
@@ -1217,21 +1217,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.9.1_20260720_01.apk",
+          "name": "Jeenith_2.9.1_feature_20260720_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61685842,
           "sizeFormatted": "58.83 MB",
           "sha256": "BB627BB8A0F5317925B79D5A837AC06749EDCCFE62E2D732CA5FCA712BE85803",
-          "localPath": "builds/android/Jeenith_feature_2.9.1_20260720_01.apk",
+          "localPath": "builds/android/Jeenith_2.9.1_feature_20260720_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.1/Jeenith_feature_2.9.1_20260720_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.9.1_20260720_01_windows_x64.zip",
+          "name": "Jeenith_2.9.1_feature_20260720_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16419440,
           "sizeFormatted": "15.66 MB",
           "sha256": "357490D3D6ECCEE58C35158D6661F2F45F385B6BD6902660A18FF782528A9E50",
-          "localPath": "builds/windows/Jeenith_feature_2.9.1_20260720_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.9.1_feature_20260720_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.1/Jeenith_feature_2.9.1_20260720_01_windows_x64.zip"
         }
       ],
@@ -1256,21 +1256,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.9.2_20260720_01.apk",
+          "name": "Jeenith_2.9.2_feature_20260720_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61685838,
           "sizeFormatted": "58.83 MB",
           "sha256": "677CE96EC393797AD385A06F68FE20605E27194373D45C0D16D8E540B79942AD",
-          "localPath": "builds/android/Jeenith_feature_2.9.2_20260720_01.apk",
+          "localPath": "builds/android/Jeenith_2.9.2_feature_20260720_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.2/Jeenith_feature_2.9.2_20260720_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.9.2_20260720_01_windows_x64.zip",
+          "name": "Jeenith_2.9.2_feature_20260720_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16419873,
           "sizeFormatted": "15.66 MB",
           "sha256": "B7667BB9DCE793613E6B47DDD5D639A697EA38998A7EF9975BC73B94D13A6024",
-          "localPath": "builds/windows/Jeenith_feature_2.9.2_20260720_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.9.2_feature_20260720_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.9.2/Jeenith_feature_2.9.2_20260720_01_windows_x64.zip"
         }
       ],
@@ -1295,21 +1295,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_feature_2.10.0_20260721_01.apk",
+          "name": "Jeenith_2.10.0_feature_20260721_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61702222,
           "sizeFormatted": "58.84 MB",
           "sha256": "7FFAAD49DC8D4D118268057A83DF9B988106FE927B972649995D252134D026AC",
-          "localPath": "builds/android/Jeenith_feature_2.10.0_20260721_01.apk",
+          "localPath": "builds/android/Jeenith_2.10.0_feature_20260721_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.0/Jeenith_feature_2.10.0_20260721_01.apk"
         },
         {
-          "name": "Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
+          "name": "Jeenith_2.10.0_feature_20260721_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16421949,
           "sizeFormatted": "15.66 MB",
           "sha256": "DE21FCD8B1A4A3B0BD11BB8805902FF3A3FBF78478ECE8221AD9547C986EBA1D",
-          "localPath": "builds/windows/Jeenith_feature_2.10.0_20260721_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.10.0_feature_20260721_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.0/Jeenith_feature_2.10.0_20260721_01_windows_x64.zip"
         }
       ],
@@ -1334,21 +1334,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_2.10.2_20260721_01.apk",
+          "name": "Jeenith_2.10.2_fix_20260721_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61702222,
           "sizeFormatted": "58.84 MB",
           "sha256": "8A971AF9E5F172EC69ADECB947C519CD29E768BEB14A4802647523F902D3175C",
-          "localPath": "builds/android/Jeenith_fix_2.10.2_20260721_01.apk",
+          "localPath": "builds/android/Jeenith_2.10.2_fix_20260721_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.2/Jeenith_fix_2.10.2_20260721_01.apk"
         },
         {
-          "name": "Jeenith_fix_2.10.2_20260721_01_windows_x64.zip",
+          "name": "Jeenith_2.10.2_fix_20260721_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16422213,
           "sizeFormatted": "15.66 MB",
           "sha256": "BEE2CB6683031617191D28CA73CC11E4F4A3389C97D3DF7E867E7FF289424F60",
-          "localPath": "builds/windows/Jeenith_fix_2.10.2_20260721_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.10.2_fix_20260721_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.2/Jeenith_fix_2.10.2_20260721_01_windows_x64.zip"
         }
       ],
@@ -1373,21 +1373,21 @@
       "notesFormat": "markdown",
       "assets": [
         {
-          "name": "Jeenith_fix_2.10.3_20260722_01.apk",
+          "name": "Jeenith_2.10.3_fix_20260722_01.apk",
           "platform": "android-arm64,android-arm,android-x64",
           "size": 61702222,
           "sizeFormatted": "58.84 MB",
           "sha256": "8DBA3F53C4F39340DE8143ADE6095660212734905C130DD7B045F50B1DA2C417",
-          "localPath": "builds/android/Jeenith_fix_2.10.3_20260722_01.apk",
+          "localPath": "builds/android/Jeenith_2.10.3_fix_20260722_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.3/Jeenith_fix_2.10.3_20260722_01.apk"
         },
         {
-          "name": "Jeenith_fix_2.10.3_20260722_01_windows_x64.zip",
+          "name": "Jeenith_2.10.3_fix_20260722_01_windows_x64.zip",
           "platform": "windows-x64",
           "size": 16423518,
           "sizeFormatted": "15.66 MB",
           "sha256": "93F5CA62B6D489DDD658281A9B8DD3870CE1DECF944BE45E6AB75E3AE5A14C51",
-          "localPath": "builds/windows/Jeenith_fix_2.10.3_20260722_01_windows_x64.zip",
+          "localPath": "builds/windows/Jeenith_2.10.3_fix_20260722_01_windows_x64.zip",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.3/Jeenith_fix_2.10.3_20260722_01_windows_x64.zip"
         }
       ],
