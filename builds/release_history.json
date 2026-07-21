@@ -1379,7 +1379,7 @@
           "sizeFormatted": "58.84 MB",
           "sha256": "8DBA3F53C4F39340DE8143ADE6095660212734905C130DD7B045F50B1DA2C417",
           "localPath": "builds/android/Jeenith_fix_2.10.3_20260722_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.3/Jeenith_fix_2.10.3_20260722_01.apk"
         },
         {
           "name": "Jeenith_fix_2.10.3_20260722_01_windows_x64.zip",
@@ -1388,16 +1388,16 @@
           "sizeFormatted": "15.66 MB",
           "sha256": "93F5CA62B6D489DDD658281A9B8DD3870CE1DECF944BE45E6AB75E3AE5A14C51",
           "localPath": "builds/windows/Jeenith_fix_2.10.3_20260722_01_windows_x64.zip",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.3/Jeenith_fix_2.10.3_20260722_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.10.3+43",
       "buildStatus": "fix",
       "builtAt": "2026-07-22T01:52:00",
-      "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "draft"
+      "commit": "5c4e4cfb6c129845e27cf454ed0598341bbe08f2",
+      "publishedAt": "2026-07-22T01:52:12+08:00",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.3",
+      "status": "published"
     }
   ]
 }
