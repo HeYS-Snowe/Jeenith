@@ -54,13 +54,13 @@ function Get-BuildDate { Get-Date -Format "yyyyMMdd" }
 function Get-BuildSequence {
     param([string]$buildsDir, [string]$buildDate, [string]$status, [string]$version, [string]$appName)
     if (-not (Test-Path $buildsDir)) { return 1 }
-    $pattern = "${appName}_${status}_${version}_${buildDate}_\d{2}\.apk"
+    $pattern = "${appName}_${version}_${status}_${buildDate}_\d{2}\.apk"
     $existing = Get-ChildItem -Path $buildsDir -Filter "*.apk" -ErrorAction SilentlyContinue |
                 Where-Object { $_.Name -match $pattern }
     if ($null -eq $existing -or $existing.Count -eq 0) { return 1 }
     $max = 0
     foreach ($f in $existing) {
-        if ($f.Name -match "${appName}_${status}_${version}_${buildDate}_(\d{2})\.apk") {
+        if ($f.Name -match "${appName}_${version}_${status}_${buildDate}_(\d{2})\.apk") {
             $s = [int]$matches[1]; if ($s -gt $max) { $max = $s }
         }
     }
@@ -79,7 +79,7 @@ function Backup-OriginalAPK {
 
 function Rename-APK {
     param([string]$apkPath, [string]$status, [string]$version, [string]$buildDate, [int]$sequence, [string]$appName)
-    $newName = "${appName}_${status}_${version}_${buildDate}_$($sequence.ToString('00')).apk"
+    $newName = "${appName}_${version}_${status}_${buildDate}_$($sequence.ToString('00')).apk"
     $newPath = Join-Path (Split-Path $apkPath) $newName
     if (Test-Path $newPath) { Write-Warning "Target exists: $newPath"; return $false }
     Rename-Item -Path $apkPath -NewName $newName -Force
@@ -134,7 +134,7 @@ if (-not (Test-Path $apkFile)) { Write-Error "APK not found: $apkFile"; exit 1 }
 
 Backup-OriginalAPK -apkPath $apkFile
 
-$newApkName = "${appName}_${Status}_${releaseVersion}_${buildDate}_$($buildSequence.ToString('00')).apk"
+$newApkName = "${appName}_${releaseVersion}_${Status}_${buildDate}_$($buildSequence.ToString('00')).apk"
 if (Rename-APK -apkPath $apkFile -status $Status -version $releaseVersion -buildDate $buildDate -sequence $buildSequence -appName $appName) {
     $newApkPath = Join-Path $apkOutputDir $newApkName
     $buildsApkPath = Join-Path $androidDir $newApkName

@@ -51,18 +51,18 @@ your_project/                       # 仓库根目录（solution root）
 │   ├── build/                      # Flutter 原始构建产物（不入版本控制）
 │   │   └── app/outputs/flutter-apk/
 │   │       ├── app-release.apk              # Flutter 原始输出
-│   │       ├── Loop_fix_0.1.3_*.apk         # 重命名后的文件
+│   │       ├── Loop_0.1.3_fix_*.apk         # 重命名后的文件
 │   │       └── backup/                       # 原始 APK 时间戳备份
 │   │           └── app_app-release.apk_20260702_191429.apk
 │   └── build_history.json          # 历史记录副本 1（项目内）
 │
 └── builds/                         # 持久化归档目录（核心产物库，按平台分类）
     ├── android/                    # Android APK（脚本自动归档）
-    │   ├── Loop_fix_0.0.14_20260625_01.apk
-    │   ├── Loop_fix_0.0.14_20260625_02.apk     # 同日同版本第 2 次构建
-    │   └── Loop_fix_0.1.0_20260702_01.apk      # minor 升级
+    │   ├── Loop_0.0.14_fix_20260625_01.apk
+    │   ├── Loop_0.0.14_fix_20260625_02.apk     # 同日同版本第 2 次构建
+    │   └── Loop_0.1.0_fix_20260702_01.apk      # minor 升级
     ├── windows/                    # Windows 桌面 zip（手动归档）
-    │   └── Loop_fix_0.1.0_20260702_01_windows_x64.zip
+    │   └── Loop_0.1.0_fix_20260702_01_windows_x64.zip
     ├── release_notes/              # 各版本 Release 说明 markdown（真实换行，复制粘贴到平台 notes 框）
     │   └── release_notes_v0.1.0.md
     ├── build_history.json          # 构建历史（归档区主副本）
@@ -89,18 +89,18 @@ your_project/                       # 仓库根目录（solution root）
 ### 3.1 文件名格式
 
 ```
-{程序名}_{状态}_{版本号}_{构建日期}_{构建序号}.apk
+{程序名}_{版本号}_{状态}_{构建日期}_{构建序号}.apk
 ```
 
 **示例**：
 
 ```
-Loop_fix_0.1.3_20260702_01.apk
-^^^^ ^^^ ^^^^^ ^^^^^^^^ ^^
-│    │   │     │        └─ 序号（同日同版本递增）
-│    │   │     └────────── 日期 YYYYMMDD
-│    │   └──────────────── 版本号 X.Y.Z（来自 pubspec.yaml）
-│    └──────────────────── 状态英文标识
+Loop_0.1.3_fix_20260702_01.apk
+^^^^ ^^^^^ ^^^ ^^^^^^^^ ^^
+│    │     │   │        └─ 序号（同日同版本递增）
+│    │     │   └────────── 日期 YYYYMMDD
+│    │     └────────────── 状态英文标识
+│    └──────────────────── 版本号 X.Y.Z（来自 pubspec.yaml）
 └───────────────────────── 程序名（PascalCase）
 ```
 
@@ -262,13 +262,13 @@ function Get-BuildDate { Get-Date -Format "yyyyMMdd" }
 function Get-BuildSequence {
     param([string]$buildsDir, [string]$buildDate, [string]$status, [string]$version, [string]$appName)
     if (-not (Test-Path $buildsDir)) { return 1 }
-    $pattern = "${appName}_${status}_${version}_${buildDate}_\d{2}\.apk"
+    $pattern = "${appName}_${version}_${status}_${buildDate}_\d{2}\.apk"
     $existing = Get-ChildItem -Path $buildsDir -Filter "*.apk" -ErrorAction SilentlyContinue |
                 Where-Object { $_.Name -match $pattern }
     if ($existing.Count -eq 0) { return 1 }
     $max = 0
     foreach ($f in $existing) {
-        if ($f.Name -match "${appName}_${status}_${version}_${buildDate}_(\d{2})\.apk") {
+        if ($f.Name -match "${appName}_${version}_${status}_${buildDate}_(\d{2})\.apk") {
             $s = [int]$matches[1]
             if ($s -gt $max) { $max = $s }
         }
@@ -292,7 +292,7 @@ function Backup-OriginalAPK {
 function Rename-APK {
     param([string]$apkPath, [string]$status, [string]$version, [string]$buildDate, [int]$sequence, [string]$appName)
     $sequenceStr = $sequence.ToString("00")
-    $newName = "${appName}_${status}_${version}_${buildDate}_${sequenceStr}.apk"
+    $newName = "${appName}_${version}_${status}_${buildDate}_${sequenceStr}.apk"
     $newPath = Join-Path (Split-Path $apkPath) $newName
     if (Test-Path $newPath) {
         Write-Warning "Target already exists: $newPath"
@@ -366,7 +366,7 @@ if (-not (Test-Path $apkFile)) {
 Backup-OriginalAPK -apkPath $apkFile
 
 if (Rename-APK -apkPath $apkFile -status $Status -version $releaseVersion -buildDate $buildDate -sequence $buildSequence -appName $appName) {
-    $newApkName = "${appName}_${Status}_${releaseVersion}_${buildDate}_$($buildSequence.ToString('00')).apk"
+    $newApkName = "${appName}_${releaseVersion}_${Status}_${buildDate}_$($buildSequence.ToString('00')).apk"
     $newApkPath = Join-Path $apkOutputDir $newApkName
     $buildsApkPath = Join-Path $androidDir $newApkName
 
@@ -444,7 +444,7 @@ pwsh -File scripts/build_apk.ps1 -BuildType debug -Status dev
 {
   "project": "Loop",
   "description": "Loop - 周期计划管理应用",
-  "namingRule": "{程序名}_{状态}_{版本号}_{日期}_{序号}.{扩展名}",
+  "namingRule": "{程序名}_{版本号}_{状态}_{日期}_{序号}.{扩展名}",
   "builds": [
     {
       "version": "0.1.3+21",
@@ -452,13 +452,13 @@ pwsh -File scripts/build_apk.ps1 -BuildType debug -Status dev
       "statusLabel": "修复版",
       "date": "20260702",
       "sequence": 1,
-      "filename": "Loop_fix_0.1.3_20260702_01.apk",
+      "filename": "Loop_0.1.3_fix_20260702_01.apk",
       "timestamp": "2026-07-02T19:14:29",
       "fileSize": 108766172,
       "fileSizeFormatted": "103.73 MB",
       "sha256": "E6518E29...",
       "sourcePath": "D:\\Code\\Project\\Loop\\loop_app\\build\\app\\outputs\\flutter-apk\\app-release.apk",
-      "targetPath": "D:\\Code\\Project\\Loop\\builds\\android\\Loop_fix_0.1.3_20260702_01.apk",
+      "targetPath": "D:\\Code\\Project\\Loop\\builds\\android\\Loop_0.1.3_fix_20260702_01.apk",
       "backupPath": "D:\\Code\\Project\\Loop\\loop_app\\build\\app\\outputs\\flutter-apk\\backup\\app_app-release.apk_20260702_191429.apk",
       "platform": "android-arm64,android-arm,android-x64",
       "verificationPassed": true
@@ -472,7 +472,7 @@ pwsh -File scripts/build_apk.ps1 -BuildType debug -Status dev
 ```json
 {
   "project": "Loop",
-  "namingFormat": "{app_name}_{status}_{version}_{date}_{seq}.{ext}",
+  "namingFormat": "{app_name}_{version}_{status}_{date}_{seq}.{ext}",
   "builds": [
     {
       "version": "0.1.3",
@@ -480,9 +480,9 @@ pwsh -File scripts/build_apk.ps1 -BuildType debug -Status dev
       "status": "fix",
       "date": "20260702",
       "sequence": 1,
-      "filename": "Loop_fix_0.1.3_20260702_01.apk",
+      "filename": "Loop_0.1.3_fix_20260702_01.apk",
       "originalName": "app-release.apk",
-      "filePath": "d:\\Code\\Project\\Loop\\builds\\android\\Loop_fix_0.1.3_20260702_01.apk",
+      "filePath": "d:\\Code\\Project\\Loop\\builds\\android\\Loop_0.1.3_fix_20260702_01.apk",
       "fileSize": 108766172,
       "fileSizeHuman": "103.73 MB",
       "sha256": "E6518E29...",
@@ -634,8 +634,8 @@ pwsh -File scripts/build_apk.ps1 -Status alpha
 ```
 [VERSION] Updated: 0.0.2+2
 [BACKUP] app-release.apk -> backup\app_app-release.apk_*.apk
-[RENAME] app-release.apk -> MindCareAI_alpha_0.0.2_20260101_01.apk
-[ARCHIVE] Copied to builds: MindCareAI_alpha_0.0.2_20260101_01.apk
+[RENAME] app-release.apk -> MindCareAI_0.0.2_alpha_20260101_01.apk
+[ARCHIVE] Copied to builds: MindCareAI_0.0.2_alpha_20260101_01.apk
 ```
 
 迁移完成。

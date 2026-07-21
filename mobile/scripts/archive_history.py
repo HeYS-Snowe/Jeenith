@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Qore
 """追加本次构建到双份 build_history.json（builds/ 主副本 + 项目内副本）。
 用法: python scripts/archive_history.py <filename>
-filename 形如 Jeenith_release_1.0.1_20260711_01.apk
+filename 形如 Jeenith_1.0.1_release_20260711_01.apk
 未传 filename 时自动取 builds/ 中最新的 Jeenith_*.apk。"""
 import sys, hashlib, os, json, shutil, datetime, re
 
@@ -18,10 +18,10 @@ if not fname:
     print("[HISTORY] No APK found"); sys.exit(1)
 
 target = os.path.join(android_dir, fname)
-m = re.match(r"Jeenith_(\w+)_(\d+\.\d+\.\d+)_(\d{8})_(\d{2})\.apk", fname)
+m = re.match(r"Jeenith_(\d+\.\d+\.\d+)_(\w+)_(\d{8})_(\d{2})\.apk", fname)
 if not m:
     print(f"[HISTORY] Cannot parse {fname}"); sys.exit(1)
-status, version, date, seq = m.group(1), m.group(2), m.group(3), int(m.group(4))
+version, status, date, seq = m.group(1), m.group(2), m.group(3), int(m.group(4))
 
 pubspec = open(os.path.join(project_root, "pubspec.yaml"), encoding="utf-8").read()
 pm = re.search(r"version:\s*\d+\.\d+\.\d+\+(\d+)", pubspec)
@@ -66,8 +66,8 @@ inner_rec = {
     "buildType": "apk", "platform": "android", "timestamp": ts, "configSource": "pubspec.yaml",
 }
 main_obj = {"project": "Jeenith", "description": "Jeenith (志极) - 叩问本心的卜算合集",
-            "namingRule": "{程序名}_{状态}_{版本号}_{构建日期}_{构建序号}.{扩展名}", "builds": [main_rec]}
-inner_obj = {"project": "Jeenith", "namingFormat": "{app_name}_{status}_{version}_{date}_{seq}.{ext}",
+            "namingRule": "{程序名}_{版本号}_{状态}_{构建日期}_{构建序号}.{扩展名}", "builds": [main_rec]}
+inner_obj = {"project": "Jeenith", "namingFormat": "{app_name}_{version}_{status}_{date}_{seq}.{ext}",
              "builds": [inner_rec]}
 
 for path, obj in [(os.path.join(builds_dir, "build_history.json"), main_obj),

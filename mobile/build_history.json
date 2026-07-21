@@ -1,6 +1,6 @@
 {
   "project": "Jeenith",
-  "namingFormat": "{app_name}_{status}_{version}_{date}_{seq}.{ext}",
+  "namingFormat": "{app_name}_{version}_{status}_{date}_{seq}.{ext}",
   "builds": [
     {
       "version": "1.0.0",

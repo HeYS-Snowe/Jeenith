@@ -1,7 +1,7 @@
 {
   "project": "Jeenith",
   "description": "Jeenith (志极) - 叩问本心的卜算合集",
-  "namingRule": "{程序名}_{状态}_{版本号}_{构建日期}_{构建序号}.{扩展名}",
+  "namingRule": "{程序名}_{版本号}_{状态}_{构建日期}_{构建序号}.{扩展名}",
   "builds": [
     {
       "version": "1.0.0+1",

@@ -69,19 +69,19 @@
 ### 1.3 产物命名规则 Naming Rule
 
 ```
-{程序名}_{状态类型}_{版本号}_{构建日期}_{构建序号}.{扩展名}
+{程序名}_{版本号}_{状态类型}_{构建日期}_{构建序号}.{扩展名}
 ```
 
 | 字段 Field | 说明 Description | 示例 Example |
 |----------|---------------|-----------|
 | 程序名 | 固定 `Jeenith` | Jeenith |
-| 状态类型 | release / beta / alpha / rc / fix / hotfix / feature / dev / debug | release |
 | 版本号 | X.Y.Z（来自 pubspec.yaml） | 2.3.3 |
+| 状态类型 | release / beta / alpha / rc / fix / hotfix / feature / dev / debug | release |
 | 构建日期 | YYYYMMDD | 20260715 |
 | 构建序号 | 同日同版本 2 位序号 | 01 |
 | 扩展名 | apk / zip | apk |
 
-完整示例：`Jeenith_release_2.3.3_20260715_01.apk`
+完整示例：`Jeenith_2.3.3_release_20260715_01.apk`
 
 ### 1.4 状态类型说明 Status Types
 
@@ -558,7 +558,7 @@ pwsh -File scripts/build_apk.ps1 -Status release -TargetVersion "2.3.3"
 # 2. Windows
 flutter build windows --release
 $src = "build\windows\x64\runner\Release\*"
-$dst = "..\builds\windows\Jeenith_release_2.3.3_$(Get-Date -Format yyyyMMdd)_01_windows_x64.zip"
+$dst = "..\builds\windows\Jeenith_2.3.3_release_$(Get-Date -Format yyyyMMdd)_01_windows_x64.zip"
 Compress-Archive -Path $src -DestinationPath $dst -Force
 ```
 
