@@ -16,6 +16,9 @@ import '../../core/theme/app_theme.dart';
 ///    SizedBox(width:inf)` 双层嵌套，反而让 DarkButton 在 Wrap / Row 中被强制撑满
 ///    整个剩余宽度（详见 GoldButton 同款 BUG）。本次简化为仅 `ConstrainedBox(minWidth:72)`。
 ///
+/// **v2.10.2 文字过渡动画**：label 用 AnimatedSwitcher 包裹，text 变化时
+/// 淡入+上滑过渡（配合 CopyResultButton 图标切换动画，text 不变时无影响）。
+///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class DarkButton extends ConsumerStatefulWidget {
   final String text;
@@ -90,7 +93,10 @@ class _DarkButtonState extends ConsumerState<DarkButton>
     // 主题感知色板
     // 深色：紫黑渐变 + 鎏金描边（原配色）
     // 浅色：浅米渐变 + 深鎏金描边（与浅色背景协调，不留深色块）
-    final labelColor = c.resolve(const Color(0xFFF0E6CF), const Color(0xFF2E2210));
+    final labelColor = c.resolve(
+      const Color(0xFFF0E6CF),
+      const Color(0xFF2E2210),
+    );
     final gradTop = enabled
         ? c.resolve(const Color(0xFF3A2F4A), const Color(0xFFEBE2CC))
         : c.resolve(const Color(0xFF2A2235), const Color(0xFFD9CBA8));
@@ -100,12 +106,31 @@ class _DarkButtonState extends ConsumerState<DarkButton>
     final borderAlpha = enabled ? 0.43 : 0.18;
     final borderColor = c.goldBorder.withValues(alpha: borderAlpha);
 
-    final label = Text(
-      widget.text,
-      style: TextStyle(
-        color: labelColor,
-        fontSize: 13,
-        fontWeight: FontWeight.bold,
+    // v2.10.2：label 用 AnimatedSwitcher 包裹，text 变化时淡入+上滑过渡。
+    // 配合 CopyResultButton 的"复制结果"→"已复制"切换，与图标旋转动画呼应。
+    // text 不变时 AnimatedSwitcher 不触发动画，无副作用。
+    final label = AnimatedSwitcher(
+      duration: const Duration(milliseconds: 250),
+      transitionBuilder: (child, anim) {
+        return FadeTransition(
+          opacity: anim,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.3),
+              end: Offset.zero,
+            ).animate(anim),
+            child: child,
+          ),
+        );
+      },
+      child: Text(
+        widget.text,
+        key: ValueKey(widget.text),
+        style: TextStyle(
+          color: labelColor,
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
     final innerContent = widget.icon == null
@@ -149,7 +174,8 @@ class _DarkButtonState extends ConsumerState<DarkButton>
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        child: innerContent),
+        child: innerContent,
+      ),
     );
 
     // ★ v2.10.1 竖线坍塌防御修正（与 GoldButton 同款方案）：
@@ -167,7 +193,9 @@ class _DarkButtonState extends ConsumerState<DarkButton>
               final t = _press.value;
               final downCurve = AppAnimations.pressDownCurve.transform(t);
               final upCurve = AppAnimations.pressReleaseCurve.transform(1 - t);
-              final scale = _down ? 1.0 - 0.05 * downCurve : 0.95 + 0.05 * upCurve;
+              final scale = _down
+                  ? 1.0 - 0.05 * downCurve
+                  : 0.95 + 0.05 * upCurve;
               return Transform.scale(
                 scale: scale,
                 alignment: Alignment.center,

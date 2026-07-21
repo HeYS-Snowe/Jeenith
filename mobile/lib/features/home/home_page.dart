@@ -266,7 +266,10 @@ class _HomePageState extends ConsumerState<HomePage>
                               return InteractableCard(
                                 entrance: _entrance,
                                 interval: Interval(
-                                  0.28 + i * 0.08,
+                                  // v2.10.2：begin 必须 clamp，否则 i>=10 时
+                                  // 0.28+i*0.08 > 1.0 触发 Interval 断言崩溃。
+                                  // clamp 上限 0.92 确保与 end(≤1.0) 至少差 0.08。
+                                  (0.28 + i * 0.08).clamp(0.0, 0.92).toDouble(),
                                   (0.62 + i * 0.08).clamp(0.0, 1.0).toDouble(),
                                 ),
                                 color: meta.accentColor,
