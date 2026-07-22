@@ -96,7 +96,8 @@ flutter build windows --release
 - v2.9.0/v2.9.1/v2.9.2 六爻断法深化（旬空 + 六冲六合 + 进退神）
 - v2.10.0 浅色模式适配
 - v2.10.1/v2.10.2/v2.10.3 GoldButton/DarkButton 竖线坍塌多次根治 + InteractableCard 崩溃修复 + 周易 ActionBar 自适应
-- 后续可考虑：思源宋体字体、主题浅色对齐细节
+- v2.10.4 DarkButton 浅色适配补齐 + configProvider 订阅修复 + SvgIcon fallback 主题感知
+- 后续可考虑：仪式动画浅色适配、首次使用引导遮罩扩展（周易/六爻/八字）、v3.0.0 大版本规划（新术数 / AI 解卦集成 / 数据云同步 / 国际化）
 
 ## 六、规则
 
