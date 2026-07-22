@@ -6,18 +6,11 @@ import '../../core/config/config_providers.dart';
 import '../../core/theme/animations.dart';
 import '../../core/theme/app_theme.dart';
 
-/// 深色次要按钮（主题感知），可选前置图标（接受任意 Widget：[Icon] / [SvgIcon] / [Image]）。
+/// 深色次要按钮，可选前置图标（接受任意 Widget：[Icon] / [SvgIcon] / [Image]）。
 ///
 /// v2.0.0 升级：与 [GoldButton] 同款按动 0.95 缩放 + 阴影变化 + 抬起 easeOutBack 弹回。
-///
-/// **v2.10.1 双重升级修正**：
-/// 1. **主题感知**：浅色模式下改为浅米渐变 + 深鎏金描边，不再保留深色块。
-/// 2. **竖线坍塌防御修正**：v2.10.0 用 `ConstrainedBox(minWidth:72, maxWidth:inf) +
-///    SizedBox(width:inf)` 双层嵌套，反而让 DarkButton 在 Wrap / Row 中被强制撑满
-///    整个剩余宽度（详见 GoldButton 同款 BUG）。本次简化为仅 `ConstrainedBox(minWidth:72)`。
-///
-/// **v2.10.2 文字过渡动画**：label 用 AnimatedSwitcher 包裹，text 变化时
-/// 淡入+上滑过渡（配合 CopyResultButton 图标切换动画，text 不变时无影响）。
+/// **v2.10.4 主题感知**：颜色全部从 [AppClr.of] 取，深色沿用紫黑渐变 + 浅金字，
+/// 浅色切换为浅米渐变 + 深棕字（与设置页配色一致），补齐 v2.10.0 浅色适配遗漏。
 ///
 /// 内部自动读 [AppConfig.animationsEnabled]，开关关闭时降级为静态按钮。
 class DarkButton extends ConsumerStatefulWidget {
@@ -42,6 +35,8 @@ class _DarkButtonState extends ConsumerState<DarkButton>
     with SingleTickerProviderStateMixin {
   late final AnimationController _press;
   bool _down = false;
+  // 最近一次 build 时确定的动画开关，供 tap 回调安全读取（避免在非 build
+  // 上下文调用 ref.watch）。在 build 中通过 ref.watch 订阅以即时重建。
   bool _animEnabled = true;
 
   @override
@@ -85,52 +80,29 @@ class _DarkButtonState extends ConsumerState<DarkButton>
 
   @override
   Widget build(BuildContext context) {
+    // 订阅全局配置：设置页切换开关时即时重建，动画/静态形态无缝切换
     _animEnabled =
         ref.watch(configProvider).valueOrNull?.animationsEnabled ?? true;
     final enabled = widget.onPressed != null;
     final animEnabled = _animEnabled;
     final c = AppClr.of(context);
-    // 主题感知色板
-    // 深色：紫黑渐变 + 鎏金描边（原配色）
-    // 浅色：浅米渐变 + 深鎏金描边（与浅色背景协调，不留深色块）
-    final labelColor = c.resolve(
-      const Color(0xFFF0E6CF),
-      const Color(0xFF2E2210),
-    );
+    // 主题感知：深色沿用紫黑渐变 + 浅金字；浅色用浅米渐变 + 深棕字（与设置页一致）
+    final labelColor =
+        c.resolve(const Color(0xFFF0E6CF), const Color(0xFF2E2210));
     final gradTop = enabled
-        ? c.resolve(const Color(0xFF3A2F4A), const Color(0xFFEBE2CC))
+        ? c.resolve(const Color(0xFF3A2F4A), AppColorsLight.buttonTop)
         : c.resolve(const Color(0xFF2A2235), const Color(0xFFD9CBA8));
     final gradBottom = enabled
-        ? c.resolve(const Color(0xFF241C30), const Color(0xFFD9CBA8))
+        ? c.resolve(const Color(0xFF241C30), AppColorsLight.buttonBottom)
         : c.resolve(const Color(0xFF1A1525), const Color(0xFFC9BB98));
-    final borderAlpha = enabled ? 0.43 : 0.18;
-    final borderColor = c.goldBorder.withValues(alpha: borderAlpha);
-
-    // v2.10.2：label 用 AnimatedSwitcher 包裹，text 变化时淡入+上滑过渡。
-    // 配合 CopyResultButton 的"复制结果"→"已复制"切换，与图标旋转动画呼应。
-    // text 不变时 AnimatedSwitcher 不触发动画，无副作用。
-    final label = AnimatedSwitcher(
-      duration: const Duration(milliseconds: 250),
-      transitionBuilder: (child, anim) {
-        return FadeTransition(
-          opacity: anim,
-          child: SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, 0.3),
-              end: Offset.zero,
-            ).animate(anim),
-            child: child,
-          ),
-        );
-      },
-      child: Text(
-        widget.text,
-        key: ValueKey(widget.text),
-        style: TextStyle(
-          color: labelColor,
-          fontSize: 13,
-          fontWeight: FontWeight.bold,
-        ),
+    final borderColor =
+        enabled ? c.goldBorder : c.goldBorder.withValues(alpha: 0.18);
+    final label = Text(
+      widget.text,
+      style: TextStyle(
+        color: labelColor,
+        fontSize: 13,
+        fontWeight: FontWeight.bold,
       ),
     );
     final innerContent = widget.icon == null
@@ -173,17 +145,9 @@ class _DarkButtonState extends ConsumerState<DarkButton>
               ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        child: innerContent,
-      ),
-    );
-
-    // ★ v2.10.1 竖线坍塌防御修正（与 GoldButton 同款方案）：
-    // 仅保留 ConstrainedBox(minWidth:72)，去掉 v2.10.0 错误的 maxWidth:inf + SizedBox(width:inf)。
-    // 详见 GoldButton 注释 + docs/频发BUG/GoldButton竖线坍塌.md
-    final expandedBox = ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 72),
-      child: box,
+        padding:
+            const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        child: innerContent),
     );
 
     final inner = animEnabled
@@ -193,17 +157,15 @@ class _DarkButtonState extends ConsumerState<DarkButton>
               final t = _press.value;
               final downCurve = AppAnimations.pressDownCurve.transform(t);
               final upCurve = AppAnimations.pressReleaseCurve.transform(1 - t);
-              final scale = _down
-                  ? 1.0 - 0.05 * downCurve
-                  : 0.95 + 0.05 * upCurve;
+              final scale = _down ? 1.0 - 0.05 * downCurve : 0.95 + 0.05 * upCurve;
               return Transform.scale(
                 scale: scale,
                 alignment: Alignment.center,
-                child: expandedBox,
+                child: box,
               );
             },
           )
-        : expandedBox;
+        : box;
 
     return GestureDetector(
       onTapDown: enabled ? _onTapDown : null,

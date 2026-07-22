@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../core/theme/app_theme.dart';
+
 /// 统一的 SVG 矢量图标组件：从 `assets/icons/$name.svg` 加载并按 [color] 染色。
 ///
 /// 新增图标只需把 `.svg` 文件丢进 `assets/icons/` 目录，再用 `SvgIcon('名称')` 引用，
@@ -18,7 +20,7 @@ class SvgIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = IconTheme.of(context);
     final s = size ?? theme.size ?? 24;
-    final c = color ?? theme.color ?? const Color(0xFFF0E6CF);
+    final c = color ?? theme.color ?? context.appClr.textPrimary;
     return SvgPicture.asset(
       'assets/icons/$name.svg',
       width: s,
