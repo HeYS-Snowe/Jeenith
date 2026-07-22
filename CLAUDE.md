@@ -10,7 +10,7 @@
 | 项目类型 | 移动 App（Flutter，Android + Windows 桌面）|
 | 所属组织 | Qore（叩心）|
 | 应用包名 | `com.qore.jeenith` |
-| 当前版本 | 2.4.1+25（fix，2026-07-18）|
+| 当前版本 | 2.10.3+43（fix，2026-07-22）|
 | 项目位置 | `D:\Code\Project\Qore\Jeenith` |
 
 **项目定位**：叩问本心的卜算合集——小六壬、周易、梅花易数、掷筊、紫微斗数、奇门遁甲、抽签、测字、大六壬、风水罗盘 + 使用手册。一个 APP 首页选术，可扩展卜算框架（加新术 = 新建 feature 目录 + 注册一行）。
@@ -25,8 +25,8 @@ Jeenith/
       main.dart       # 入口（async + ProviderScope + 桌面窗口尺寸初始化）
       core/           # branding / calendar / config / divination / history / rng / theme
       data/           # yijing（64卦 + 八卦数据，周易/梅花共用）
-      features/       # home / xiaoliuren / zhouyi / meihua / jiaobei / ziwei / qimen /
-                      #   chouqian / cezi / daliuren / luopan / bazi / name_test / manual / settings / history
+      features/       # home / xiaoliuren / zhouyi / meihua / jiaobei / ziwei / qimen / taiyi /
+                      #   daliuren / liuyao / chouqian / cezi / chenggu / luopan / bazi / name_test / manual / settings / history
       providers/      # providers.dart（barrel 聚合 config + rng providers）
       router/         # app_router.dart（GoRouter + 仪式路由）
       shared/         # widgets/（GoldButton / DarkButton / AnimatedExpandIcon / SvgIcon /
@@ -86,8 +86,17 @@ flutter build windows --release
 - v2.3.1 起卦按钮 BUG 修复 + 动效曲线优化
 - v2.3.2 设置页动画细分开关（4 个 AnimationKind 独立控制）+ Windows 应用图标修复
 - v2.3.3 首页按钮间距修复 + 添加 MIT LICENSE + Windows 图标产物归档
-- v2.4.0 八字/测名字入场仪式 + 一键获取当前时间 + 测字词库扩展 + All rights reserved 全面移除
-- 后续可考虑：思源宋体字体、首次使用引导遮罩、主题浅色对齐细节
+- v2.4.0 八字/测字入场仪式 + 一键获取当前时间 + 测字词库扩展 + All rights reserved 全面移除
+- v2.4.x 首次使用引导遮罩落地（TechGuideOverlay，紫微/奇门/大六壬分步导读）+ 全量浅色主题感知
+- v2.5.0 紫微深化（四化/大限/长生/补煞）+ 奇门深化（天盘干/格局断辞）
+- v2.6.0 称骨算命（袁天罡）— 第 13 术
+- v2.7.0 太乙神数（三式之首）— 第 14 术，三式齐备
+- v2.7.1 GoldButton 竖线坍塌根治 + 按压缩放延迟
+- v2.8.0 六爻纳甲 — 第 15 术 + pinned header 修复（v2.8.1）
+- v2.9.0/v2.9.1/v2.9.2 六爻断法深化（旬空 + 六冲六合 + 进退神）
+- v2.10.0 浅色模式适配
+- v2.10.1/v2.10.2/v2.10.3 GoldButton/DarkButton 竖线坍塌多次根治 + InteractableCard 崩溃修复 + 周易 ActionBar 自适应
+- 后续可考虑：思源宋体字体、主题浅色对齐细节
 
 ## 六、规则
 
