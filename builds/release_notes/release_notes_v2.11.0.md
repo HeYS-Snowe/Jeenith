@@ -53,8 +53,7 @@
 | 平台 | 文件 | 大小 | SHA-256 |
 |------|------|------|---------|
 | Android | Jeenith_2.11.0_release_20260724_01.apk | 59.17 MB | `CDC3830CBA2702EC1A28426EF0F129BB20BC63D051C3E6C404D49CA45B3F6E09` |
-
-> Windows x64 版本将随后补发。
+| Windows x64 | Jeenith_2.11.0_release_20260724_01_windows_x64.zip | 15.70 MB | `22F41A8CED0E6CF800A00311038E5890FB108459B3C0E701B76DC93B166426E1` |
 
 ## 版本信息
 

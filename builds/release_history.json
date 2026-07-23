@@ -1459,6 +1459,15 @@
           "sha256": "CDC3830CBA2702EC1A28426EF0F129BB20BC63D051C3E6C404D49CA45B3F6E09",
           "localPath": "builds/android/Jeenith_2.11.0_release_20260724_01.apk",
           "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.11.0/Jeenith_2.11.0_release_20260724_01.apk"
+        },
+        {
+          "name": "Jeenith_2.11.0_release_20260724_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16458045,
+          "sizeFormatted": "15.70 MB",
+          "sha256": "22F41A8CED0E6CF800A00311038E5890FB108459B3C0E701B76DC93B166426E1",
+          "localPath": "builds/windows/Jeenith_2.11.0_release_20260724_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.11.0/Jeenith_2.11.0_release_20260724_01_windows_x64.zip"
         }
       ],
       "versionInPubspec": "2.11.0+45",
