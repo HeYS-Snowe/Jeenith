@@ -39,11 +39,22 @@ class _CopyResultButtonState extends State<CopyResultButton> {
       if (mounted) setState(() => _copied = false);
     });
     if (context.mounted) {
+      final sc = AppClr.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('已复制详细结果到剪贴板'),
-          backgroundColor: AppClr.of(context).card,
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: sc.goldBright, size: 18),
+              const SizedBox(width: 8),
+              const Expanded(child: Text('已复制详细结果到剪贴板')),
+            ],
+          ),
+          backgroundColor: sc.card,
           behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: sc.goldBorder),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -75,6 +86,24 @@ class _CopyResultButtonState extends State<CopyResultButton> {
     return DarkButton(
       icon: icon,
       text: _copied ? '已复制' : '复制结果',
+      // 文字过渡：与图标旋转切换呼应，「复制结果」↔「已复制」淡入 + 轻微上滑
+      label: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, anim) => FadeTransition(
+          opacity: anim,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.35),
+              end: Offset.zero,
+            ).animate(anim),
+            child: child,
+          ),
+        ),
+        child: Text(
+          _copied ? '已复制' : '复制结果',
+          key: ValueKey(_copied ? 'copied' : 'copy'),
+        ),
+      ),
       onPressed: widget.enabled ? _onCopy : null,
     );
   }

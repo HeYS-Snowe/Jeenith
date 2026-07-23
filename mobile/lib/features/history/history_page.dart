@@ -14,10 +14,11 @@ import '../../core/history/history_providers.dart';
 import '../../shared/widgets/decorative_panel.dart';
 import '../../shared/widgets/divination_loading_indicator.dart';
 
-/// 历史记录页：列表 + 详情 + 备注 + 删除 + 恢复卦象（v2.4.3）。
+/// 历史记录页：列表 + 详情 + 备注 + 删除 + 恢复卦象。
 ///
 /// v2.4.2：全面主题感知（浅色模式适配）。
 /// v2.4.3：新增「恢复卦象」按钮（有 extra 可恢复，旧记录置灰）。
+/// v2.12.0：搜索 + 按术数筛选 + 批量删除（长按进入多选）。
 class HistoryPage extends ConsumerStatefulWidget {
   const HistoryPage({super.key});
   @override
@@ -27,11 +28,23 @@ class HistoryPage extends ConsumerStatefulWidget {
 class _HistoryPageState extends ConsumerState<HistoryPage> {
   List<HistoryEntry> _list = const [];
   bool _loading = true;
+  String _query = '';
+  String? _filterTech;
+  bool _selectMode = false;
+  final Set<String> _selected = {};
+  late final TextEditingController _searchCtrl;
 
   @override
   void initState() {
     super.initState();
+    _searchCtrl = TextEditingController();
     _reload();
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
   }
 
   Future<void> _reload() async {
@@ -40,17 +53,46 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
     setState(() {
       _list = list;
       _loading = false;
+      _selected.removeWhere((id) => !list.any((e) => e.id == id));
     });
   }
 
-  /// 恢复卦象（v2.4.3）：设置 pendingRestoreProvider 后跳转到该术 page，
-  /// page initState 消费 extra 重建展示。仅对有 extra 的新历史可用。
+  /// 过滤后的列表（搜索词 + 术数筛选）。
+  List<HistoryEntry> get _filtered {
+    var r = _list;
+    if (_filterTech != null) {
+      r = r.where((e) => e.techId == _filterTech).toList();
+    }
+    if (_query.isNotEmpty) {
+      final q = _query.toLowerCase();
+      r = r
+          .where((e) =>
+              e.summary.toLowerCase().contains(q) ||
+              e.techName.toLowerCase().contains(q) ||
+              e.detail.toLowerCase().contains(q) ||
+              (e.note ?? '').toLowerCase().contains(q))
+          .toList();
+    }
+    return r;
+  }
+
+  /// 历史中出现过的术数（按首次出现去重保序）。
+  List<HistoryEntry> _distinctTechs() {
+    final seen = <String>{};
+    final out = <HistoryEntry>[];
+    for (final e in _list) {
+      if (seen.add(e.techId)) out.add(e);
+    }
+    return out;
+  }
+
+  /// 恢复卦象（v2.4.3）。
   void _restore(HistoryEntry e) {
     ref.read(pendingRestoreProvider.notifier).state = e;
     context.go('/tech/${e.techId}');
   }
 
-  /// 复制一条历史记录到剪贴板，含术数名、摘要、时间、详情与备注。
+  /// 复制一条历史记录到剪贴板。
   Future<void> _copyEntry(HistoryEntry e) async {
     final buf = StringBuffer()
       ..writeln('【${e.techName}】${e.summary}')
@@ -64,11 +106,22 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
     }
     await Clipboard.setData(ClipboardData(text: buf.toString().trimRight()));
     if (!mounted) return;
+    final sc = AppClr.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('已复制到剪贴板'),
-        backgroundColor: AppClr.of(context).card,
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: sc.goldBright, size: 18),
+            const SizedBox(width: 8),
+            const Expanded(child: Text('已复制到剪贴板')),
+          ],
+        ),
+        backgroundColor: sc.card,
         behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: sc.goldBorder),
+        ),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -172,14 +225,71 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
     );
   }
 
+  /// 批量删除选中记录（v2.12.0）。
+  void _confirmDeleteSelected() {
+    final c = AppClr.of(context);
+    final gradeBad = c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad);
+    final count = _selected.length;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.card,
+        title: Text('删除选中记录',
+            style: TextStyle(
+                color: c.goldBright,
+                fontSize: 15,
+                fontWeight: FontWeight.bold)),
+        content: Text('确定删除选中的 $count 条记录？此操作不可撤销。',
+            style: TextStyle(color: c.textBody, fontSize: 13, height: 1.5)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text('取消', style: TextStyle(color: c.textSubtitle)),
+          ),
+          TextButton(
+            onPressed: () async {
+              final ids = _selected.toList();
+              for (final id in ids) {
+                await HistoryStore.remove(id);
+              }
+              if (!ctx.mounted) return;
+              Navigator.pop(ctx);
+              setState(() {
+                _selected.clear();
+                _selectMode = false;
+              });
+              _reload();
+            },
+            child: Text('删除', style: TextStyle(color: gradeBad)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _exitSelectMode() => setState(() {
+        _selected.clear();
+        _selectMode = false;
+      });
+
+  void _toggleSelected(String id) => setState(() {
+        if (_selected.contains(id)) {
+          _selected.remove(id);
+        } else {
+          _selected.add(id);
+        }
+        if (_selected.isEmpty) _selectMode = false;
+      });
+
   Future<void> _export(String format) async {
     final list = await HistoryStore.load();
     if (!mounted) return;
     if (list.isEmpty) {
+      final sc = AppClr.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('暂无历史记录可导出'),
-          backgroundColor: AppClr.of(context).card,
+          backgroundColor: sc.card,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
@@ -206,33 +316,67 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     final c = AppClr.of(context);
+    final gradeBad = c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad);
+    final filtered = _filtered;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
-        ),
-        title: const Text('历 史 记 录'),
-        actions: [
-          if (_list.isNotEmpty)
-            PopupMenuButton<String>(
-              icon: Icon(Icons.ios_share, color: c.gold),
-              tooltip: '导出历史',
-              onSelected: _export,
-              itemBuilder: (ctx) => const [
-                PopupMenuItem(value: 'json', child: Text('导出为 JSON')),
-                PopupMenuItem(value: 'md', child: Text('导出为 Markdown')),
-                PopupMenuItem(value: 'csv', child: Text('导出为 CSV')),
+        leading: _selectMode
+            ? IconButton(
+                icon: const Icon(Icons.close), onPressed: _exitSelectMode)
+            : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.go('/'),
+              ),
+        title: _selectMode
+            ? Text('已选 ${_selected.length} 项')
+            : const Text('历 史 记 录'),
+        actions: _selectMode
+            ? [
+                IconButton(
+                  icon: Icon(filtered.isNotEmpty &&
+                          filtered.every((e) => _selected.contains(e.id))
+                      ? Icons.deselect
+                      : Icons.select_all),
+                  tooltip: '全选 / 取消全选',
+                  onPressed: filtered.isEmpty
+                      ? null
+                      : () => setState(() {
+                            final all = filtered
+                                .every((e) => _selected.contains(e.id));
+                            if (all) {
+                              _selected.removeWhere(
+                                  (id) => filtered.any((e) => e.id == id));
+                            } else {
+                              _selected.addAll(filtered.map((e) => e.id));
+                            }
+                          }),
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: gradeBad),
+                  tooltip: '删除选中',
+                  onPressed:
+                      _selected.isEmpty ? null : _confirmDeleteSelected,
+                ),
+              ]
+            : [
+                if (_list.isNotEmpty)
+                  PopupMenuButton<String>(
+                    icon: Icon(Icons.ios_share, color: c.gold),
+                    tooltip: '导出历史',
+                    onSelected: _export,
+                    itemBuilder: (ctx) => const [
+                      PopupMenuItem(value: 'json', child: Text('导出为 JSON')),
+                      PopupMenuItem(value: 'md', child: Text('导出为 Markdown')),
+                      PopupMenuItem(value: 'csv', child: Text('导出为 CSV')),
+                    ],
+                  ),
+                if (_list.isNotEmpty)
+                  IconButton(
+                    icon: Icon(Icons.delete_sweep, color: gradeBad),
+                    tooltip: '清空全部历史',
+                    onPressed: _confirmClear,
+                  ),
               ],
-            ),
-          if (_list.isNotEmpty)
-            IconButton(
-              icon: Icon(Icons.delete_sweep,
-                  color: c.resolve(AppColors.gradeBad, AppColorsLight.gradeBad)),
-              tooltip: '清空全部历史',
-              onPressed: _confirmClear,
-            ),
-        ],
       ),
       body: _loading
           ? const Center(child: DivinationLoadingIndicator(size: 56))
@@ -241,77 +385,184 @@ class _HistoryPageState extends ConsumerState<HistoryPage> {
                   child: Text('暂无历史记录',
                       style: TextStyle(color: c.textHint)),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
-                  itemCount: _list.length,
-                  itemBuilder: (context, i) {
-                    final e = _list[i];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: DecorativePanel(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                          title: Text('${e.techName} · ${e.summary}',
-                              style: TextStyle(
-                                  color: c.goldBright,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold)),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 2),
-                              Text(e.time.toString().substring(0, 19),
-                                  style: TextStyle(
-                                      color: c.textMeta, fontSize: 11)),
-                              if (e.note != null && e.note!.isNotEmpty)
-                                Text('备注：${e.note}',
-                                    style: TextStyle(
-                                        color: c.textBody, fontSize: 12)),
-                            ],
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(
-                                  Icons.replay,
-                                  color: e.extra != null
-                                      ? c.gold
-                                      : c.textHint,
-                                  size: 20,
-                                ),
-                                tooltip: e.extra != null
-                                    ? '恢复卦象'
-                                    : '旧记录不支持恢复',
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(
-                                    minWidth: 36, minHeight: 36),
-                                onPressed: e.extra != null
-                                    ? () => _restore(e)
-                                    : null,
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.copy_all,
-                                    color: c.textSubtitle, size: 20),
-                                tooltip: '复制',
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(
-                                    minWidth: 36, minHeight: 36),
-                                onPressed: () => _copyEntry(e),
-                              ),
-                              Icon(Icons.chevron_right, color: c.textSubtitle),
-                            ],
-                          ),
-                          onTap: () => _openDetail(e),
-                        ),
-                      ),
-                    );
-                  },
+              : Column(
+                  children: [
+                    _buildFilterBar(c),
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? Center(
+                              child: Text('无匹配记录',
+                                  style: TextStyle(color: c.textHint)))
+                          : ListView.builder(
+                              padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
+                              itemCount: filtered.length,
+                              itemBuilder: (context, i) =>
+                                  _buildItem(c, filtered[i]),
+                            ),
+                    ),
+                  ],
                 ),
+    );
+  }
+
+  /// 搜索框 + 术数筛选条（v2.12.0）。
+  Widget _buildFilterBar(AppClr c) {
+    final techs = _distinctTechs();
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+      child: Column(
+        children: [
+          TextField(
+            controller: _searchCtrl,
+            onChanged: (v) => setState(() => _query = v),
+            style: TextStyle(color: c.textPrimary, fontSize: 14),
+            cursorColor: c.gold,
+            decoration: InputDecoration(
+              isDense: true,
+              prefixIcon:
+                  Icon(Icons.search, color: c.textSubtitle, size: 20),
+              suffixIcon: _query.isNotEmpty
+                  ? IconButton(
+                      icon:
+                          Icon(Icons.clear, color: c.textSubtitle, size: 18),
+                      onPressed: () {
+                        _searchCtrl.clear();
+                        setState(() => _query = '');
+                      },
+                    )
+                  : null,
+              hintText: '搜索摘要 / 术数 / 备注…',
+              hintStyle: TextStyle(color: c.textHint, fontSize: 13),
+              filled: true,
+              fillColor: c.panel,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: c.goldBorder),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: c.goldBright, width: 1.2),
+              ),
+            ),
+          ),
+          if (techs.length > 1) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 34,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: techs.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 6),
+                itemBuilder: (_, i) {
+                  final t = techs[i];
+                  final selected = _filterTech == t.techId;
+                  return _techChip(c, t.techName, t.techId, selected);
+                },
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _techChip(AppClr c, String label, String id, bool selected) {
+    return GestureDetector(
+      onTap: () => setState(() => _filterTech = selected ? null : id),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(
+          color: selected ? c.gold.withValues(alpha: 0.18) : c.panel,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: selected ? c.gold : c.goldBorder),
+        ),
+        alignment: Alignment.center,
+        child: Text(label,
+            style: TextStyle(
+              color: selected ? c.goldBright : c.textBody,
+              fontSize: 12,
+              fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+            )),
+      ),
+    );
+  }
+
+  Widget _buildItem(AppClr c, HistoryEntry e) {
+    final selected = _selected.contains(e.id);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: DecorativePanel(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: ListTile(
+          contentPadding: EdgeInsets.zero,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          leading: _selectMode
+              ? Icon(
+                  selected
+                      ? Icons.check_circle
+                      : Icons.radio_button_unchecked,
+                  color: selected ? c.goldBright : c.textHint,
+                  size: 22,
+                )
+              : null,
+          title: Text('${e.techName} · ${e.summary}',
+              style: TextStyle(
+                  color: c.goldBright,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 2),
+              Text(e.time.toString().substring(0, 19),
+                  style: TextStyle(color: c.textMeta, fontSize: 11)),
+              if (e.note != null && e.note!.isNotEmpty)
+                Text('备注：${e.note}',
+                    style: TextStyle(color: c.textBody, fontSize: 12)),
+            ],
+          ),
+          trailing: _selectMode
+              ? null
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.replay,
+                          color: e.extra != null ? c.gold : c.textHint,
+                          size: 20),
+                      tooltip:
+                          e.extra != null ? '恢复卦象' : '旧记录不支持恢复',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                          minWidth: 36, minHeight: 36),
+                      onPressed: e.extra != null ? () => _restore(e) : null,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.copy_all,
+                          color: c.textSubtitle, size: 20),
+                      tooltip: '复制',
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                          minWidth: 36, minHeight: 36),
+                      onPressed: () => _copyEntry(e),
+                    ),
+                    Icon(Icons.chevron_right, color: c.textSubtitle),
+                  ],
+                ),
+          onTap: _selectMode
+              ? () => _toggleSelected(e.id)
+              : () => _openDetail(e),
+          onLongPress: _selectMode
+              ? null
+              : () => setState(() {
+                    _selectMode = true;
+                    _selected.add(e.id);
+                  }),
+        ),
+      ),
     );
   }
 }

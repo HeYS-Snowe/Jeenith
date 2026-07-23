@@ -16,6 +16,9 @@ import '../../core/theme/app_theme.dart';
 class DarkButton extends ConsumerStatefulWidget {
   final String text;
   final Widget? icon;
+  /// 自定义文字内容（优先于 [text]，自动套用按钮标签样式）。用于需要文字
+  /// 过渡动画的场景（如 CopyResultButton「复制结果」→「已复制」切换）。
+  final Widget? label;
   final VoidCallback? onPressed;
   final double radius;
 
@@ -23,6 +26,7 @@ class DarkButton extends ConsumerStatefulWidget {
     super.key,
     required this.text,
     this.icon,
+    this.label,
     this.onPressed,
     this.radius = 10,
   });
@@ -97,14 +101,14 @@ class _DarkButtonState extends ConsumerState<DarkButton>
         : c.resolve(const Color(0xFF1A1525), const Color(0xFFC9BB98));
     final borderColor =
         enabled ? c.goldBorder : c.goldBorder.withValues(alpha: 0.18);
-    final label = Text(
-      widget.text,
-      style: TextStyle(
-        color: labelColor,
-        fontSize: 13,
-        fontWeight: FontWeight.bold,
-      ),
+    final labelStyle = TextStyle(
+      color: labelColor,
+      fontSize: 13,
+      fontWeight: FontWeight.bold,
     );
+    final label = widget.label != null
+        ? DefaultTextStyle(style: labelStyle, child: widget.label!)
+        : Text(widget.text, style: labelStyle);
     final innerContent = widget.icon == null
         ? label
         : Row(

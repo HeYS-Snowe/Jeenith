@@ -100,6 +100,24 @@ class ShareResultButton extends StatelessWidget {
       ..strokeWidth = 2.0;
     canvas.drawRect(rect.deflate(1), borderPaint);
 
+    // 品牌署名（底部居中小金字，分享图自带品牌传播）
+    final goldColor = isLight ? AppColorsLight.gold : AppColors.gold;
+    final tp = TextPainter(
+      text: TextSpan(
+        text: '志极 Jeenith · 叩问本心',
+        style: TextStyle(
+          color: goldColor.withValues(alpha: 0.85),
+          fontSize: w.toDouble() * 0.022,
+          fontFamily: 'SourceHanSerif',
+          letterSpacing: w.toDouble() * 0.004,
+        ),
+      ),
+      textDirection: ui.TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas,
+        Offset((w - tp.width) / 2, h - tp.height - w.toDouble() * 0.028));
+    tp.dispose();
+
     final picture = recorder.endRecording();
     return picture.toImage(w, h);
   }
