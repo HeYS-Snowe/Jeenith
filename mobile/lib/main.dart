@@ -5,6 +5,7 @@ import 'package:screen_retriever/screen_retriever.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'app.dart';
+import 'core/app/restart_controller.dart';
 import 'core/config/platform_info.dart';
 import 'data/yijing/hexagram_texts.dart';
 
@@ -55,5 +56,41 @@ Future<void> main() async {
   // 预加载 64 卦卦辞爻辞到内存（周易/梅花结果页同步查询用）
   await HexagramTexts.load();
 
-  runApp(const ProviderScope(child: JeenithApp()));
+  runApp(const _JeenithRoot());
+}
+
+/// 根 widget：监听 [RestartController]，重启时更换 [ProviderScope] 的 key，
+/// 使整个 widget 树（含所有 Riverpod 状态）从已更新的 SharedPreferences
+/// 重新初始化（v2.11.0）。
+class _JeenithRoot extends StatefulWidget {
+  const _JeenithRoot();
+
+  @override
+  State<_JeenithRoot> createState() => _JeenithRootState();
+}
+
+class _JeenithRootState extends State<_JeenithRoot> {
+  @override
+  void initState() {
+    super.initState();
+    RestartController.instance.addListener(_onRestart);
+  }
+
+  @override
+  void dispose() {
+    RestartController.instance.removeListener(_onRestart);
+    super.dispose();
+  }
+
+  void _onRestart() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      key: ValueKey('scope-${RestartController.instance.value}'),
+      child: const JeenithApp(),
+    );
+  }
 }

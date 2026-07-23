@@ -100,6 +100,23 @@ class ConfigNotifier extends AsyncNotifier<AppConfig> {
     state = AsyncData(current.copyWith(themeMode: v));
   }
 
+  /// 重置所有设置为默认值（v2.11.0：「还原初设」/「归零重始」用）。
+  ///
+  /// 移除 showDetails / useOnline / animationsEnabled / themeMode 及全部
+  /// anim_* 细分开关，状态置为 [AppConfig.defaults]。仅清设置，不动
+  /// 卜算历史与引导标记（那些由 `AppData` 负责）。
+  Future<void> resetSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('showDetails');
+    await prefs.remove('useOnline');
+    await prefs.remove('animationsEnabled');
+    await prefs.remove('themeMode');
+    for (final key in prefs.getKeys().toList()) {
+      if (key.startsWith(_kAnimPrefix)) await prefs.remove(key);
+    }
+    state = const AsyncData(AppConfig.defaults);
+  }
+
   static ThemeMode _parseThemeMode(String? s) {
     switch (s) {
       case 'light':

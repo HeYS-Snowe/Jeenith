@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/app/restart_controller.dart';
 import '../../core/config/app_config.dart';
 import '../../core/config/config_providers.dart';
+import '../../core/data/app_data.dart';
 import '../../core/divination/divination_registry.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/divination_loading_indicator.dart';
 import '../../shared/widgets/section_title.dart';
 
-/// 设置页：外观 + 动画/动效（按卜算术分类，一键全控）+ 随机与展示。
+/// 设置页：外观 + 动画/动效（按卜算术分类，一键全控）+ 随机与展示 + 数据与重置。
 ///
 /// v2.3.0：合并「动效」与「动画设置」为单一「◆ 动画/动效」分区。
 /// v2.3.2：每术 ExpansionTile 拆 4 个细分开关（AnimationKind）。
 /// v2.4.2：全面主题感知，浅色模式适配。
+/// v2.11.0：新增「◆ 数据与重置」分区（清除数据 / 还原初设 / 归零重始）。
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
@@ -215,6 +218,41 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+
+            // v2.11.0：数据与重置分区。
+            SectionTitle('◆ 数据与重置', color: c.goldBright),
+            const SizedBox(height: 4),
+            _card(
+              context,
+              children: [
+                _dataTile(
+                  context,
+                  icon: Icons.cleaning_services_outlined,
+                  title: '清除数据',
+                  subtitle: '选择要清除的内容（卜算历史 / 使用指引）',
+                  onTap: () => _showClearDataDialog(context, ref),
+                ),
+                Divider(color: goldDivider, height: 1),
+                _dataTile(
+                  context,
+                  icon: Icons.restart_alt,
+                  title: '还原初设',
+                  subtitle: '将所有设置恢复为默认，保留卜算历史',
+                  onTap: () => _showResetSettingsDialog(context, ref),
+                ),
+                Divider(color: goldDivider, height: 1),
+                _dataTile(
+                  context,
+                  icon: Icons.auto_delete_outlined,
+                  title: '归零重始',
+                  subtitle: '清除全部数据并恢复所有设置（不可撤销）',
+                  titleColor: c.fireGlow,
+                  iconColor: c.fireGlow,
+                  onTap: () => _showFactoryResetDialog(context, ref),
+                ),
+              ],
+            ),
             const SizedBox(height: 24),
             Text(
               '志极 Jeenith · 叩问本心，不忘初心\nCopyright (c) 2026 Qore',
@@ -244,6 +282,33 @@ class SettingsPage extends ConsumerWidget {
     );
   }
 
+  /// 数据与重置分区的条目（图标 + 标题 + 副标题 + 箭头）。
+  Widget _dataTile(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    Color? titleColor,
+    Color? iconColor,
+  }) {
+    final c = AppClr.of(context);
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      leading: Icon(icon, color: iconColor ?? c.goldBright, size: 22),
+      title: Text(title,
+          style: TextStyle(
+              color: titleColor ?? c.textPrimary,
+              fontSize: 15,
+              fontWeight: FontWeight.bold)),
+      subtitle: Text(subtitle,
+          style: TextStyle(color: c.textSubtitle, fontSize: 12, height: 1.4)),
+      trailing: Icon(Icons.chevron_right, color: c.textHint, size: 20),
+      onTap: onTap,
+    );
+  }
+
   /// 单个细分动画开关。
   Widget _kindSwitch(
     BuildContext context,
@@ -268,5 +333,215 @@ class SettingsPage extends ConsumerWidget {
           .read(configProvider.notifier)
           .setAnimationSetting(techId, kind, v),
     );
+  }
+
+  /// 「清除数据」：勾选要清除的数据类型（历史 / 引导）后清除并重启。
+  Future<void> _showClearDataDialog(BuildContext context, WidgetRef ref) async {
+    final c = AppClr.of(context);
+    final histCount = await AppData.historyCount();
+    final guideCount = await AppData.guideFlagCount();
+    if (!context.mounted) return;
+
+    var clearHistory = true;
+    var clearGuide = true;
+
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setSt) {
+            final any = clearHistory || clearGuide;
+            return AlertDialog(
+              backgroundColor: c.card,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: c.goldBorder),
+              ),
+              title: Row(
+                children: [
+                  Icon(Icons.cleaning_services_outlined,
+                      color: c.goldBright, size: 20),
+                  const SizedBox(width: 8),
+                  Text('清除数据',
+                      style: TextStyle(
+                          color: c.goldBright,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2)),
+                ],
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('勾选要清除的内容，清除后应用将重启。',
+                        style: TextStyle(color: c.textBody, fontSize: 13)),
+                    const SizedBox(height: 12),
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      activeColor: c.goldBright,
+                      checkColor: Colors.black87,
+                      value: clearHistory,
+                      onChanged: (v) =>
+                          setSt(() => clearHistory = v ?? false),
+                      title: Text('卜算历史记录（$histCount 条）',
+                          style: TextStyle(
+                              color: c.textPrimary, fontSize: 14)),
+                      subtitle: Text('清除后无法恢复',
+                          style: TextStyle(
+                              color: c.textSubtitle, fontSize: 11)),
+                    ),
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      activeColor: c.goldBright,
+                      checkColor: Colors.black87,
+                      value: clearGuide,
+                      onChanged: (v) =>
+                          setSt(() => clearGuide = v ?? false),
+                      title: Text('使用指引标记（$guideCount 项）',
+                          style: TextStyle(
+                              color: c.textPrimary, fontSize: 14)),
+                      subtitle: Text('清除后相关引导将重新弹出',
+                          style: TextStyle(
+                              color: c.textSubtitle, fontSize: 11)),
+                    ),
+                    const SizedBox(height: 6),
+                    Text('设置（主题 / 动画 / 随机）不受影响。',
+                        style: TextStyle(color: c.textSubtitle, fontSize: 11)),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: Text('取消',
+                      style: TextStyle(color: c.textSubtitle)),
+                ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor:
+                        any ? c.gold : c.textHint,
+                    foregroundColor: Colors.black87,
+                  ),
+                  onPressed: any
+                      ? () async {
+                          Navigator.pop(ctx);
+                          if (clearHistory) await AppData.clearHistory();
+                          if (clearGuide) await AppData.clearGuideFlags();
+                          RestartController.instance.restart();
+                        }
+                      : null,
+                  child: const Text('清除并重启'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  /// 「还原初设」：把所有设置恢复为默认，保留数据，然后重启。
+  Future<void> _showResetSettingsDialog(
+      BuildContext context, WidgetRef ref) async {
+    final c = AppClr.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: c.goldBorder),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.restart_alt, color: c.goldBright, size: 20),
+            const SizedBox(width: 8),
+            Text('还原初设',
+                style: TextStyle(
+                    color: c.goldBright,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2)),
+          ],
+        ),
+        content: Text(
+          '将把主题、动画/动效、随机与展示等所有设置恢复为默认值。\n\n卜算历史与使用指引不受影响。完成后应用将重启。',
+          style: TextStyle(color: c.textBody, fontSize: 13, height: 1.6),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('取消', style: TextStyle(color: c.textSubtitle)),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: c.gold,
+              foregroundColor: Colors.black87,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('还原并重启'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await ref.read(configProvider.notifier).resetSettings();
+    RestartController.instance.restart();
+  }
+
+  /// 「归零重始」：清除全部数据 + 恢复所有设置（最彻底，不可撤销），然后重启。
+  Future<void> _showFactoryResetDialog(
+      BuildContext context, WidgetRef ref) async {
+    final c = AppClr.of(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: c.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: c.fireGlow.withValues(alpha: 0.5)),
+        ),
+        title: Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: c.fireGlow, size: 22),
+            const SizedBox(width: 8),
+            Text('归零重始',
+                style: TextStyle(
+                    color: c.fireGlow,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2)),
+          ],
+        ),
+        content: Text(
+          '此操作将清除全部数据（卜算历史 + 使用指引），并把所有设置恢复为默认。\n\n该操作不可撤销，完成后应用将重启。',
+          style: TextStyle(color: c.textBody, fontSize: 13, height: 1.6),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('取消', style: TextStyle(color: c.textSubtitle)),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: c.fireGlow,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('确认归零'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await AppData.clearAllData();
+    await ref.read(configProvider.notifier).resetSettings();
+    RestartController.instance.restart();
   }
 }
