@@ -1436,6 +1436,37 @@
       "commit": "ae34cdc32e9b29ed095fbed4f0a556b0667b6dbe",
       "publishedAt": "2026-07-23T10:14:21Z",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.4",
+      "status": "published",
+      "isLatest": false
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.11.0",
+      "target": "main",
+      "title": "v2.11.0 — 设置页数据与重置 + 周易/小六壬复制按钮修复",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.11.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_2.11.0_release_20260724_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 62046606,
+          "sizeFormatted": "59.17 MB",
+          "sha256": "CDC3830CBA2702EC1A28426EF0F129BB20BC63D051C3E6C404D49CA45B3F6E09",
+          "localPath": "builds/android/Jeenith_2.11.0_release_20260724_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.11.0/Jeenith_2.11.0_release_20260724_01.apk"
+        }
+      ],
+      "versionInPubspec": "2.11.0+45",
+      "buildStatus": "release",
+      "builtAt": "2026-07-24T02:31:05",
+      "commit": "94671b8aec895a4b806036124ab4d1d4f5548f54",
+      "publishedAt": "2026-07-24T02:50:00+08:00",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.11.0",
       "status": "published"
     }
   ]
