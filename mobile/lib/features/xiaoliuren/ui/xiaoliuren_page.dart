@@ -547,5 +547,9 @@ class _PinHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) => child;
   @override
-  bool shouldRebuild(_) => false;
+  // child 依赖可变状态（结果 _result / _busy / _sampling），必须返回 true：
+  // page setState 后需 rebuild header，复制/分享按钮的 enabled 等参数才能随
+  // 状态更新。曾误设 false 致 header 冻结在初始 _result=null，表现为
+  // "已有结果仍无法点击复制/分享"。
+  bool shouldRebuild(_) => true;
 }
