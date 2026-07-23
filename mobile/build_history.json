@@ -851,6 +851,23 @@
       "platform": "android",
       "timestamp": "2026-07-23T03:52:10",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.10.4",
+      "buildNumber": 44,
+      "status": "fix",
+      "date": "20260723",
+      "sequence": 1,
+      "filename": "Jeenith_2.10.4_fix_20260723_01_windows_x64.zip",
+      "originalName": "jeenith.exe",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_2.10.4_fix_20260723_01_windows_x64.zip",
+      "fileSize": 16423210,
+      "fileSizeHuman": "15.66 MB",
+      "sha256": "5B535462CF3F1A862581D6A92F3817221D9A224BD6E0A53B2E9A53D33524D7FA",
+      "buildType": "zip",
+      "platform": "windows-x64",
+      "timestamp": "2026-07-23T10:20:00",
+      "configSource": "pubspec.yaml"
     }
   ]
 }

@@ -1103,6 +1103,23 @@
       "backupPath": null,
       "platform": "android-arm64,android-arm,android-x64",
       "verificationPassed": true
+    },
+    {
+      "version": "2.10.4+44",
+      "status": "fix",
+      "statusLabel": "修复版",
+      "date": "20260723",
+      "sequence": 1,
+      "filename": "Jeenith_2.10.4_fix_20260723_01_windows_x64.zip",
+      "timestamp": "2026-07-23T10:20:00",
+      "fileSize": 16423210,
+      "fileSizeFormatted": "15.66 MB",
+      "sha256": "5B535462CF3F1A862581D6A92F3817221D9A224BD6E0A53B2E9A53D33524D7FA",
+      "sourcePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\build\\windows\\x64\\runner\\Release\\",
+      "targetPath": "D:\\Code\\Project\\Qore\\Jeenith\\builds\\windows\\Jeenith_2.10.4_fix_20260723_01_windows_x64.zip",
+      "platform": "windows-x64",
+      "buildType": "zip",
+      "verificationPassed": true
     }
   ]
 }

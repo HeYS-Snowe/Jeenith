@@ -63,8 +63,7 @@ v2.10.0 浅色模式深度适配时遗漏了 DarkButton 组件——它仍用 v2
 | 平台 | 文件 | 大小 | SHA-256 |
 |------|------|------|---------|
 | Android | Jeenith_2.10.4_fix_20260723_01.apk | 58.84 MB | `738AC0B62CA672BC7EC72BF07B9892ED562BDDA26D75DECB9DEDCB042BE81F5F` |
-
-> Windows 桌面版本本次未构建，沿用 v2.10.3。
+| Windows x64 | Jeenith_2.10.4_fix_20260723_01_windows_x64.zip | 15.66 MB | `5B535462CF3F1A862581D6A92F3817221D9A224BD6E0A53B2E9A53D33524D7FA` |
 
 ## 版本信息
 
