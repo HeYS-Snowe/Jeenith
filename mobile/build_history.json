@@ -868,6 +868,23 @@
       "platform": "windows-x64",
       "timestamp": "2026-07-23T10:20:00",
       "configSource": "pubspec.yaml"
+    },
+    {
+      "version": "2.11.0",
+      "buildNumber": 45,
+      "status": "release",
+      "date": "20260724",
+      "sequence": 1,
+      "filename": "Jeenith_2.11.0_release_20260724_01.apk",
+      "originalName": "app-release.apk",
+      "filePath": "D:\\Code\\Project\\Qore\\Jeenith\\mobile\\..\\builds\\android\\Jeenith_2.11.0_release_20260724_01.apk",
+      "fileSize": 62046606,
+      "fileSizeHuman": "59.17 MB",
+      "sha256": "CDC3830CBA2702EC1A28426EF0F129BB20BC63D051C3E6C404D49CA45B3F6E09",
+      "buildType": "apk",
+      "platform": "android",
+      "timestamp": "2026-07-24T02:31:05",
+      "configSource": "pubspec.yaml"
     }
   ]
 }
