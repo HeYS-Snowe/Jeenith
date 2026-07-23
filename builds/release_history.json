@@ -1418,16 +1418,16 @@
           "sizeFormatted": "58.84 MB",
           "sha256": "738AC0B62CA672BC7EC72BF07B9892ED562BDDA26D75DECB9DEDCB042BE81F5F",
           "localPath": "builds/android/Jeenith_2.10.4_fix_20260723_01.apk",
-          "downloadUrl": ""
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.10.4/Jeenith_2.10.4_fix_20260723_01.apk"
         }
       ],
       "versionInPubspec": "2.10.4+44",
       "buildStatus": "fix",
       "builtAt": "2026-07-23T03:52:10",
-      "commit": "",
-      "publishedAt": "",
-      "url": "",
-      "status": "unpublished"
+      "commit": "ae34cdc32e9b29ed095fbed4f0a556b0667b6dbe",
+      "publishedAt": "2026-07-23T10:14:21Z",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.10.4",
+      "status": "published"
     }
   ]
 }
