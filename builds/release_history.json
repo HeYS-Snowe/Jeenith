@@ -1476,6 +1476,46 @@
       "commit": "94671b8aec895a4b806036124ab4d1d4f5548f54",
       "publishedAt": "2026-07-24T02:50:00+08:00",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.11.0",
+      "status": "published",
+      "isLatest": false
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.11.1",
+      "target": "main",
+      "title": "v2.11.1 — 结果输出体验增强 + 历史记录搜索/筛选/批量删除",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.11.1.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_2.11.1_release_20260724_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 62063226,
+          "sizeFormatted": "59.19 MB",
+          "sha256": "97F3AD738665B7AD12AD7F1688B1193B441B4F687CA5735088E6FBB441B466E3",
+          "localPath": "builds/android/Jeenith_2.11.1_release_20260724_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.11.1/Jeenith_2.11.1_release_20260724_01.apk"
+        },
+        {
+          "name": "Jeenith_2.11.1_release_20260724_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16460914,
+          "sizeFormatted": "15.70 MB",
+          "sha256": "8D7806181AEF10B525DB4E1FE37FE87C54D46CFD8F6E193972488548AE83BFFC",
+          "localPath": "builds/windows/Jeenith_2.11.1_release_20260724_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.11.1/Jeenith_2.11.1_release_20260724_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.11.1+46",
+      "buildStatus": "release",
+      "builtAt": "2026-07-24T03:27:17",
+      "commit": "0f4b5237bb535732729dfeab5fcfafb0a62a0b3e",
+      "publishedAt": "2026-07-24T03:35:00+08:00",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.11.1",
       "status": "published"
     }
   ]
