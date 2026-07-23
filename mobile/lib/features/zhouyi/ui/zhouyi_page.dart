@@ -18,6 +18,7 @@ import '../../../shared/widgets/gold_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/svg_icon.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
 import '../algorithm/divine.dart';
 import 'hexagram_view.dart';
 
@@ -49,8 +50,24 @@ class _ZhouyiPageState extends ConsumerState<ZhouyiPage>
       _ownCtrl = ScrollController();
       _sheetCtrl = _ownCtrl; // 桌面端把自建 controller 暴露给 reset 复用
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _showGuide();
+    });
   }
+
+  /// 首次进入显示使用指引（只弹一次）。
+  Future<void> _showGuide() => showTechGuideOnce(
+        context,
+        'zhouyi',
+        '周易金钱卦 · 使用指引',
+        const [
+          GuideStep('起卦', '心中默念所问之事，点「摇卦」摇六次（金钱卦，三铜钱之和定阴阳），注意力集中于顶点时起卦最灵。'),
+          GuideStep('本卦与变卦', '老阴(6)、老阳(9)为变爻——阳极生阴、阴极生阳，翻转后得「之卦」；无变爻则以本卦为占。'),
+          GuideStep('卦辞爻辞', '无变爻看本卦卦辞；一个变爻看该爻爻辞；多个变爻看之卦卦辞。'),
+          GuideStep('心诚则灵', '一念不生之际起卦最准，切忌反复摇卦。'),
+        ],
+      );
 
   /// v2.4.3：从历史记录恢复，按 extra 快照重建卦象（周易为随机起卦，存结果快照）。
   void _maybeRestore() {

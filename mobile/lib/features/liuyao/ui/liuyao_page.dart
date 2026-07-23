@@ -16,6 +16,7 @@ import '../../../shared/widgets/decorative_panel.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
 import '../algorithm/divine.dart';
 import '../data/najia_data.dart';
 import '../data/liuyao_text.dart';
@@ -42,8 +43,24 @@ class _LiuyaoPageState extends ConsumerState<LiuyaoPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _showGuide();
+    });
   }
+
+  /// 首次进入显示使用指引（只弹一次）。
+  Future<void> _showGuide() => showTechGuideOnce(
+        context,
+        'liuyao',
+        '六爻纳甲 · 使用指引',
+        const [
+          GuideStep('起卦', '先选「所测之事」（定用神）与性别，再摇六爻；金钱卦同周易，但断法以纳甲为主。'),
+          GuideStep('纳甲排盘', '六爻配六亲（父母/兄弟/子孙/妻财/官鬼）+ 六神 + 世应，用神为所测之事对应的六亲。'),
+          GuideStep('断辞要点', '用神旺衰看月日生克，发动之爻主事之动向；空亡/六冲六合/三合三刑为格局参考。'),
+          GuideStep('旺衰吉凶', '用神得月日生扶为旺（吉），受克为衰（凶），空亡待出空方有作为。'),
+        ],
+      );
 
   /// v2.8.0：从历史记录恢复，按 extra 中的原始六爻快照精确复现。
   void _maybeRestore() {

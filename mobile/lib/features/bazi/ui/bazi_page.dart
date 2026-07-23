@@ -16,6 +16,7 @@ import '../../../shared/widgets/dark_button.dart';
 import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
+import '../../../shared/widgets/tech_guide_overlay.dart';
 import '../algorithm/divine.dart';
 import '../algorithm/shensha.dart';
 
@@ -67,8 +68,24 @@ class _BaziPageState extends ConsumerState<BaziPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeRestore());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeRestore();
+      _showGuide();
+    });
   }
+
+  /// 首次进入显示使用指引（只弹一次）。
+  Future<void> _showGuide() => showTechGuideOnce(
+        context,
+        'bazi',
+        '八字推演 · 使用指引',
+        const [
+          GuideStep('生辰输入', '选择公历出生年月日 + 时辰（不知时可留空）+ 性别，排出四柱（年/月/日/时）。'),
+          GuideStep('四柱十神', '天干地支 + 纳音五行 + 十神（比/劫/食/伤/财/官/杀/印），日干为命主。'),
+          GuideStep('大运', '阳男阴女顺行、阴男阳女逆行，从月柱起每十年一运，看行运五行喜忌。'),
+          GuideStep('五行喜用', '日主旺则宜克泄耗、衰则宜生扶，喜用神定一生吉凶方向。'),
+        ],
+      );
 
   /// v2.4.3：从历史记录恢复，按 extra 重建生辰 + 推演。
   void _maybeRestore() {

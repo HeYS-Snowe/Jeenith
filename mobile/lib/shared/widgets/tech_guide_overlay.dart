@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/theme/app_theme.dart';
 
@@ -11,6 +12,29 @@ class GuideStep {
   final String title;
   final String body;
   const GuideStep(this.title, this.body);
+}
+
+/// 复杂术首次进入时显示引导遮罩（SharedPreferences 控制每术只显一次）。
+///
+/// key：`tech_guide_<id>`。封装常见的「读取标记 → showDialog → 写回标记」流程，
+/// 调用方只需传术 id、标题、步骤。紫微/奇门/大六壬/太乙已接入；周易/六爻/八字
+/// 于后续扩展时复用本 helper。
+Future<void> showTechGuideOnce(
+  BuildContext context,
+  String id,
+  String title,
+  List<GuideStep> steps,
+) async {
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getBool('tech_guide_$id') ?? false) return;
+  if (!context.mounted) return;
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) =>
+        TechGuideOverlay(title: title, steps: steps),
+  );
+  await prefs.setBool('tech_guide_$id', true);
 }
 
 /// 单个复杂术数的首次使用引导遮罩（v2.4.4）。
