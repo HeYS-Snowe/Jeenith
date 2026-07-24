@@ -20,6 +20,7 @@ import '../../../shared/widgets/copy_result_button.dart';
 import '../../../shared/widgets/share_result_button.dart';
 import '../../../shared/widgets/gold_button.dart';
 import '../algorithm/divine.dart';
+import '../algorithm/liu_nian.dart';
 import '../algorithm/star_placement.dart';
 import '../data/stars.dart';
 import 'star_chart_painter.dart';
@@ -53,6 +54,11 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
   // 1.2s, drives StarChartPainter.progress 0.0→1.0.
   late final AnimationController _chartAnim;
 
+  // 流年/小限（v2.12.0）
+  LiuNianInfo? _liuNian;
+  bool _showLiuNian = false;
+  late final TextEditingController _liuNianYearCtrl;
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +66,8 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     );
+    _liuNianYearCtrl =
+        TextEditingController(text: DateTime.now().year.toString());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _maybeRestore();
       _maybeShowTechGuide();
@@ -118,6 +126,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
   void dispose() {
     _inertiaCtrl?.dispose();
     _chartAnim.dispose();
+    _liuNianYearCtrl.dispose();
     for (final c in [_year, _month, _day, _hour]) {
       c.dispose();
     }
@@ -130,7 +139,16 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
     final d = int.tryParse(_day.text) ?? 0;
     final h = int.tryParse(_hour.text) ?? -1;
     if (y < 1900 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31 || h < 0 || h > 23) return;
-    setState(() => _r = divine(y, m, d, h, isMale: _isMale));
+    setState(() {
+      _r = divine(y, m, d, h, isMale: _isMale);
+      if (_showLiuNian) {
+        _liuNian = computeLiuNian(
+          birthYear: y,
+          liuNianYear:
+              int.tryParse(_liuNianYearCtrl.text) ?? DateTime.now().year,
+        );
+      }
+    });
     // 触发命盘绘制过程动画（受 painter kind 开关控制）
     final painterOn = ref
             .read(configProvider)
@@ -152,6 +170,29 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       detail: _buildCopyText(),
       extra: {'year': y, 'month': m, 'day': d, 'hour': h, 'isMale': _isMale},
     )));
+  }
+
+  /// 切换流年显示（v2.12.0）。
+  void _toggleLiuNian(bool v) {
+    setState(() {
+      _showLiuNian = v;
+      if (v && _r != null && _liuNian == null) {
+        final birthYear = int.tryParse(_year.text) ?? DateTime.now().year;
+        final lnYear =
+            int.tryParse(_liuNianYearCtrl.text) ?? DateTime.now().year;
+        _liuNian = computeLiuNian(birthYear: birthYear, liuNianYear: lnYear);
+      }
+    });
+  }
+
+  /// 刷新流年（年份变更后）。
+  void _refreshLiuNian() {
+    if (_r == null) return;
+    final birthYear = int.tryParse(_year.text) ?? DateTime.now().year;
+    final lnYear = int.tryParse(_liuNianYearCtrl.text) ?? DateTime.now().year;
+    setState(() {
+      _liuNian = computeLiuNian(birthYear: birthYear, liuNianYear: lnYear);
+    });
   }
 
   // === Star chart rotation gestures ===
@@ -403,6 +444,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
         ),
       ),
       sections: [
+        _buildLiuNianBar(c),
         Text('◆ 命盘星图',
             style: TextStyle(
                 color: c.gold,
@@ -435,6 +477,7 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
                             mingGanZhi: r.mingGanZhi,
                             wuxingJu: r.wuxingJu,
                             chart: r.stars,
+                            liuNian: _showLiuNian ? _liuNian : null,
                             progress: _chartAnim.value,
                             clr: c,
                           ),
@@ -480,7 +523,107 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
               ),
           ],
         ),
+        if (_showLiuNian && _liuNian != null) ...[
+          Text('◆ 流年运势 · ${_liuNian!.ganZhi}（虚岁 ${_liuNian!.xuSui}）',
+              style: TextStyle(
+                  color: c.fireGlow,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2)),
+          _buildLiuNianPanel(r, _liuNian!, c),
+        ],
       ],
+    );
+  }
+
+  /// 流年切换栏（v2.12.0）：开关 + 年份输入 + 干支虚岁 + 图例。
+  Widget _buildLiuNianBar(AppClr c) {
+    return DecorativePanel(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Text('流年运势',
+                  style: TextStyle(
+                      color: c.goldBright,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold)),
+              const Spacer(),
+              Switch(
+                value: _showLiuNian,
+                onChanged: _r == null ? null : _toggleLiuNian,
+                activeThumbColor: c.fireGlow,
+              ),
+            ],
+          ),
+          if (_showLiuNian) ...[
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Text('流年', style: TextStyle(color: c.textBody, fontSize: 12)),
+                const SizedBox(width: 8),
+                SizedBox(
+                  width: 76,
+                  child: TextField(
+                    controller: _liuNianYearCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        hintText: '年份', isDense: true),
+                    style: TextStyle(color: c.textPrimary, fontSize: 13),
+                    onSubmitted: (_) => _refreshLiuNian(),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh, size: 18),
+                  color: c.gold,
+                  tooltip: '刷新流年',
+                  onPressed: _refreshLiuNian,
+                ),
+                const Spacer(),
+                if (_liuNian != null)
+                  Text('${_liuNian!.ganZhi} · 虚岁${_liuNian!.xuSui}',
+                      style: TextStyle(
+                          color: c.fireGlow,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text('红框 = 流年命宫　蓝框 = 小限宫',
+                style: TextStyle(color: c.textHint, fontSize: 10)),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 流年断辞面板（v2.12.0）：命宫主星 + 流年四化落宫 + 小限。
+  Widget _buildLiuNianPanel(ZiweiResult r, LiuNianInfo ln, AppClr c) {
+    final points = liuNianPoints(ln, r.stars);
+    return DecorativePanel(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final p in points)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('· ', style: TextStyle(color: c.fireGlow, fontSize: 12)),
+                  Expanded(
+                    child: Text(p,
+                        style: TextStyle(
+                            color: c.textBody, fontSize: 12, height: 1.6)),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -735,6 +878,16 @@ class _ZiweiPageState extends ConsumerState<ZiweiPage>
       if (mal.isNotEmpty) sb.writeln('  煞星：$mal');
       if (bos.isNotEmpty) sb.writeln('  博士：$bos');
       if (sha.isNotEmpty) sb.writeln('  神煞：$sha');
+    }
+
+    // 流年/小限（v2.12.0）
+    if (_showLiuNian && _liuNian != null) {
+      final ln = _liuNian!;
+      sb.writeln('\n—— 流年 ${ln.ganZhi}（虚岁 ${ln.xuSui}）——');
+      sb.writeln('流年命宫：${dz[ln.zhiIdx]}  小限：${dz[ln.xiaoXianZhi]}');
+      for (final p in liuNianPoints(ln, r.stars)) {
+        sb.writeln('· $p');
+      }
     }
     sb.writeln('\n—— 志极 Jeenith · 叩问本心 ——');
     return sb.toString();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../algorithm/divine.dart';
+import '../algorithm/liu_nian.dart';
 import '../algorithm/star_placement.dart';
 import '../data/stars.dart';
 
@@ -37,6 +38,9 @@ class StarChartPainter extends CustomPainter {
   /// 已排布的星曜分布。
   final StarChart chart;
 
+  /// 流年/小限信息（v2.12.0）。非 null 时叠加流年命宫（红）/ 小限宫（蓝）高亮。
+  final LiuNianInfo? liuNian;
+
   /// 绘制进度 0.0→1.0。1.0 表示完全绘制（默认）。
   final double progress;
 
@@ -50,6 +54,7 @@ class StarChartPainter extends CustomPainter {
     required this.mingGanZhi,
     required this.wuxingJu,
     required this.chart,
+    this.liuNian,
     this.progress = 1.0,
     required this.clr,
   });
@@ -118,6 +123,8 @@ class StarChartPainter extends CustomPainter {
 
       final isMing = zhi == mingGong;
       final isShen = zhi == shenGong;
+      final isLiuNianMing = liuNian != null && zhi == liuNian!.zhiIdx;
+      final isXiaoXian = liuNian != null && zhi == liuNian!.xiaoXianZhi;
 
       // 扇形背景（绘制时带 scale 入场效果）
       canvas.save();
@@ -136,21 +143,30 @@ class StarChartPainter extends CustomPainter {
 
       final bgPaint = Paint()
         ..style = PaintingStyle.fill
-        ..color = (isMing
-                ? clr.gold.withValues(alpha: 0.20)
-                : (isShen
-                    ? clr.waterDeep.withValues(alpha: 0.20)
-                    : clr.card))
+        ..color = (isLiuNianMing
+                ? clr.fireGlow.withValues(alpha: 0.20)
+                : (isXiaoXian
+                    ? clr.waterDeepGlow.withValues(alpha: 0.20)
+                    : (isMing
+                        ? clr.gold.withValues(alpha: 0.20)
+                        : (isShen
+                            ? clr.waterDeep.withValues(alpha: 0.20)
+                            : clr.card))))
             .withValues(alpha: localT);
       canvas.drawPath(path, bgPaint);
 
-      // 描边
+      // 描边（流年命宫红 / 小限蓝 / 本命命宫金 / 身宫水，优先级递减）
       final borderPaint = Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = isMing || isShen ? 1.6 : 0.6
-        ..color = isMing
-            ? clr.gold
-            : (isShen ? clr.waterDeepGlow : clr.goldBorder);
+        ..strokeWidth =
+            (isLiuNianMing || isXiaoXian || isMing || isShen) ? 1.6 : 0.6
+        ..color = isLiuNianMing
+            ? clr.fireGlow
+            : (isXiaoXian
+                ? clr.waterDeepGlow
+                : (isMing
+                    ? clr.gold
+                    : (isShen ? clr.waterDeepGlow : clr.goldBorder)));
       canvas.drawPath(path, borderPaint);
 
       canvas.restore();
@@ -167,12 +183,16 @@ class StarChartPainter extends CustomPainter {
       canvas.translate(mx, my);
       canvas.rotate(centerAngle - math.pi / 2);
 
-      // Earthly Branch
+      // Earthly Branch（流年命宫红 / 小限蓝 / 本命命宫金亮）
       _drawText(
         canvas,
         dz[zhi],
         const Offset(0, -24),
-        color: (isMing ? clr.goldBright : clr.textMeta)
+        color: (isLiuNianMing
+                ? clr.fireGlow
+                : (isXiaoXian
+                    ? clr.waterDeepGlow
+                    : (isMing ? clr.goldBright : clr.textMeta)))
             .withValues(alpha: textAlpha),
         fontSize: 13,
         fontWeight: FontWeight.bold,
@@ -374,6 +394,9 @@ class StarChartPainter extends CustomPainter {
       old.shenGong != shenGong ||
       old.chart != chart ||
       old.mingGanZhi != mingGanZhi ||
+      old.liuNian?.year != liuNian?.year ||
+      old.liuNian?.zhiIdx != liuNian?.zhiIdx ||
+      old.liuNian?.xiaoXianZhi != liuNian?.xiaoXianZhi ||
       old.progress != progress ||
       old.clr.t != clr.t;
 }
