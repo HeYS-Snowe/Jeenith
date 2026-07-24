@@ -1516,6 +1516,46 @@
       "commit": "0f4b5237bb535732729dfeab5fcfafb0a62a0b3e",
       "publishedAt": "2026-07-24T03:35:00+08:00",
       "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.11.1",
+      "status": "published",
+      "isLatest": false
+    },
+    {
+      "platform": "GitHub",
+      "repo": "HeYS-Snowe/Jeenith",
+      "tag": "v2.12.0",
+      "target": "main",
+      "title": "v2.12.0 — 紫微流年/小限",
+      "label": "Latest",
+      "isLatest": true,
+      "isPreRelease": false,
+      "notesFile": "builds/release_notes/release_notes_v2.12.0.md",
+      "notesFormat": "markdown",
+      "assets": [
+        {
+          "name": "Jeenith_2.12.0_release_20260724_01.apk",
+          "platform": "android-arm64,android-arm,android-x64",
+          "size": 62079678,
+          "sizeFormatted": "59.20 MB",
+          "sha256": "78BE7F9505AB620D7030B26F4E2F9CA30A5EF0487C8612B43711689BC4CCC80F",
+          "localPath": "builds/android/Jeenith_2.12.0_release_20260724_01.apk",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.12.0/Jeenith_2.12.0_release_20260724_01.apk"
+        },
+        {
+          "name": "Jeenith_2.12.0_release_20260724_01_windows_x64.zip",
+          "platform": "windows-x64",
+          "size": 16466805,
+          "sizeFormatted": "15.71 MB",
+          "sha256": "6A0FC5B577564DF0C54D702D9B4DB034BD84037F9261CC1853FC8E84F3704C4F",
+          "localPath": "builds/windows/Jeenith_2.12.0_release_20260724_01_windows_x64.zip",
+          "downloadUrl": "https://github.com/HeYS-Snowe/Jeenith/releases/download/v2.12.0/Jeenith_2.12.0_release_20260724_01_windows_x64.zip"
+        }
+      ],
+      "versionInPubspec": "2.12.0+47",
+      "buildStatus": "release",
+      "builtAt": "2026-07-24T18:27:10",
+      "commit": "32eb559299901925669fdc7b991e80b3a3aaa1ae",
+      "publishedAt": "2026-07-24T18:35:00+08:00",
+      "url": "https://github.com/HeYS-Snowe/Jeenith/releases/tag/v2.12.0",
       "status": "published"
     }
   ]
